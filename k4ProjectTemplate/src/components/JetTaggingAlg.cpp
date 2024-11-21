@@ -48,21 +48,26 @@ StatusCode JetTaggingAlg::execute(const EventContext&) const {
   info() << endmsg;
 
   // Retrieve the RefinedVertexJets collection
-  const edm4hep::ReconstructedParticleCollection* refinedVertexJets = m_refinedVertexJets.get();
-  if (!refinedVertexJets) {
-    error() << "Failed to retrieve RefinedVertexJets collection" << endmsg;
-    return StatusCode::FAILURE;
-  }
+  //const edm4hep::ReconstructedParticle* refinedVertexJets = m_refinedVertexJets.get();
+  // if (!refinedVertexJets) {
+  //   error() << "Failed to retrieve RefinedVertexJets collection" << endmsg;
+  //   return StatusCode::FAILURE;
+  // }
+  //const edm4hep::TrackerHit3DCollection* input_hits = m_input_hits.get();
+  //info() << "Input Hit collection size: " << input_hits->size() << endmsg;
+
+  //info() << "Jets? : " << refinedVertexJets->getEnergy() << endmsg;
 
   // Iterate over jets in the collection
-  for (const auto& jet : *refinedVertexJets) {
-    info() << "Jet: "
-           << " Energy: " << jet.getEnergy()
-           << " Px: " << jet.getMomentum().x
-           << " Py: " << jet.getMomentum().y
-           << " Pz: " << jet.getMomentum().z
-           << endmsg;
-  }
+  //for (size_t i = 0; i < refinedVertexJets->size(); ++i) {
+  //  const auto& jet = (*refinedVertexJets)[i];
+  //  info() << "Jet: "
+  //         << " Energy: " << jet.getEnergy()
+  //         << " Px: " << jet.getMomentum().x
+  //         << " Py: " << jet.getMomentum().y
+  //         << " Pz: " << jet.getMomentum().z
+  //         << endmsg;
+  //}
 
   return StatusCode::SUCCESS;
 }

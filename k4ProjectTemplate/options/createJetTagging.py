@@ -21,7 +21,8 @@ from Configurables import JetTaggingAlg
 from k4FWCore import ApplicationMgr, IOSvc
 
 iosvc = IOSvc("IOSvc")
-iosvc.input = "/eos/experiment/fcc/prod/fcc/ee/test_spring2024/240gev/Hbb/CLD_o2_v05/rec/00016562/010/Hbb_rec_16562_10058.root"
+#iosvc.input = "/eos/experiment/fcc/prod/fcc/ee/test_spring2024/240gev/Hbb/CLD_o2_v05/rec/00016562/010/Hbb_rec_16562_10058.root"
+iosvc.Input = "/afs/cern.ch/work/s/saaumill/public/fullsimGEN/cldfullsimHbb_REC.edm4hep.root"
 iosvc.Output = "output_jettagging.root"
 # iosvc.outputCommands = ["keep *"]
 

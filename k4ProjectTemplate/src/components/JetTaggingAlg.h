@@ -29,6 +29,16 @@
 
 // EDM4HEP
 #include "edm4hep/ReconstructedParticleCollection.h"
+#include "edm4hep/ReconstructedParticle.h"
+//#include "edm4hep/TrackCollection.h"
+//#if __has_include("edm4hep/TrackerHit3DCollection.h")
+//#include "edm4hep/TrackerHit3DCollection.h"
+//#else
+//#include "edm4hep/TrackerHitCollection.h"
+//namespace edm4hep {
+//  using TrackerHit3DCollection = edm4hep::TrackerHitCollection;
+//}  // namespace edm4hep
+//#endif
 
 class JetTaggingAlg : public Gaudi::Algorithm {
 public:
@@ -51,5 +61,7 @@ public:
 private:
   // member variable
   Gaudi::Property<std::string> theMessage{this, "PerEventPrintMessage", "Hello ", "The message to printed for each Event"};
-  DataHandle<edm4hep::ReconstructedParticleCollection> m_refinedVertexJets{"RefinedVertexJets", Gaudi::DataHandle::Reader, this};
+  mutable DataHandle<edm4hep::ReconstructedParticle> m_refinedVertexJets{"RefinedVertexJets", Gaudi::DataHandle::Reader, this};
+  //mutable DataHandle<edm4hep::TrackerHit3DCollection> m_input_hits{"inputHits", Gaudi::DataHandle::Reader, this};
+
 };
