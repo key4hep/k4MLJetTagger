@@ -1,7 +1,10 @@
-# k4-project-template
+# Key4Hep Jet-Flavor Tagging implementation for CLD full simulation
 
-
-This repository can be a starting point and template for projects using the Key4hep software stack, in particular those writing Gaudi algorithms.
+This repository started from a k4-project-template to implement Jet-Flavor Tagging in key4hep for CLD full simulation at 240 GeV.
+The workflow is as follows:
+1. First, extract jet contituent variables (such as kinematics, track parameters, PID...) from every jet in the event.
+2. Use these variables as input to a neural network (Particle Transformer). Here, we run inference on an ONNX exported trained network on 2 million jets / flavor.
+3. Create a new collection that returns the probability for each flavor ($H\rightarrow u \bar{u}$, $H\rightarrow d \bar{d}$, $H\rightarrow c \bar{c}$, $H\rightarrow s \bar{s}$, $H\rightarrow b \bar{b}$, $H\rightarrow g g$, $H\rightarrow \tau^- \tau^+$).
 
 
 ## Dependencies
@@ -16,14 +19,14 @@ This repository can be a starting point and template for projects using the Key4
 
 ## Installation
 
-Run, from the `k4-project-template` directory:
+Within the `JetTagging` directory run:
 
 ``` bash
 source /cvmfs/sw.hsf.org/key4hep/setup.sh
 k4_local_repo
 mkdir build
 cd build
-cmake .. -DCMAKE_INSTALL_PREFIX=../install -G Ninja
+cmake .. -DCMAKE_INSTALL_PREFIX=../install -G Ninja -DPython_EXECUTABLE=$(which python3)
 ninja install
 ```
 
@@ -32,20 +35,6 @@ Alternatively you can source the nightlies instead of the releases:
 ``` bash
 source /cvmfs/sw-nightlies.hsf.org/key4hep/setup.sh
 ```
-
-Note that if you source the releases and use the current version of this
-repository this is not guaranteed to work as there could be changes since this
-repository was built for the release. What you can do in this case is to
-checkout a previous tag, for example:
-
-``` bash
-git checkout v0.3.0
-```
-
-This is because the releases are only built with tagged versions of the
-packages. With the nightlies this repository should always work; if it doesn't
-please [open an
-issue](https://github.com/key4hep/k4-project-template/issues/new/choose).
 
 ## Execute Examples
 
@@ -65,6 +54,6 @@ k4run ../k4ProjectTemplate/options/createExampleEventData.py
 
 
 ## References:
-These could perhaps be usefule for newcomers.
+
 1. [lhcb-98-064 COMP](https://cds.cern.ch/record/691746/files/lhcb-98-064.pdf)
 2. [Hello World in the Gaudi Framework](https://lhcb.github.io/DevelopKit/02a-gaudi-helloworld)
