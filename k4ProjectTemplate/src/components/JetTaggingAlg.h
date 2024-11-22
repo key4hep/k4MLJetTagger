@@ -29,7 +29,7 @@
 
 // EDM4HEP
 #include "edm4hep/ReconstructedParticleCollection.h"
-#include "edm4hep/ReconstructedParticle.h"
+// #include "edm4hep/ReconstructedParticle.h"
 //#include "edm4hep/TrackCollection.h"
 //#if __has_include("edm4hep/TrackerHit3DCollection.h")
 //#include "edm4hep/TrackerHit3DCollection.h"

@@ -26,7 +26,9 @@ iosvc.Input = "/afs/cern.ch/work/s/saaumill/public/fullsimGEN/cldfullsimHbb_REC.
 iosvc.Output = "output_jettagging.root"
 # iosvc.outputCommands = ["keep *"]
 
-tagger = JetTaggingAlg()
+tagger = JetTaggingAlg(
+    RefinedVertexJets="RefinedVertexJets",
+)
 tagger.PerEventPrintMessage = "Hi it's Sara"
 
 ApplicationMgr(TopAlg=[tagger],

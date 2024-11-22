@@ -25,7 +25,7 @@ DECLARE_COMPONENT(JetTaggingAlg)
 
 JetTaggingAlg::JetTaggingAlg(const std::string& aName, ISvcLocator* aSvcLoc) : Gaudi::Algorithm(aName, aSvcLoc) {
   // declare properties here like 
-  declareProperty("inputJets", m_refinedVertexJets, "Input jets collection name");
+  declareProperty("RefinedVertexJets", m_refinedVertexJets, "Input jets collection name");
 }
 
 JetTaggingAlg::~JetTaggingAlg() {}
@@ -48,7 +48,7 @@ StatusCode JetTaggingAlg::execute(const EventContext&) const {
   info() << endmsg;
 
   // Retrieve the RefinedVertexJets collection
-  //const edm4hep::ReconstructedParticle* refinedVertexJets = m_refinedVertexJets.get();
+  const edm4hep::ReconstructedParticle* refinedVertexJets = m_refinedVertexJets.get();
   // if (!refinedVertexJets) {
   //   error() << "Failed to retrieve RefinedVertexJets collection" << endmsg;
   //   return StatusCode::FAILURE;
