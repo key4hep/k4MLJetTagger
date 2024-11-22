@@ -17,23 +17,32 @@
 # limitations under the License.
 #
 from Gaudi.Configuration import INFO
-from Configurables import JetTaggingAlg
-from k4FWCore import ApplicationMgr, IOSvc
+from Configurables import JetTagger
+from Configurables import ApplicationMgr
+from Configurables import k4DataSvc
+from Configurables import PodioOutput
+from Configurables import PodioInput
 
-iosvc = IOSvc("IOSvc")
-#iosvc.input = "/eos/experiment/fcc/prod/fcc/ee/test_spring2024/240gev/Hbb/CLD_o2_v05/rec/00016562/010/Hbb_rec_16562_10058.root"
-iosvc.Input = "/afs/cern.ch/work/s/saaumill/public/fullsimGEN/cldfullsimHbb_REC.edm4hep.root"
-iosvc.Output = "output_jettagging.root"
-# iosvc.outputCommands = ["keep *"]
 
-tagger = JetTaggingAlg(
-    RefinedVertexJets="RefinedVertexJets",
-)
-tagger.PerEventPrintMessage = "Hi it's Sara"
+podioevent = k4DataSvc("EventDataSvc")
+podioevent.input = "/afs/cern.ch/work/s/saaumill/public/fullsimGEN/cldfullsimHbb_REC.edm4hep.root"
 
-ApplicationMgr(TopAlg=[tagger],
+inp = PodioInput()
+inp.collections = [
+    "RefinedVertexJets",
+]
+
+out = PodioOutput("out")
+out.filename = "output_k4test_exampledata_transformer.root"
+
+
+transformer = JetTagger("JetTagger",
+                        InputCollection="RefinedVertexJets",
+                        OutputCollection="JetFlavorTag")
+
+ApplicationMgr(TopAlg=[inp, transformer, out],
                EvtSel="NONE",
-               EvtMax=3,
-               ExtSvc=[iosvc],
+               EvtMax=10,
+               ExtSvc=[k4DataSvc("EventDataSvc")],
                OutputLevel=INFO,
                )
