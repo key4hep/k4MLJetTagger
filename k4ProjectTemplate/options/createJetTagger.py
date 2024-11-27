@@ -18,31 +18,27 @@
 #
 from Gaudi.Configuration import INFO
 from Configurables import JetTagger
-from Configurables import ApplicationMgr
 from Configurables import k4DataSvc
-from Configurables import PodioOutput
-from Configurables import PodioInput
+from Configurables import EventDataSvc
+from Configurables import CollectionMerger
+from k4FWCore import ApplicationMgr, IOSvc
 
-
-podioevent = k4DataSvc("EventDataSvc")
-podioevent.input = "/afs/cern.ch/work/s/saaumill/public/fullsimGEN/cldfullsimHbb_REC.edm4hep.root"
-
-inp = PodioInput()
-inp.collections = [
-    "RefinedVertexJets",
-]
-
-out = PodioOutput("out")
-out.filename = "output_jettagging.root"
-
+svc = IOSvc("IOSvc")
+svc.Input = "/afs/cern.ch/work/s/saaumill/public/fullsimGEN/cldfullsimHbb_REC.edm4hep.root"
+svc.Output = "output_jettagging.root"
+#svc.outputCommands = [
+#    "drop *",
+#    "keep RefinedVertexJets",
+#    "keep RefinedJetTags",
+#]
 
 transformer = JetTagger("JetTagger",
                         InputJets=["RefinedVertexJets"],
                         OutputIDCollections=["RefinedJetTags"])
 
-ApplicationMgr(TopAlg=[inp, transformer, out],
+ApplicationMgr(TopAlg=[transformer],
                EvtSel="NONE",
-               EvtMax=10,
+               EvtMax=7,
                ExtSvc=[k4DataSvc("EventDataSvc")],
                OutputLevel=INFO,
                )
