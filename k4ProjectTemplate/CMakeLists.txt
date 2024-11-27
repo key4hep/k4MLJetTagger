@@ -17,12 +17,18 @@ See the License for the specific language governing permissions and
 limitations under the License.
 ]]
 
+find_package(ROOT REQUIRED COMPONENTS Core Hist Tree Physics)
+
 file(GLOB _plugin_sources src/components/*.cpp)
 gaudi_add_module(k4ProjectTemplatePlugins
                  SOURCES ${_plugin_sources}
                  LINK Gaudi::GaudiKernel
                       k4FWCore::k4FWCore
                       EDM4HEP::edm4hep
+                      ROOT::Core
+                      ROOT::Hist
+                      ROOT::Tree
+                      ROOT::Physics
                       )
 
 install(TARGETS k4ProjectTemplatePlugins
