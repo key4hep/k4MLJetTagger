@@ -33,12 +33,12 @@ inp.collections = [
 ]
 
 out = PodioOutput("out")
-out.filename = "output_k4test_exampledata_transformer.root"
+out.filename = "output_jettagging.root"
 
 
 transformer = JetTagger("JetTagger",
-                        InputCollection="RefinedVertexJets",
-                        OutputCollection="JetFlavorTag")
+                        InputJets=["RefinedVertexJets"],
+                        OutputIDCollections=["RefinedJetTags"])
 
 ApplicationMgr(TopAlg=[inp, transformer, out],
                EvtSel="NONE",

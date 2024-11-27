@@ -35,8 +35,8 @@
 
 
 // struct JetTagger final
-//     : k4FWCore::Transformer<edm4hep::ParticleIDCollection(const edm4hep::ReconstructedParticleCollection&), BaseClass_t> {
-// 
-//   JetTagger(const std::string& name, ISvcLocator* svcLoc);
-//   edm4hep::ParticleIDCollection operator()(const edm4hep::ReconstructedParticleCollection& input) const override;
+//      : k4FWCore::Transformer<edm4hep::ParticleIDCollection(const edm4hep::ReconstructedParticleCollection&), BaseClass_t> {
+//  
+//    JetTagger(const std::string& name, ISvcLocator* svcLoc);
+//    edm4hep::ParticleIDCollection operator()(const edm4hep::ReconstructedParticleCollection& input) const final; //override;
 // };
