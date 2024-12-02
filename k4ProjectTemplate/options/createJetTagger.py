@@ -34,6 +34,7 @@ svc.Output = "output_jettagging.root"
 
 transformer = JetTagger("JetTagger",
                         InputJets=["RefinedVertexJets"],
+                        InputPrimaryVertices=["PrimaryVertices"],
                         OutputIDCollections=["RefinedJetTags"])
 
 ApplicationMgr(TopAlg=[transformer],

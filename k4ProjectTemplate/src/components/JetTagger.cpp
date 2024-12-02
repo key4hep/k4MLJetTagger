@@ -32,8 +32,15 @@
 #include "k4FWCore/Transformer.h"
 #include <edm4hep/ParticleIDCollection.h>
 #include <edm4hep/ReconstructedParticleCollection.h>
+#include <edm4hep/VertexCollection.h>
 
 #include <random>
+
+// define the edm4hep operators
+edm4hep::Vector3f operator-(const edm4hep::Vector3f& a, const edm4hep::Vector3f& b) {
+    return edm4hep::Vector3f(a.x - b.x, a.y - b.y, a.z - b.z);
+}
+
 
 // define the structures for jet constituents (pfcand) and jets
 
@@ -63,8 +70,20 @@ struct Jet {
     std::vector<Pfcand> constituents; 
 };
 
+struct Helix{
+  /**
+  Structure to store the helix parameters of a track. We use following convention (similar to https://github.com/key4hep/EDM4hep/blob/997ab32b886899253c9bc61adea9a21b57bc5a21/edm4hep.yaml#L195C9-L200 ):
+  * - d0: transverse impact parameter
+  * - phi: azimuthal angle 
+  * - c: signed curvature of the track.[c] = 1/s. To convert to key4hep convention, multiply by 2/c [1/m]. 
+  * - z0: longitudinal impact parameter
+  * - tanLambda: lambda is the dip angle of the track in r-z
+  */
+  float d0, phi, c, z0, tanLambda;
+};
+
 // Declare the function at the top
-int fancyModelDoTag(const edm4hep::ReconstructedParticle& jet, MsgStream& log);
+int fancyModelDoTag(const edm4hep::ReconstructedParticle& jet, const edm4hep::VertexCollection& prim_vertex, MsgStream& log);
 
 float get_relative_erel(const edm4hep::ReconstructedParticle& jet, const edm4hep::ReconstructedParticle& particle) {
     /**
@@ -214,34 +233,120 @@ Pfcand fill_cov_matrix(Pfcand p, const edm4hep::ReconstructedParticle& particle)
   return p;
 }
 
-Pfcand fill_ip(Pfcand p, const edm4hep::ReconstructedParticle& particle){
+Helix calculate_helix_params(const edm4hep::ReconstructedParticle& particle, const edm4hep::VertexCollection& prim_vertex){
   /**
-  * Fill the impact parameters for a charged particle.
-  * Therefore, we must first extract the helix parametrisation of the track with respect to the PRIMARY VERTEX.
-  * Then, we can extract the impact parameters from the helix.
+  * we must extract the helix parametrisation of the track with respect to the PRIMARY VERTEX. 
+  * This is done like in: https://github.com/HEP-FCC/FCCAnalyses/blob/63d346103159c4fc88cdee7884e09b3966cfeca4/analyzers/dataframe/src/ReconstructedParticle2Track.cc#L64 
+  * @param particle: the charged particle / jet constituent which track should be parametrized
+  * @param prim_vertex: the primary vertex collection of the event
+  * @return: helix object filled with track parametrization with respect to the primary vertex
+  */
+
+  // get primary vertex
+  edm4hep::Vector3f dummy; // A dummy variable to use for initialization
+  edm4hep::Vector3f& pv_pos = dummy;
+  int i = 0;
+  for (const auto& pv : prim_vertex) {
+    if (i>0) {
+        throw std::invalid_argument("More than one primary vertex found");
+    } else {
+      pv_pos = pv.getPosition();
+      i++;
+    }
+  }
+  if (i==0) {
+    throw std::invalid_argument("No primary vertex found");
+  }
+
+  // get track
+  auto track = particle.getTracks()[0].getTrackStates()[0]; // get info at interaction point
+  // get other needed parameters
+  const int q = particle.getCharge();
+  const edm4hep::Vector3f& p = particle.getMomentum();
+  // constants
+  const float Bz = 2.0; // magnetic field in T
+  const float cSpeed = 2.99792458e8 * 1.0e-9; // speed of light 
+
+  // calculate helpers
+  const edm4hep::Vector3f point_on_track = edm4hep::Vector3f(- track.D0 * std::sin(track.phi), track.D0 * std::cos(track.phi), track.Z0); // point on particle track
+  const edm4hep::Vector3f x = edm4hep::Vector3f(point_on_track.x - pv_pos.x, point_on_track.y - pv_pos.y, point_on_track.z - pv_pos.z); //point_on_track - *pv_pos; // vector from primary vertex to point on track
+  const float pt = std::sqrt(p.x*p.x + p.y*p.y); // transverse momentum of particle
+  const float a = - q * Bz * cSpeed; // Lorentz force on particle in magnetic field
+  const float r2 = x.x*x.x + x.y*x.y;
+  const float cross = x.x * p.y - x.y * p.x;
+  const float discrim = pt*pt - 2 * a * cross + a*a * r2;
+
+  // helix parameters
+  Helix h;
+
+  // calculate d0
+  if (discrim>0){
+    if (pt<10.0){
+      h.d0 = (std::sqrt(discrim) - pt) / a;
+    } else {
+      h.d0 = (-2 * cross + a * r2) / (std::sqrt(discrim) + pt);
+    }
+  } else {
+    h.d0 = -9;
+  }
+
+  // calculate c
+  h.c = a/ (2 * pt);
+
+  // calculate z0
+  float b = h.c * std::sqrt(std::max(r2 - h.d0*h.d0, float(0))/ (1 + 2 * h.c * h.d0));
+  if (std::abs(b)>1){
+    b = std::signbit(b);
+  }
+  const float st = std::asin(b) / h.c;
+  const float ct = p.z / pt;
+  const float dot = x.x * p.x + x.y * p.y;
+  if (dot>0){
+    h.z0 = x.z - st * ct;
+  } else {
+    h.z0 = x.z + st * ct;
+  }
+
+  // calculate phi
+  h.phi = std::atan2((p.y - a * x.x)/std::sqrt(discrim), (p.x + a * x.y)/std::sqrt(discrim));
+
+  // calculate tanLambda
+  h.tanLambda = p.z / pt;
+
+  return h;
+}
+
+Pfcand fill_track_IP(Pfcand p, Helix h){
+  /**
+  Calculate the impact parameters of the track with respect to the primary vertex. The helix parametrization of the particle track is with respect to the primary vertex.
   * @param p: the particle object to fill
-  * @param particle: the particle / jet constituent from which to extract the impact parameters
+  * @param h: the helix object with the track parametrization
   * @return: the particle object with filled impact parameters
   */
+
+  // calculate impact parameters
 
   return p;
 }
 
 // main function
-struct JetTagger //final
-    : k4FWCore::Transformer<edm4hep::ParticleIDCollection(const edm4hep::ReconstructedParticleCollection&)> {
+struct JetTagger
+    : k4FWCore::Transformer<edm4hep::ParticleIDCollection(const edm4hep::ReconstructedParticleCollection&, const edm4hep::VertexCollection& )> {
   JetTagger(const std::string& name, ISvcLocator* svcLoc)
     : Transformer(name, svcLoc, 
-                  {KeyValues("InputJets", {"RefinedVertexJets"})},
+                  {
+                    KeyValues("InputJets", {"RefinedVertexJets"}),
+                    KeyValues("InputPrimaryVertices", {"PrimaryVertices"})
+                  },
                   {KeyValues("OutputIDCollections", {"RefinedJetTags"})}
                   ) {}
 
-  edm4hep::ParticleIDCollection operator()(const edm4hep::ReconstructedParticleCollection& inputJets) const override{
+  edm4hep::ParticleIDCollection operator()(const edm4hep::ReconstructedParticleCollection& inputJets, const edm4hep::VertexCollection& primVerticies) const override{
     info() << "Tagging " << inputJets.size() << " input jets" << endmsg;
     auto tagCollection = edm4hep::ParticleIDCollection();
 
     for (const auto& jet : inputJets) {
-      auto tagValue = fancyModelDoTag(jet, info());  // this is where you will have to
+      auto tagValue = fancyModelDoTag(jet, primVerticies, info());  // this is where you will have to
                                              // put in an actual thing
       auto jetTag = tagCollection.create();
       jetTag.setParticle(jet);
@@ -253,7 +358,7 @@ struct JetTagger //final
 };
 
 // Function that simulates a tagging model by returning a dummy value.
-int fancyModelDoTag(const edm4hep::ReconstructedParticle& jet, MsgStream& log) {
+int fancyModelDoTag(const edm4hep::ReconstructedParticle& jet, const edm4hep::VertexCollection& prim_vertex, MsgStream& log) {
     // Create a random number generator for demonstration purposes.
     static std::mt19937 rng(42);  // Seed for reproducibility
     static std::uniform_int_distribution<int> dist(0, 6);  // Assume 7 jet flavors: 0 to 6
@@ -284,7 +389,8 @@ int fancyModelDoTag(const edm4hep::ReconstructedParticle& jet, MsgStream& log) {
       int n_tracks = particle.getTracks().size();
       if (n_tracks == 1) { // charged particle
         p = fill_cov_matrix(p, particle); // covariance matrix
-        p = fill_ip(p, particle); // impact parameters
+        Helix h = calculate_helix_params(particle, prim_vertex); // calculate track parameters described by a helix parametrization
+        p = fill_track_IP(p, h);
       } else if (n_tracks == 0) { // neutral particle
         p = fill_track_params_neutral(p);
       } else {
