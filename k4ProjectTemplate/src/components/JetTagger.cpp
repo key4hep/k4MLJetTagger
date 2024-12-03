@@ -85,8 +85,7 @@ struct Helix{
   float d0, phi, c, z0, tanLambda;
 };
 
-// Declare the function at the top
-int fancyModelDoTag(const edm4hep::ReconstructedParticle& jet, const edm4hep::VertexCollection& prim_vertex_coll, MsgStream& log);
+// helper functions
 
 float get_relative_erel(const edm4hep::ReconstructedParticle& jet, const edm4hep::ReconstructedParticle& particle) {
     /**
@@ -378,42 +377,14 @@ Pfcand fill_track_IP(const edm4hep::ReconstructedParticle& jet, const edm4hep::R
   return p;
 }
 
-// main function
-struct JetTagger
-    : k4FWCore::Transformer<edm4hep::ParticleIDCollection(const edm4hep::ReconstructedParticleCollection&, const edm4hep::VertexCollection& )> {
-  JetTagger(const std::string& name, ISvcLocator* svcLoc)
-    : Transformer(name, svcLoc, 
-                  {
-                    KeyValues("InputJets", {"RefinedVertexJets"}),
-                    KeyValues("InputPrimaryVertices", {"PrimaryVertices"})
-                  },
-                  {KeyValues("OutputIDCollections", {"RefinedJetTags"})}
-                  ) {}
-
-  edm4hep::ParticleIDCollection operator()(const edm4hep::ReconstructedParticleCollection& inputJets, const edm4hep::VertexCollection& primVerticies) const override{
-    info() << "Tagging " << inputJets.size() << " input jets" << endmsg;
-    auto tagCollection = edm4hep::ParticleIDCollection();
-
-    for (const auto& jet : inputJets) {
-      auto tagValue = fancyModelDoTag(jet, primVerticies, info());  // this is where you will have to
-                                             // put in an actual thing
-      auto jetTag = tagCollection.create();
-      jetTag.setParticle(jet);
-      jetTag.setType(tagValue);  // for example
-    }
-
-    return tagCollection;
-  };
-};
-
-// Function that simulates a tagging model by returning a dummy value.
-int fancyModelDoTag(const edm4hep::ReconstructedParticle& jet, const edm4hep::VertexCollection& prim_vertex_coll, MsgStream& log) {
-    // Create a random number generator for demonstration purposes.
-    static std::mt19937 rng(42);  // Seed for reproducibility
-    static std::uniform_int_distribution<int> dist(0, 6);  // Assume 7 jet flavors: 0 to 6
-
-    // Generate a random tag value for the jet.
-    int tagValue = dist(rng);
+Jet retrieve_input_observables(const edm4hep::ReconstructedParticle& jet, const edm4hep::VertexCollection& prim_vertex_coll, MsgStream& log) {
+    /**
+    * Function that retrieves the input observables for a jet and its constituents. The input observables are the 33 features per constituent that are used as input to the neural network for jet flavor tagging. The function loops over all jet constituents and fills the input observables for each constituent.
+    * @param jet: the jet to retrieve the input observables for
+    * @param prim_vertex_coll: the primary vertex collection
+    * @param log: the message stream
+    * @return: the filled jet object that contains the jet constituents with their input observables
+    */
 
     // Create a jet object
     Jet j;
@@ -451,10 +422,54 @@ int fancyModelDoTag(const edm4hep::ReconstructedParticle& jet, const edm4hep::Ve
       j.constituents.push_back(p);
     }
 
-    log << "Tagged jet with energy " << jet.getEnergy() << endmsg;
-    log << "Tag value: " << tagValue << endmsg;
-
-    return tagValue;
+    return j;
 }
+
+int tagger(Jet jet){
+  /**
+  * Function that takes a jet and returns a tag value. This function is a dummy function that returns a random tag value for demonstration purposes.
+  * @param jet: the jet to tag
+  * @return: the tag value
+  */
+  // Create a random number generator for demonstration purposes.
+  static std::mt19937 rng(42);  // Seed for reproducibility
+  static std::uniform_int_distribution<int> dist(0, 6);  // Assume 7 jet flavors: 0 to 6
+
+  // Generate a random tag value for the jet.
+  int tagValue = dist(rng);
+
+  return tagValue;
+}
+
+
+// main function
+struct JetTagger
+    : k4FWCore::Transformer<edm4hep::ParticleIDCollection(const edm4hep::ReconstructedParticleCollection&, const edm4hep::VertexCollection& )> {
+  JetTagger(const std::string& name, ISvcLocator* svcLoc)
+    : Transformer(name, svcLoc, 
+                  {
+                    KeyValues("InputJets", {"RefinedVertexJets"}),
+                    KeyValues("InputPrimaryVertices", {"PrimaryVertices"})
+                  },
+                  {KeyValues("OutputIDCollections", {"RefinedJetTags"})}
+                  ) {}
+
+  edm4hep::ParticleIDCollection operator()(const edm4hep::ReconstructedParticleCollection& inputJets, const edm4hep::VertexCollection& primVerticies) const override{
+    info() << "Tagging " << inputJets.size() << " input jets" << endmsg;
+    auto tagCollection = edm4hep::ParticleIDCollection();
+
+    for (const auto& jet : inputJets) {
+      Jet j = retrieve_input_observables(jet, primVerticies, info());
+      int tagValue = tagger(j);  
+
+      // Handle tag collection
+      auto jetTag = tagCollection.create();
+      jetTag.setParticle(jet);
+      jetTag.setType(tagValue); // maybe alter this
+    }
+
+    return tagCollection;
+  };
+};
 
 DECLARE_COMPONENT(JetTagger)
