@@ -34,6 +34,8 @@
 #include <edm4hep/ReconstructedParticleCollection.h>
 #include <edm4hep/VertexCollection.h>
 
+#include <torch/torch.h>
+
 #include <random>
 
 

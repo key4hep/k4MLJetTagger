@@ -33,6 +33,23 @@ find_package(ROOT COMPONENTS RIO Tree)
 find_package(EDM4HEP)
 find_package(k4FWCore)
 find_package(Gaudi)
+
+# make sure the onnx find script is found:
+set(CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/cmake)
+find_package(OnnxRuntime)
+if(OnnxRuntime_FOUND)
+  message("ONNX Runtime inference library found.")
+else()
+  message("ONNX Runtime not found!")
+endif()
+
+find_package(Torch)
+if(Torch_FOUND)
+  message("Torch inference library found.")
+else()
+  message("Torch not found!")
+endif()
+
 #---------------------------------------------------------------
 
 include(cmake/Key4hepConfig.cmake)
