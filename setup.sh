@@ -13,7 +13,9 @@ export LD_LIBRARY_PATH=${LD_LIBRARY_PATH}:${TORCH_PATH}/lib
 
 ONNXRUNTIME_PATH=$(dirname $(python -c 'import onnxruntime; print(f"{onnxruntime.__file__}")'))
 #export LD_LIBRARY_PATH=${LD_LIBRARY_PATH}:$(realpath ${ONNXRUNTIME_PATH}/../../../../)/lib64  # CentOS7
-export CMAKE_PREFIX_PATH=${ONNXRUNTIME_PATH}/../../../../lib/cmake
+#export CMAKE_PREFIX_PATH=${ONNXRUNTIME_PATH}/../../../../lib/cmake
+#export CMAKE_PREFIX_PATH=${ONNXRUNTIME_PATH}/../../../..
+export CMAKE_PREFIX_PATH=$CMAKE_PREFIX_PATH:${ONNXRUNTIME_PATH}/../../../..
 export LD_LIBRARY_PATH=${LD_LIBRARY_PATH}:$(realpath ${ONNXRUNTIME_PATH}/../../../../)/lib    # Ubuntu
 
 

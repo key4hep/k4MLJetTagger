@@ -29,7 +29,7 @@ gaudi_add_module(k4ProjectTemplatePlugins
                       ROOT::Hist
                       ROOT::Tree
                       ROOT::Physics
-                      OnnxRuntime
+                      onnxruntime::onnxruntime
                       torch
                       )
 
