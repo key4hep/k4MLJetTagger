@@ -17,6 +17,8 @@ See the License for the specific language governing permissions and
 limitations under the License.
 ]]
 
+include_directories(${CMAKE_SOURCE_DIR}/src/components)
+
 find_package(ROOT REQUIRED COMPONENTS Core Hist Tree Physics)
 
 file(GLOB _plugin_sources src/components/*.cpp)

@@ -31,11 +31,6 @@ cmake .. -DCMAKE_INSTALL_PREFIX=../install -G Ninja -DPython_EXECUTABLE=$(which 
 ninja install
 ```
 
-Alternatively you can source the nightlies instead of the releases:
-
-``` bash
-source /cvmfs/sw-nightlies.hsf.org/key4hep/setup.sh
-```
 
 ## Execute Examples
 
@@ -46,9 +41,14 @@ If they are not, they can be added by running:
 export LD_LIBRARY_PATH=$PWD/../install/lib:$LD_LIBRARY_PATH
 export PYTHONPATH=$PWD/../install/python:$PYTHONPATH
 ```
-and then run the examples like this:
+and then run the tagger like this:
 
 ``` bash
+k4run ../k4ProjectTemplate/options/createJetTagger.py
+```
+
+or these dummy examples:
+```
 k4run ../k4ProjectTemplate/options/createHelloWorld.py
 k4run ../k4ProjectTemplate/options/createExampleEventData.py
 ```
@@ -64,7 +64,11 @@ If you wish to use a different model for tagging, you will need to export it to 
 To export your favorite model `best_model.pt` (e.g. [Particle Transformer](https://arxiv.org/abs/2202.03772)) using `weaver` to onnx, run:
 
 ```bash
-python3 -m weaver.train -c myConfigFromTraining.auto.yaml -n /path-to/particle_transformer/networks/example_ParticleTransformer.py -m /path-to/best_model.pt --export-onnx my-onnx-model.onnx
+python3 -m weaver.train \
+-c myConfigFromTraining.auto.yaml \
+-n /path-to/particle_transformer/networks/example_ParticleTransformer.py \
+-m /path-to/best_model.pt \
+--export-onnx my-onnx-model.onnx
 ```
 
 For that, we need an appropriate envirnoment as the one provided by `weaver` does not work for the conversion to ONNX. The envirnoment can be set-up with the YAML file in `extras` like: 
