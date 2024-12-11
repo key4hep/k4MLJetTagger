@@ -22,7 +22,8 @@ The workflow is as follows:
 Within the `JetTagging` directory run:
 
 ``` bash
-source /cvmfs/sw.hsf.org/key4hep/setup.sh
+cd /afs/cern.ch/work/s/saaumill/public/JetTagging/
+source ./setup.sh
 k4_local_repo
 mkdir build
 cd build
@@ -51,6 +52,30 @@ and then run the examples like this:
 k4run ../k4ProjectTemplate/options/createHelloWorld.py
 k4run ../k4ProjectTemplate/options/createExampleEventData.py
 ```
+
+## Extras
+
+In the `extras` folder you can find helpful resources. 
+
+### Changing the inference model
+
+If you wish to use a different model for tagging, you will need to export it to [ONNX](https://onnx.ai/). Here, we discribe how to transform a model with [weaver](https://github.com/hqucms/weaver-core) from `.pt` to `.onnx`. 
+
+To export your favorite model `best_model.pt` (e.g. [Particle Transformer](https://arxiv.org/abs/2202.03772)) using `weaver` to onnx, run:
+
+```bash
+python3 -m weaver.train -c myConfigFromTraining.auto.yaml -n /path-to/particle_transformer/networks/example_ParticleTransformer.py -m /path-to/best_model.pt --export-onnx my-onnx-model.onnx
+```
+
+For that, we need an appropriate envirnoment as the one provided by `weaver` does not work for the conversion to ONNX. The envirnoment can be set-up with the YAML file in `extras` like: 
+
+```bash
+conda env create -f env_for_onnx.yml
+conda activate weaver
+```
+
+`torch_geometric` is still not supported by this envirnoment (not needed for using Particle Transformer).
+
 
 
 ## References:
