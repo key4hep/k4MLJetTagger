@@ -437,6 +437,49 @@ Jet retrieve_input_observables(const edm4hep::ReconstructedParticle& jet, const 
     return j;
 }
 
+rv::RVec<rv::RVec<float>> from_Jet_to_onnx_input(Jet jet){
+  // Create a vector of per-constituent variables
+  rv::RVec<rv::RVec<float>> constituent_vars;
+  // use the Jet oject to fill constituent_vars
+  for (const auto& pfcand : jet.constituents) {
+    rv::RVec<float> vars;
+    vars.push_back(pfcand.pfcand_erel_log);
+    vars.push_back(pfcand.pfcand_thetarel);
+    vars.push_back(pfcand.pfcand_phirel);
+    vars.push_back(pfcand.pfcand_type);
+    vars.push_back(pfcand.pfcand_charge);
+    vars.push_back(pfcand.pfcand_isEl);
+    vars.push_back(pfcand.pfcand_isMu);
+    vars.push_back(pfcand.pfcand_isGamma);
+    vars.push_back(pfcand.pfcand_isChargedHad);
+    vars.push_back(pfcand.pfcand_isNeutralHad);
+    vars.push_back(pfcand.pfcand_cov_cc);
+    vars.push_back(pfcand.pfcand_cov_tanLambdatanLambda);
+    vars.push_back(pfcand.pfcand_cov_phiphi);
+    vars.push_back(pfcand.pfcand_cov_d0d0);
+    vars.push_back(pfcand.pfcand_cov_z0z0);
+    vars.push_back(pfcand.pfcand_cov_d0z0);
+    vars.push_back(pfcand.pfcand_cov_phid0);
+    vars.push_back(pfcand.pfcand_cov_tanLambdaz0);
+    vars.push_back(pfcand.pfcand_cov_d0c);
+    vars.push_back(pfcand.pfcand_cov_d0tanLambda);
+    vars.push_back(pfcand.pfcand_cov_phic);
+    vars.push_back(pfcand.pfcand_cov_phiz0);
+    vars.push_back(pfcand.pfcand_cov_phitanLambda);
+    vars.push_back(pfcand.pfcand_cov_cz0);
+    vars.push_back(pfcand.pfcand_cov_ctanLambda);
+    vars.push_back(pfcand.pfcand_d0);
+    vars.push_back(pfcand.pfcand_z0);
+    vars.push_back(pfcand.pfcand_Sip2dVal);
+    vars.push_back(pfcand.pfcand_Sip2dSig);
+    vars.push_back(pfcand.pfcand_Sip3dVal);
+    vars.push_back(pfcand.pfcand_Sip3dSig);
+    vars.push_back(pfcand.pfcand_JetDistVal);
+  }
+  return constituent_vars;
+
+};
+
 int tagger(Jet jet){
   /**
   * Function that takes a jet and returns a tag value. This function is a dummy function that returns a random tag value for demonstration purposes.
@@ -464,15 +507,24 @@ int tagger(Jet jet){
   json_file >> json_config;
 
   // retrieve the input variable to onnx model from json file
-  rv::RVec<std::string> vars;
+  rv::RVec<std::string> vars; // e.g. pfcand_isEl, ...
   for (const auto& var : json_config["pf_features"]["var_names"]) {
     vars.push_back(var.get<std::string>());
   }
-  std::cout << "Input variables: ";
-  for (const auto& var : vars) {
-    std::cout << var << " ";
-  }
 
+  // Create the WeaverInterface object
+  WeaverInterface weaver(model_path, json_path, vars);
+
+  // Convert the Jet object to the input format for the ONNX model
+  rv::RVec<rv::RVec<float>> jet_const_data = from_Jet_to_onnx_input(jet);
+
+  // Run inference on the input variables for a list of jet constituents
+  rv::RVec<float> probabilities = weaver.run(jet_const_data);
+
+  // print results
+  for (int i = 0; i < probabilities.size(); i++) {
+    std::cout << "Probability for jet flavor " << i << ": " << probabilities[i] << std::endl;
+  }
 
 
   return tagValue;
