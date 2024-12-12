@@ -1,7 +1,6 @@
 #include "VarMapper.h"
 
 VarMapper::VarMapper() {
-    // Initialize mappings
     map_to_FCCAn["pfcand_erel_log"] = "pfcand_erel_log";
     map_to_FCCAn["pfcand_thetarel"] = "pfcand_thetarel";
     map_to_FCCAn["pfcand_phirel"] = "pfcand_phirel";

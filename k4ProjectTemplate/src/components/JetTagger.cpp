@@ -43,6 +43,7 @@
 
 #include <random>
 #include "VarMapper.h"
+#include "WeaverInterface.h"
 
 
 // define the structures for jet constituents (pfcand) and jets
@@ -57,6 +58,7 @@ struct Pfcand {
   * tanLambda | ctngtheta or deta or dlambda | lambda is the dip angle of the track in r-z
   * c | dpt | signed curvature of the track.[c] = 1/s. To convert to key4hep convention, multiply by 2/c [1/m]. 
   * z0 | dz | longitudinal impact parameter
+  * All these transformations/convenstions can be found in VarMapper.cpp
   */
 
   // kinematics
@@ -448,8 +450,6 @@ int tagger(Jet jet){
   // Generate a random tag value for the jet.
   int tagValue = dist(rng);
 
-
-
   // Path to your ONNX model
   const char* model_path = "/afs/cern.ch/work/s/saaumill/public/onnx_export/fullsimCLD240_2mio.onnx";
   const char* json_path = "/afs/cern.ch/work/s/saaumill/public/onnx_export/preprocess_fullsimCLD240_2mio.json";
@@ -463,70 +463,17 @@ int tagger(Jet jet){
   nlohmann::json json_config;
   json_file >> json_config;
 
-  // Initialize ONNX Runtime environment
-  Ort::Env env(ORT_LOGGING_LEVEL_WARNING, "JetTagging");
+  // retrieve the input variable to onnx model from json file
+  rv::RVec<std::string> vars;
+  for (const auto& var : json_config["pf_features"]["var_names"]) {
+    vars.push_back(var.get<std::string>());
+  }
+  std::cout << "Input variables: ";
+  for (const auto& var : vars) {
+    std::cout << var << " ";
+  }
 
-  // Create a session options object
-  Ort::SessionOptions session_options;
-  session_options.SetIntraOpNumThreads(1); // Set the number of threads (optional)
 
-  // Enable CUDA or other EPs if needed (requires ONNX Runtime compiled with GPU support)
-  // session_options.AppendExecutionProvider_CUDA(cuda_device_id);
-
-  // Load the ONNX model
-  Ort::Session session(env, model_path, session_options);
-
-  // Get input and output node information
-  size_t num_input_nodes = session.GetInputCount(); // 3 tensors: ? var_names, var_infos, var_length
-  size_t num_output_nodes = session.GetOutputCount(); // 1 tensor ["recojet_isX"for X in flavors]
-
-  // print input and output node names
-  std::cout << "Number of input nodes: " << num_input_nodes << std::endl;
-  std::cout << "Number of output nodes: " << num_output_nodes << std::endl;
-
-  // Extract input and output names from JSON
-  std::vector<std::string> input_names = json_config["input_names"].get<std::vector<std::string>>();
-  std::vector<std::string> output_names = json_config["output_names"].get<std::vector<std::string>>();
-
-  std::cout << "Input name: " << input_names << std::endl;
-  std::cout << "Output name: " << output_names << std::endl;
-
-  /*
-  // Define input tensor shape (adjust based on your model)
-  std::vector<int64_t> input_shape = {1, 4}; // Example: Batch size 1, 4 features
-
-  // Prepare input tensor data
-  std::vector<float> input_data = {jet.pt, jet.eta, jet.phi, jet.mass};
-
-  // Create input tensor
-  Ort::Value input_tensor = Ort::Value::CreateTensor<float>(
-      Ort::AllocatorWithDefaultOptions(),
-      input_data.data(),
-      input_data.size(),
-      input_shape.data(),
-      input_shape.size()
-  );
-
-  // Run the model
-  std::vector<const char*> input_names = {input_name};
-  std::vector<const char*> output_names = {output_name};
-
-  auto output_tensors = session.Run(
-      Ort::RunOptions{nullptr},
-      input_names.data(),
-      &input_tensor,
-      1,
-      output_names.data(),
-      1
-  );
-
-  // Extract output tensor data
-  float* output_data = output_tensors[0].GetTensorMutableData<float>();
-
-  // Return the tag value (assuming single output for simplicity)
-  int tagValue = static_cast<int>(output_data[0]);
-  return tagValue;
-  */
 
   return tagValue;
 }
