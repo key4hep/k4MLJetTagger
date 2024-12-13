@@ -2,6 +2,7 @@
 #define ONNXRuntime_WeaverInterface_h
 
 // From: https://github.com/HEP-FCC/FCCAnalyses/tree/b9b84221837da8868158f5592b48a9af69f0f6e3/addons/ONNXRuntime  
+// AI generated documentation
 
 #include "ONNXRuntime.h"
 #include "ROOT/RVec.hxx"
@@ -90,7 +91,7 @@ private:
       float pad{0.};                ///< Value to use for padding.
     };
 
-    std::string name;                        ///< Name of the preprocessing configuration.
+    std::string name;                         ///< Name of the preprocessing configuration.
     size_t min_length{0}, max_length{0};     ///< Minimum and maximum lengths for input vectors.
     std::vector<std::string> var_names;      ///< List of variable names for preprocessing.
     std::unordered_map<std::string, VarInfo> var_info_map; ///< Map of variable names to VarInfo.
@@ -101,7 +102,7 @@ private:
      * @param name The name of the variable.
      * @return The VarInfo object for the specified variable.
      */
-    VarInfo info(const std::string& name) const { return var_info_map.at(name); }
+    VarInfo info(const std::string& name_info) const { return var_info_map.at(name_info); }
 
     /**
      * @brief Dumps variable names and preprocessing details to the console.

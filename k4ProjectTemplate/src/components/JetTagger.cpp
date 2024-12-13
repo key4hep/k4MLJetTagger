@@ -67,6 +67,7 @@ struct Pfcand {
   int pfcand_type;
   int pfcand_charge;
   int pfcand_isEl, pfcand_isMu, pfcand_isGamma, pfcand_isChargedHad, pfcand_isNeutralHad;
+  int pfcand_dndx, pfcand_tof; // dummy, filled with 0
 
   // track params
   // cov matrix
@@ -77,6 +78,44 @@ struct Pfcand {
   float pfcand_Sip2dVal, pfcand_Sip2dSig;
   float pfcand_Sip3dVal, pfcand_Sip3dSig;
   float pfcand_JetDistVal, pfcand_JetDistSig;
+
+  void print_values(){
+    std::cout << "pfcand_erel_log: " << pfcand_erel_log << std::endl;
+    std::cout << "pfcand_thetarel: " << pfcand_thetarel << std::endl;
+    std::cout << "pfcand_phirel: " << pfcand_phirel << std::endl;
+    std::cout << "pfcand_type: " << pfcand_type << std::endl;
+    std::cout << "pfcand_charge: " << pfcand_charge << std::endl;
+    std::cout << "pfcand_isEl: " << pfcand_isEl << std::endl;
+    std::cout << "pfcand_isMu: " << pfcand_isMu << std::endl;
+    std::cout << "pfcand_isGamma: " << pfcand_isGamma << std::endl;
+    std::cout << "pfcand_isChargedHad: " << pfcand_isChargedHad << std::endl;
+    std::cout << "pfcand_isNeutralHad: " << pfcand_isNeutralHad << std::endl;
+    std::cout << "pfcand_dndx: " << pfcand_dndx << std::endl;
+    std::cout << "pfcand_tof: " << pfcand_tof << std::endl;
+    std::cout << "pfcand_cov_cc: " << pfcand_cov_cc << std::endl;
+    std::cout << "pfcand_cov_tanLambdatanLambda: " << pfcand_cov_tanLambdatanLambda << std::endl;
+    std::cout << "pfcand_cov_phiphi: " << pfcand_cov_phiphi << std::endl;
+    std::cout << "pfcand_cov_d0d0: " << pfcand_cov_d0d0 << std::endl;
+    std::cout << "pfcand_cov_z0z0: " << pfcand_cov_z0z0 << std::endl;
+    std::cout << "pfcand_cov_d0z0: " << pfcand_cov_d0z0 << std::endl;
+    std::cout << "pfcand_cov_phid0: " << pfcand_cov_phid0 << std::endl;
+    std::cout << "pfcand_cov_tanLambdaz0: " << pfcand_cov_tanLambdaz0 << std::endl;
+    std::cout << "pfcand_cov_d0c: " << pfcand_cov_d0c << std::endl;
+    std::cout << "pfcand_cov_d0tanLambda: " << pfcand_cov_d0tanLambda << std::endl;
+    std::cout << "pfcand_cov_phic: " << pfcand_cov_phic << std::endl;
+    std::cout << "pfcand_cov_phiz0: " << pfcand_cov_phiz0 << std::endl;
+    std::cout << "pfcand_cov_phitanLambda: " << pfcand_cov_phitanLambda << std::endl;
+    std::cout << "pfcand_cov_cz0: " << pfcand_cov_cz0 << std::endl;
+    std::cout << "pfcand_cov_ctanLambda: " << pfcand_cov_ctanLambda << std::endl;
+    std::cout << "pfcand_d0: " << pfcand_d0 << std::endl;
+    std::cout << "pfcand_z0: " << pfcand_z0 << std::endl;
+    std::cout << "pfcand_Sip2dVal: " << pfcand_Sip2dVal << std::endl;
+    std::cout << "pfcand_Sip2dSig: " << pfcand_Sip2dSig << std::endl;
+    std::cout << "pfcand_Sip3dVal: " << pfcand_Sip3dVal << std::endl;
+    std::cout << "pfcand_Sip3dSig: " << pfcand_Sip3dSig << std::endl;
+    std::cout << "pfcand_JetDistVal: " << pfcand_JetDistVal << std::endl;
+    std::cout << "pfcand_JetDistSig: " << pfcand_JetDistSig << std::endl;
+  }
 };
 
 struct Jet {
@@ -96,8 +135,7 @@ struct Helix{
 };
 
 
-
-// helper functions
+// helper functions to retrieve input observables for the neural network
 
 float get_relative_erel(const edm4hep::ReconstructedParticle& jet, const edm4hep::ReconstructedParticle& particle) {
     /**
@@ -139,12 +177,11 @@ float get_relative_angle(const edm4hep::ReconstructedParticle& jet, const edm4he
     }
 }
 
-Pfcand fill_track_params_neutral(Pfcand p){
+void fill_track_params_neutral(Pfcand& p){
   /**
   * Fill the track parameters for a neutral particle with dummy values.
   * The value dummy value -9 comes from fast sim https://github.com/HEP-FCC/FCCAnalyses/blob/d39a711a703244ee2902f5d2191ad1e2367363ac/analyzers/dataframe/src/JetConstituentsUtils.cc#L495, however the signicance that is chosen here is -200 to lie outside the distribution. 
   * @param p: the particle object to fill
-  * @return: the particle object with filled track parameters for neutrals
   */
 
   // cov matrix
@@ -173,15 +210,13 @@ Pfcand fill_track_params_neutral(Pfcand p){
   p.pfcand_JetDistVal = -9;
   p.pfcand_JetDistSig = -200;
   
-  return p;
 }
 
-Pfcand pid_flags(Pfcand p, const edm4hep::ReconstructedParticle& particle){
+void pid_flags(Pfcand& p, const edm4hep::ReconstructedParticle& particle){
   /**
   * Fill the PID flags for a particle.
   * @param p: the particle object to fill
   * @param particle: the particle / jet constituent from which to extract the PID flags
-  * @return: the particle object with filled PID flags
   */
 
   int n_tracks = particle.getTracks().size();
@@ -211,17 +246,15 @@ Pfcand pid_flags(Pfcand p, const edm4hep::ReconstructedParticle& particle){
   p.pfcand_isChargedHad = chad;
   p.pfcand_isNeutralHad = nhad;
 
-  return p;
 }
 
-Pfcand fill_cov_matrix(Pfcand p, const edm4hep::ReconstructedParticle& particle){
+void fill_cov_matrix(Pfcand& p, const edm4hep::ReconstructedParticle& particle){
   /**
   * Fill the covariance matrix for a charged particle.
   * The covariance matrix is a 5 dim matrix, therefore we have 15 distinct values. 
   * On the diagonal it's: d0 = xy, phi, omega = pt, z0, tanLambda = eta.
   * @param p: the particle object to fill
   * @param particle: the particle / jet constituent from which to extract the covariance matrix
-  * @return: the particle object with filled covariance matrix
   */
 
   // get the track
@@ -244,7 +277,6 @@ Pfcand fill_cov_matrix(Pfcand p, const edm4hep::ReconstructedParticle& particle)
   p.pfcand_cov_cz0 = track.covMatrix[8];
   p.pfcand_cov_ctanLambda = track.covMatrix[12];
 
-  return p;
 }
 
 const edm4hep::Vector3f get_primary_vertex(const edm4hep::VertexCollection& prim_vertex){
@@ -340,14 +372,13 @@ Helix calculate_helix_params(const edm4hep::ReconstructedParticle& particle, con
   return h;
 }
 
-Pfcand fill_track_IP(const edm4hep::ReconstructedParticle& jet, const edm4hep::ReconstructedParticle& particle, Pfcand p, Helix h, const edm4hep::Vector3f& prim_vertex){
+void fill_track_IP(const edm4hep::ReconstructedParticle& jet, const edm4hep::ReconstructedParticle& particle, Pfcand& p, Helix& h, const edm4hep::Vector3f& prim_vertex){
   /**
   Calculate the impact parameters of the track with respect to the primary vertex. The helix parametrization of the particle track is with respect to the primary vertex.
   * @param jet: the jet
   * @param particle: the charged particle / jet constituent
   * @param p: the particle object to fill
   * @param h: the helix object with the track parametrization
-  * @return: the particle object with filled impact parameters
   */
 
   // IP
@@ -385,8 +416,6 @@ Pfcand fill_track_IP(const edm4hep::ReconstructedParticle& jet, const edm4hep::R
     p.pfcand_JetDistSig = -999;
     p.pfcand_Sip3dSig = -999;
   }
-
-  return p;
 }
 
 Jet retrieve_input_observables(const edm4hep::ReconstructedParticle& jet, const edm4hep::VertexCollection& prim_vertex_coll, MsgStream& log) {
@@ -416,19 +445,23 @@ Jet retrieve_input_observables(const edm4hep::ReconstructedParticle& jet, const 
       // PID
       p.pfcand_type = particle.getPDG(); // new; deprecated: get.Type() method
       p.pfcand_charge = particle.getCharge();
-      p = pid_flags(p, particle);
+      pid_flags(p, particle);
+      p.pfcand_dndx = 0; // dummy, filled with 0
+      p.pfcand_tof = 0; // dummy, filled with 0
 
       // track parameters
       int n_tracks = particle.getTracks().size();
       if (n_tracks == 1) { // charged particle
-        p = fill_cov_matrix(p, particle); // covariance matrix
+        fill_cov_matrix(p, particle); // covariance matrix
         Helix h = calculate_helix_params(particle, prim_vertex); // calculate track parameters described by a helix parametrization
-        p = fill_track_IP(jet, particle, p, h, prim_vertex); // impact parameters
+        fill_track_IP(jet, particle, p, h, prim_vertex); // impact parameters
       } else if (n_tracks == 0) { // neutral particle
-        p = fill_track_params_neutral(p);
+        fill_track_params_neutral(p);
       } else {
         throw std::invalid_argument("Particle has more than one track");
       }
+
+      //p.print_values();
 
       // add the pfcand to the jet
       j.constituents.push_back(p);
@@ -437,7 +470,9 @@ Jet retrieve_input_observables(const edm4hep::ReconstructedParticle& jet, const 
     return j;
 }
 
-rv::RVec<rv::RVec<float>> from_Jet_to_onnx_input(Jet jet){
+// helper functions to run inference on the neural network
+
+rv::RVec<rv::RVec<float>> from_Jet_to_onnx_input(Jet& jet){
   // Create a vector of per-constituent variables
   rv::RVec<rv::RVec<float>> constituent_vars;
   // use the Jet oject to fill constituent_vars
@@ -480,7 +515,7 @@ rv::RVec<rv::RVec<float>> from_Jet_to_onnx_input(Jet jet){
 
 };
 
-int tagger(Jet jet){
+int tagger(Jet& jet){
   /**
   * Function that takes a jet and returns a tag value. This function is a dummy function that returns a random tag value for demonstration purposes.
   * @param jet: the jet to tag
@@ -506,17 +541,27 @@ int tagger(Jet jet){
   nlohmann::json json_config;
   json_file >> json_config;
 
+  std::cout << "Loaded JSON configuration" << std::endl;
+
   // retrieve the input variable to onnx model from json file
   rv::RVec<std::string> vars; // e.g. pfcand_isEl, ...
   for (const auto& var : json_config["pf_features"]["var_names"]) {
     vars.push_back(var.get<std::string>());
   }
 
+  std::cout << "Loaded input variables" << std::endl;
+  std::cout << "Number of input variables: " << vars.size() << std::endl;
+
   // Create the WeaverInterface object
   WeaverInterface weaver(model_path, json_path, vars);
 
+  std::cout << "Created WeaverInterface object" << std::endl;
+
   // Convert the Jet object to the input format for the ONNX model
   rv::RVec<rv::RVec<float>> jet_const_data = from_Jet_to_onnx_input(jet);
+
+  std::cout << "Input data size: " << jet_const_data.size() << std::endl;
+
 
   // Run inference on the input variables for a list of jet constituents
   rv::RVec<float> probabilities = weaver.run(jet_const_data);
@@ -549,6 +594,7 @@ struct JetTagger
 
     for (const auto& jet : inputJets) {
       Jet j = retrieve_input_observables(jet, primVerticies, info());
+      std::cout << "Jet constituents: " << j.constituents.size() << std::endl;
       int tagValue = tagger(j);  
 
       // Handle tag collection

@@ -20,11 +20,7 @@ WeaverInterface::WeaverInterface(const std::string& onnx_filename,
   try {
     const auto json = nlohmann::json::parse(json_file);
     json.at("input_names").get_to(input_names); // input_names is a vector of strings: pf_points pf_features pf_vectors pf_mask
-    std::cout << "Input names: ";
-    for (const auto& name : input_names) {
-      std::cout << name << " ";
-    }
-    std::cout << std::endl;
+
     for (const auto& input : input_names) { // loops over pf_points pf_features pf_vectors pf_mask
       const auto& group_params = json.at(input); // group params is then the dictionary of the input name; look in json. It always has has three keys: var_names, var_infos, var_length
       auto& info = prep_info_map_[input];
@@ -57,7 +53,11 @@ WeaverInterface::WeaverInterface(const std::string& onnx_filename,
   } catch (const nlohmann::json::exception& exc) {
     throw std::runtime_error("Failed to parse input JSON file '" + json_filename + "'.\n" + exc.what());
   }
+
+  std::cout << "Loaded " << input_names.size() << " input groups." << std::endl;
+
   onnx_ = std::make_unique<ONNXRuntime>(onnx_filename, input_names);
+  std::cout << "Loaded ONNX model '" << onnx_filename << "'." << std::endl;
 }
 
 std::vector<float> WeaverInterface::center_norm_pad(const rv::RVec<float>& input,

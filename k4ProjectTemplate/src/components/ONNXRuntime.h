@@ -2,17 +2,18 @@
 #define ONNXRuntime_ONNXRuntime_h
 
 // From: https://github.com/HEP-FCC/FCCAnalyses/tree/b9b84221837da8868158f5592b48a9af69f0f6e3/addons/ONNXRuntime  
+// AI generated documentation
 
 #include <string>
 #include <vector>
 #include <map>
 #include <memory>
 
+#include "onnxruntime_cxx_api.h"
+
 namespace Ort {
   class Env; ///< Wrapper class for the ONNX Runtime environment.
-  namespace Experimental {
-    class Session; ///< Wrapper class for ONNX Runtime session handling.
-  }
+  class Session; ///< Wrapper class for ONNX Runtime session handling.
 }  // namespace Ort
 
 /**
@@ -81,7 +82,8 @@ private:
   size_t variablePos(const std::string& var_name) const;
 
   std::unique_ptr<Ort::Env> env_; ///< Pointer to the ONNX Runtime environment object.
-  std::unique_ptr<Ort::Experimental::Session> session_; ///< Pointer to the ONNX Runtime session object.
+  std::unique_ptr<Ort::Session> session_; ///< Pointer to the ONNX Runtime session object.
+  Ort::AllocatorWithDefaultOptions allocator; ///< Allocator for ONNX Runtime tensors.
 
   std::vector<std::string> input_node_strings_; ///< List of input node names.
   std::vector<std::string> output_node_strings_; ///< List of output node names.
