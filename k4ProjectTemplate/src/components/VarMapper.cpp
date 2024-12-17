@@ -34,6 +34,8 @@ VarMapper::VarMapper() {
     map_to_FCCAn["pfcand_isGamma"] = "pfcand_isGamma";
     map_to_FCCAn["pfcand_isChargedHad"] = "pfcand_isChargedHad";
     map_to_FCCAn["pfcand_isNeutralHad"] = "pfcand_isNeutralHad";
+    map_to_FCCAn["pfcand_dndx"] = "pfcand_dndx";
+    map_to_FCCAn["pfcand_tof"] = "pfcand_mtof";
 
     // Create the reverse mapping
     for (const auto& pair : map_to_FCCAn) {
@@ -52,7 +54,7 @@ std::string VarMapper::mapKey4hepToFCCAn(const std::string& key4hepName) const {
 std::string VarMapper::mapFCCAnToKey4hep(const std::string& FCCAnName) const {
     auto it = map_to_key4hep.find(FCCAnName);
     if (it != map_to_key4hep.end()) {
-        return it->first;
+        return it->second;
     }
     return ""; // Return an empty string if not found
 }

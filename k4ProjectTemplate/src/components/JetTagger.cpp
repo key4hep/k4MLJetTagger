@@ -529,11 +529,8 @@ rv::RVec<rv::RVec<float>> from_Jet_to_onnx_input(Jet& jet, rv::RVec<std::string>
   for (auto& pfcand : jet.constituents) { // loop over all constituents
     rv::RVec<float> vars;
     // loop over all expected input observables
-
     for (auto& obs : input_names){
-      std::cout << obs << std::endl;
-      std::string key4hepName = mapper.mapFCCAnToKey4hep(obs);
-      std::cout << key4hepName << std::endl;
+      std::string key4hepName = mapper.mapFCCAnToKey4hep(obs); // map the variable name to the key4hep convention
       vars.push_back(pfcand.get_attribute(key4hepName));
     }
     // add the vars to the constituent_vars
@@ -605,7 +602,7 @@ int tagger(Jet& jet){
 
   // Run inference on the input variables for a list of jet constituents
 
-  // NOTE:   ERROR Attribute not found: pfcand_dptdpt - what's the problem? how to give input to the model?
+  // NOTE: ERROR Unable to find variable with name 'pfcand_e' in the list of registered variables
   rv::RVec<float> probabilities = weaver.run(jet_const_data);
 
   // print results
