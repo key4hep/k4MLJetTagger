@@ -116,6 +116,50 @@ struct Pfcand {
     std::cout << "pfcand_JetDistVal: " << pfcand_JetDistVal << std::endl;
     std::cout << "pfcand_JetDistSig: " << pfcand_JetDistSig << std::endl;
   }
+
+  float get_attribute(std::string& attribute){
+    /**
+    * Return the attributes of the Struct Pfcand given an string. 
+    * @param attribute: the attribute to return
+    * @return: the value of the attribute
+    */
+    if (attribute == "pfcand_erel_log") return pfcand_erel_log;
+    else if (attribute == "pfcand_thetarel") return pfcand_thetarel;
+    else if (attribute == "pfcand_phirel") return pfcand_phirel;
+    else if (attribute == "pfcand_type") return pfcand_type;
+    else if (attribute == "pfcand_charge") return pfcand_charge;
+    else if (attribute == "pfcand_isEl") return pfcand_isEl;
+    else if (attribute == "pfcand_isMu") return pfcand_isMu;
+    else if (attribute == "pfcand_isGamma") return pfcand_isGamma;
+    else if (attribute == "pfcand_isChargedHad") return pfcand_isChargedHad;
+    else if (attribute == "pfcand_isNeutralHad") return pfcand_isNeutralHad;
+    else if (attribute == "pfcand_dndx") return pfcand_dndx;
+    else if (attribute == "pfcand_tof") return pfcand_tof;
+    else if (attribute == "pfcand_cov_cc") return pfcand_cov_cc;
+    else if (attribute == "pfcand_cov_tanLambdatanLambda") return pfcand_cov_tanLambdatanLambda;
+    else if (attribute == "pfcand_cov_phiphi") return pfcand_cov_phiphi;
+    else if (attribute == "pfcand_cov_d0d0") return pfcand_cov_d0d0;
+    else if (attribute == "pfcand_cov_z0z0") return pfcand_cov_z0z0;
+    else if (attribute == "pfcand_cov_d0z0") return pfcand_cov_d0z0;
+    else if (attribute == "pfcand_cov_phid0") return pfcand_cov_phid0;
+    else if (attribute == "pfcand_cov_tanLambdaz0") return pfcand_cov_tanLambdaz0;
+    else if (attribute == "pfcand_cov_d0c") return pfcand_cov_d0c;
+    else if (attribute == "pfcand_cov_d0tanLambda") return pfcand_cov_d0tanLambda;
+    else if (attribute == "pfcand_cov_phic") return pfcand_cov_phic;
+    else if (attribute == "pfcand_cov_phiz0") return pfcand_cov_phiz0;
+    else if (attribute == "pfcand_cov_phitanLambda") return pfcand_cov_phitanLambda;
+    else if (attribute == "pfcand_cov_cz0") return pfcand_cov_cz0;
+    else if (attribute == "pfcand_cov_ctanLambda") return pfcand_cov_ctanLambda;
+    else if (attribute == "pfcand_d0") return pfcand_d0;
+    else if (attribute == "pfcand_z0") return pfcand_z0;
+    else if (attribute == "pfcand_Sip2dVal") return pfcand_Sip2dVal;
+    else if (attribute == "pfcand_Sip2dSig") return pfcand_Sip2dSig;
+    else if (attribute == "pfcand_Sip3dVal") return pfcand_Sip3dVal;
+    else if (attribute == "pfcand_Sip3dSig") return pfcand_Sip3dSig;
+    else if (attribute == "pfcand_JetDistVal") return pfcand_JetDistVal;
+    else if (attribute == "pfcand_JetDistSig") return pfcand_JetDistSig;
+    else throw std::invalid_argument("Attribute not found: " + attribute);
+  };
 };
 
 struct Jet {
@@ -472,46 +516,42 @@ Jet retrieve_input_observables(const edm4hep::ReconstructedParticle& jet, const 
 
 // helper functions to run inference on the neural network
 
-rv::RVec<rv::RVec<float>> from_Jet_to_onnx_input(Jet& jet){
-  // Create a vector of per-constituent variables
+rv::RVec<rv::RVec<float>> from_Jet_to_onnx_input(Jet& jet, rv::RVec<std::string>& input_names){
+  /**
+  Return the input variables for the ONNX model from a Jet object. The input variables should have the form of {jet -> {var1 -> {constit1, constit2, ...}, var2 -> {...}, ...}}
+  * @param jet: the jet object
+  * @param input_names: the names of the input variables for the ONNX model.
+  * @return: the input variables for the ONNX model
+  * NOTE: the order of the variables must match the order of the input variables to the neural network
+  */
   rv::RVec<rv::RVec<float>> constituent_vars;
-  // use the Jet oject to fill constituent_vars
-  for (const auto& pfcand : jet.constituents) {
+  VarMapper mapper; // transform the names of the variables (ONNX (aka FCCAnalyses) convention <-> key4hep convention)
+  for (auto& pfcand : jet.constituents) { // loop over all constituents
     rv::RVec<float> vars;
-    vars.push_back(pfcand.pfcand_erel_log);
-    vars.push_back(pfcand.pfcand_thetarel);
-    vars.push_back(pfcand.pfcand_phirel);
-    vars.push_back(pfcand.pfcand_type);
-    vars.push_back(pfcand.pfcand_charge);
-    vars.push_back(pfcand.pfcand_isEl);
-    vars.push_back(pfcand.pfcand_isMu);
-    vars.push_back(pfcand.pfcand_isGamma);
-    vars.push_back(pfcand.pfcand_isChargedHad);
-    vars.push_back(pfcand.pfcand_isNeutralHad);
-    vars.push_back(pfcand.pfcand_cov_cc);
-    vars.push_back(pfcand.pfcand_cov_tanLambdatanLambda);
-    vars.push_back(pfcand.pfcand_cov_phiphi);
-    vars.push_back(pfcand.pfcand_cov_d0d0);
-    vars.push_back(pfcand.pfcand_cov_z0z0);
-    vars.push_back(pfcand.pfcand_cov_d0z0);
-    vars.push_back(pfcand.pfcand_cov_phid0);
-    vars.push_back(pfcand.pfcand_cov_tanLambdaz0);
-    vars.push_back(pfcand.pfcand_cov_d0c);
-    vars.push_back(pfcand.pfcand_cov_d0tanLambda);
-    vars.push_back(pfcand.pfcand_cov_phic);
-    vars.push_back(pfcand.pfcand_cov_phiz0);
-    vars.push_back(pfcand.pfcand_cov_phitanLambda);
-    vars.push_back(pfcand.pfcand_cov_cz0);
-    vars.push_back(pfcand.pfcand_cov_ctanLambda);
-    vars.push_back(pfcand.pfcand_d0);
-    vars.push_back(pfcand.pfcand_z0);
-    vars.push_back(pfcand.pfcand_Sip2dVal);
-    vars.push_back(pfcand.pfcand_Sip2dSig);
-    vars.push_back(pfcand.pfcand_Sip3dVal);
-    vars.push_back(pfcand.pfcand_Sip3dSig);
-    vars.push_back(pfcand.pfcand_JetDistVal);
+    // loop over all expected input observables
+
+    for (auto& obs : input_names){
+      std::cout << obs << std::endl;
+      std::string key4hepName = mapper.mapFCCAnToKey4hep(obs);
+      std::cout << key4hepName << std::endl;
+      vars.push_back(pfcand.get_attribute(key4hepName));
+    }
+    // add the vars to the constituent_vars
+    constituent_vars.push_back(vars);
   }
-  return constituent_vars;
+  std::cout << "Number of constituents: " << constituent_vars.size() << std::endl;
+
+  // change from {constituent -> {var1, var2, ...}} to {var1 -> {constituent1, constituent2, ...}, var2 -> {...}, ...}
+  rv::RVec<rv::RVec<float>> input_vars;
+  for (int i = 0; i < constituent_vars[0].size(); i++) { // loop over all variables
+    rv::RVec<float> var;
+    for (int j = 0; j < constituent_vars.size(); j++) { // loop over all constituents
+      var.push_back(constituent_vars[j][i]);
+    }
+    input_vars.push_back(var);
+  }
+
+  return input_vars;
 
 };
 
@@ -558,12 +598,14 @@ int tagger(Jet& jet){
   std::cout << "Created WeaverInterface object" << std::endl;
 
   // Convert the Jet object to the input format for the ONNX model
-  rv::RVec<rv::RVec<float>> jet_const_data = from_Jet_to_onnx_input(jet);
+  rv::RVec<rv::RVec<float>> jet_const_data = from_Jet_to_onnx_input(jet, vars);
 
   std::cout << "Input data size: " << jet_const_data.size() << std::endl;
 
 
   // Run inference on the input variables for a list of jet constituents
+
+  // NOTE:   ERROR Attribute not found: pfcand_dptdpt - what's the problem? how to give input to the model?
   rv::RVec<float> probabilities = weaver.run(jet_const_data);
 
   // print results
