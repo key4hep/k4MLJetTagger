@@ -131,6 +131,7 @@ rv::RVec<float> WeaverInterface::run(const rv::RVec<ConstituentVars>& constituen
     values.resize(it_pos);
     ++i;
   }
+  std::cout << "Hey there! I've preprocess the input dat and now start to run inference." << std::endl;
   return onnx_->run<float>(data_, input_shapes_)[0]; // this runs the interference on the preprocessed data
 }
 

@@ -23,59 +23,35 @@ ONNXRuntime::ONNXRuntime(const std::string& model_path, const std::vector<std::s
   std::string model{model_path};  // fixes a poor Ort experimental API
   session_ = std::make_unique<Ort::Session>(*env_, model.c_str(), options);
 
-  std::cout << "Loaded ONNX model" << std::endl;
-
   // Get input names and shapes
   input_node_strings_.clear();
   input_node_dims_.clear();
 
   for (size_t i = 0; i < session_->GetInputCount(); ++i) {
-    std::cout << "Loading input " << i << std::endl;
     // get input names
-    const auto input_name = session_->GetInputNameAllocated(i, allocator);
-    //input_node_strings_.emplace_back(input_name);
-    input_node_strings_.emplace_back(input_name.get());
-
-    std::cout << "Loaded input name" << std::endl;
+    const auto input_name = session_->GetInputNameAllocated(i, allocator).release(); // release the ownership of the pointer
+    input_node_strings_.emplace_back(input_name);
 
     // get input shapes
-    std::string input_name_str(input_name.get()); // Convert to std::string
-    std::cout << "Getting input type info" << std::endl;
-    //auto type_info = session_->GetInputTypeInfo(i).GetTensorTypeAndShapeInfo();
-    std::cout << "Got input type info" << std::endl;
-    //auto shape = type_info.GetShape();
-    //std::cout << "Run type_info.GetShape()" << std::endl;
-    try {
-        auto type_info = session_->GetInputTypeInfo(i).GetTensorTypeAndShapeInfo();
-        std::cout << "Input " << i << " Element Type: " << type_info.GetElementType() << std::endl;
-        //std::cout << "Is Tensor: " << type_info.IsTensor() << std::endl;
-    } catch (const std::exception& e) {
-        std::cerr << "Exception caught while inspecting type info: " << e.what() << std::endl;
-    }
-    // input_node_dims_[input_name_str] = type_info.GetShape();
-    std::cout << "Loaded input shape" << std::endl;
-
+    const auto nodeInfo = session_->GetInputTypeInfo(i);
+    input_node_dims_[input_name] = nodeInfo.GetTensorTypeAndShapeInfo().GetShape();
   }
-
-  std::cout << "Loaded input names and shapes" << std::endl;
 
   // Get output names and shapes
   output_node_strings_.clear();
   output_node_dims_.clear();
   for (size_t i = 0; i < session_->GetOutputCount(); ++i) {
     // Get output names
-    const auto output_name = session_->GetInputNameAllocated(i, allocator);
-    output_node_strings_.emplace_back(output_name.get());
+    const auto output_name = session_->GetOutputNameAllocated(i, allocator).release();
+    output_node_strings_.emplace_back(output_name);
 
-    // Get output shapes
-    auto type_info = session_->GetOutputTypeInfo(i).GetTensorTypeAndShapeInfo();
-    auto shape = type_info.GetShape();
-    shape[0] = -1;  // Set batch size to dynamic (-1)
-    std::string output_name_str(output_name.get()); // Convert to std::string
-    output_node_dims_[output_name_str] = shape;
+    // get output shapes
+    const auto nodeInfo = session_->GetOutputTypeInfo(i);
+    output_node_dims_[output_name] = nodeInfo.GetTensorTypeAndShapeInfo().GetShape();
+
+    // the 0th dim depends on the batch size
+    output_node_dims_[output_name].at(0) = -1;
   }
-
-  std::cout << "Loaded output names and shapes" << std::endl;
 
 }
 
