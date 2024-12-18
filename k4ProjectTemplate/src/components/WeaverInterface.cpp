@@ -97,6 +97,7 @@ size_t WeaverInterface::variablePos(const std::string& var_name) const {
 
 rv::RVec<float> WeaverInterface::run(const rv::RVec<ConstituentVars>& constituents) { // constituents is the collection of all jet constituents. Each constituent is a collection of observables (ConstituentVars).
   size_t i = 0;
+  std::cout << "Start to preprocess the input data." << std::endl;
   for (const auto& name : onnx_->inputNames()) {
     std::cout << "Preprocessing input data for '" << name << "'." << std::endl;
     const auto& params = prep_info_map_.at(name);
