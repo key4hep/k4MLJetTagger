@@ -54,10 +54,7 @@ WeaverInterface::WeaverInterface(const std::string& onnx_filename,
     throw std::runtime_error("Failed to parse input JSON file '" + json_filename + "'.\n" + exc.what());
   }
 
-  std::cout << "Loaded " << input_names.size() << " input groups." << std::endl;
-
   onnx_ = std::make_unique<ONNXRuntime>(onnx_filename, input_names);
-  std::cout << "Loaded ONNX model '" << onnx_filename << "'." << std::endl;
 }
 
 std::vector<float> WeaverInterface::center_norm_pad(const rv::RVec<float>& input,
@@ -97,9 +94,7 @@ size_t WeaverInterface::variablePos(const std::string& var_name) const {
 
 rv::RVec<float> WeaverInterface::run(const rv::RVec<ConstituentVars>& constituents) { // constituents is the collection of all jet constituents. Each constituent is a collection of observables (ConstituentVars).
   size_t i = 0;
-  std::cout << "Start to preprocess the input data." << std::endl;
   for (const auto& name : onnx_->inputNames()) {
-    std::cout << "Preprocessing input data for '" << name << "'." << std::endl;
     const auto& params = prep_info_map_.at(name);
     auto& values = data_[i];
     values.resize(input_sizes_.at(i));
@@ -108,7 +103,6 @@ rv::RVec<float> WeaverInterface::run(const rv::RVec<ConstituentVars>& constituen
     ConstituentVars jc;
     for (size_t j = 0; j < params.var_names.size(); ++j) {  // transform and add the proper amount of padding
       const auto& var_name = params.var_names.at(j);
-      std::cout << "Preprocessing variable '" << var_name << "'." << std::endl;
       //if (std::find(variables_names_.begin(), variables_names_.end(), "pfcand_mask") == variables_names_.end())
       //  jc = ConstituentVars(constituents.at(0).size(), 1.f);
 
@@ -134,7 +128,6 @@ rv::RVec<float> WeaverInterface::run(const rv::RVec<ConstituentVars>& constituen
     values.resize(it_pos);
     ++i;
   }
-  std::cout << "Hey there! I've preprocess the input dat and now start to run inference." << std::endl;
   return onnx_->run<float>(data_, input_shapes_)[0]; // this runs the interference on the preprocessed data
 }
 

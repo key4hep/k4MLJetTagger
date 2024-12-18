@@ -15,7 +15,6 @@ ONNXRuntime::ONNXRuntime(const std::string& model_path, const std::vector<std::s
       allocator(), 
       input_names_(input_names) { 
   
-  std::cout << "Loading ONNX model from " << model_path << std::endl;
   if (model_path.empty())
     throw std::runtime_error("Path to ONNX model cannot be empty!");
   Ort::SessionOptions options;

@@ -58,13 +58,12 @@ rv::RVec<rv::RVec<float>> from_Jet_to_onnx_input(Jet& jet, rv::RVec<std::string>
     // add the vars to the constituent_vars
     constituent_vars.push_back(vars);
   }
-  std::cout << "Number of constituents: " << constituent_vars.size() << std::endl;
 
   // change from {constituent -> {var1, var2, ...}} to {var1 -> {constituent1, constituent2, ...}, var2 -> {...}, ...}
   rv::RVec<rv::RVec<float>> input_vars;
-  for (int i = 0; i < constituent_vars[0].size(); i++) { // loop over all variables
+  for (unsigned int i = 0; i < constituent_vars[0].size(); i++) { // loop over all variables
     rv::RVec<float> var;
-    for (int j = 0; j < constituent_vars.size(); j++) { // loop over all constituents
+    for (unsigned int j = 0; j < constituent_vars.size(); j++) { // loop over all constituents
       var.push_back(constituent_vars[j][i]);
     }
     input_vars.push_back(var);
@@ -80,6 +79,7 @@ int tagger(Jet& jet){
   * @param jet: the jet to tag
   * @return: the tag value
   */
+  
   // Create a random number generator for demonstration purposes.
   static std::mt19937 rng(42);  // Seed for reproducibility
   static std::uniform_int_distribution<int> dist(0, 6);  // Assume 7 jet flavors: 0 to 6
@@ -100,8 +100,6 @@ int tagger(Jet& jet){
   nlohmann::json json_config;
   json_file >> json_config;
 
-  std::cout << "Loaded JSON configuration" << std::endl;
-
   // retrieve the input variable to onnx model from json file
   rv::RVec<std::string> vars; // e.g. pfcand_isEl, ...
   for (const auto& var : json_config["pf_features"]["var_names"]) {
@@ -110,30 +108,27 @@ int tagger(Jet& jet){
   for (const auto& var : json_config["pf_vectors"]["var_names"]) { // not sure if this is the solution here
     vars.push_back(var.get<std::string>());
   }
-
-
-  std::cout << "Loaded input variables" << std::endl;
-  std::cout << "Number of input variables: " << vars.size() << std::endl;
+  // variables in pf_points are already included in pf_features
 
   // Create the WeaverInterface object
   WeaverInterface weaver(model_path, json_path, vars);
 
-  std::cout << "Created WeaverInterface object" << std::endl;
-
   // Convert the Jet object to the input format for the ONNX model
   rv::RVec<rv::RVec<float>> jet_const_data = from_Jet_to_onnx_input(jet, vars);
 
-  std::cout << "Input data size: " << jet_const_data.size() << std::endl;
-
-
-  // Run inference on the input variables for a list of jet constituents
-
-  // NOTE: ERROR Unable to find variable with name 'pfcand_e' in the list of registered variables
+  // Run inference on the input variables - returns the 7 probabilities for each jet flavor
   rv::RVec<float> probabilities = weaver.run(jet_const_data);
 
+  // retrieve output variable names from json file
+  rv::RVec<std::string> output_names; // e.g. "recojet_isX" with X being the jet flavor (G, U, S, C, B, D, TAU)
+  for (const auto& var : json_config["output_names"]) {
+    output_names.push_back(var.get<std::string>());
+  }
+
   // print results
-  for (int i = 0; i < probabilities.size(); i++) {
-    std::cout << "Probability for jet flavor " << i << ": " << probabilities[i] << std::endl;
+  std::cout << "------------------------" << std::endl;
+  for (unsigned int i = 0; i < probabilities.size(); i++) {
+    std::cout << "Probability for jet flavor " << output_names[i] << ": " << probabilities[i] << std::endl;
   }
 
 
@@ -154,14 +149,13 @@ struct JetTagger
                   ) {}
 
   edm4hep::ParticleIDCollection operator()(const edm4hep::ReconstructedParticleCollection& inputJets, const edm4hep::VertexCollection& primVerticies) const override{
-    info() << "Tagging " << inputJets.size() << " input jets" << endmsg;
+    // info() << "Tagging " << inputJets.size() << " input jets" << endmsg;
     auto tagCollection = edm4hep::ParticleIDCollection();
 
     JetObservablesRetriever Retriever;
 
     for (const auto& jet : inputJets) {
       Jet j = Retriever.retrieve_input_observables(jet, primVerticies);
-      std::cout << "Jet constituents: " << j.constituents.size() << std::endl;
       int tagValue = tagger(j);  
 
       // Handle tag collection
