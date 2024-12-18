@@ -36,6 +36,8 @@ VarMapper::VarMapper() {
     map_to_FCCAn["pfcand_isNeutralHad"] = "pfcand_isNeutralHad";
     map_to_FCCAn["pfcand_dndx"] = "pfcand_dndx";
     map_to_FCCAn["pfcand_tof"] = "pfcand_mtof";
+    map_to_FCCAn["pfcand_e"] = "pfcand_e";
+    map_to_FCCAn["pfcand_p"] = "pfcand_p";
 
     // Create the reverse mapping
     for (const auto& pair : map_to_FCCAn) {

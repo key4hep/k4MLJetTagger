@@ -3,6 +3,7 @@
 
 #include "JetObservablesRetriever.h"
 
+// public function
 
 Jet JetObservablesRetriever::retrieve_input_observables(const edm4hep::ReconstructedParticle& jet, const edm4hep::VertexCollection& prim_vertex_coll) {
     // Create a jet object
@@ -19,6 +20,9 @@ Jet JetObservablesRetriever::retrieve_input_observables(const edm4hep::Reconstru
       p.pfcand_erel_log = get_relative_erel(jet, particle);
       p.pfcand_phirel = get_relative_angle(jet, particle, "phi");
       p.pfcand_thetarel = get_relative_angle(jet, particle, "theta");
+
+      p.pfcand_e = particle.getEnergy();
+      p.pfcand_p = std::sqrt(particle.getMomentum().x * particle.getMomentum().x + particle.getMomentum().y * particle.getMomentum().y + particle.getMomentum().z * particle.getMomentum().z);
 
       // PID
       p.pfcand_type = particle.getPDG(); // new; deprecated: get.Type() method
@@ -48,6 +52,7 @@ Jet JetObservablesRetriever::retrieve_input_observables(const edm4hep::Reconstru
     return j;
 }
 
+// private functions
 
 float JetObservablesRetriever::get_relative_erel(const edm4hep::ReconstructedParticle& jet, const edm4hep::ReconstructedParticle& particle) {
     const auto& jet_E = jet.getEnergy();

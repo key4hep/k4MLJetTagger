@@ -107,6 +107,10 @@ int tagger(Jet& jet){
   for (const auto& var : json_config["pf_features"]["var_names"]) {
     vars.push_back(var.get<std::string>());
   }
+  for (const auto& var : json_config["pf_vectors"]["var_names"]) { // not sure if this is the solution here
+    vars.push_back(var.get<std::string>());
+  }
+
 
   std::cout << "Loaded input variables" << std::endl;
   std::cout << "Number of input variables: " << vars.size() << std::endl;

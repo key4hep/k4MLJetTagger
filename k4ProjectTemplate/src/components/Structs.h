@@ -16,6 +16,7 @@ struct Pfcand {
 
   // kinematics
   float pfcand_erel_log, pfcand_thetarel, pfcand_phirel;
+  float pfcand_e, pfcand_p; // needed for pf_vectors
   // PID
   int pfcand_type;
   int pfcand_charge;
@@ -33,6 +34,8 @@ struct Pfcand {
   float pfcand_JetDistVal, pfcand_JetDistSig;
 
   void print_values(){
+    std::cout << "pfcand_e" << pfcand_e << std::endl;
+    std::cout << "pfcand_p" << pfcand_p << std::endl;
     std::cout << "pfcand_erel_log: " << pfcand_erel_log << std::endl;
     std::cout << "pfcand_thetarel: " << pfcand_thetarel << std::endl;
     std::cout << "pfcand_phirel: " << pfcand_phirel << std::endl;
@@ -111,6 +114,8 @@ struct Pfcand {
     else if (attribute == "pfcand_Sip3dSig") return pfcand_Sip3dSig;
     else if (attribute == "pfcand_JetDistVal") return pfcand_JetDistVal;
     else if (attribute == "pfcand_JetDistSig") return pfcand_JetDistSig;
+    else if (attribute == "pfcand_e") return pfcand_e;
+    else if (attribute == "pfcand_p") return pfcand_p;
     else throw std::invalid_argument("Attribute not found: " + attribute);
   };
 };
