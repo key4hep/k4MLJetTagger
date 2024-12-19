@@ -49,6 +49,15 @@ nlohmann::json loadJsonFile(const std::string& json_path) {
   return json_config;
 }
 
+std::map<std::string, int> to_PDGflavor = {
+    {"recojet_isG", 21},  // PDG value for Gluon
+    {"recojet_isU", 2},   // PDG value for Up quark
+    {"recojet_isS", 3},   // PDG value for Strange quark
+    {"recojet_isC", 4},   // PDG value for Charm quark
+    {"recojet_isB", 5},   // PDG value for Bottom quark
+    {"recojet_isD", 1},   // PDG value for Down quark
+    {"recojet_isTAU", 15} // PDG value for Tau lepton
+};
 
 bool check_flavors(std::vector<std::string>& flavorNames, const std::vector<std::string>& flavor_collection_names) {
   /** Check if the flavor names from the JSON configuration file match the flavor collection names in the python config file
@@ -195,17 +204,18 @@ struct JetTagger
     
     // create n ParticleIDCollection objects, one for each flavor
     std::vector<edm4hep::ParticleIDCollection> tagCollections;
+    std::vector<int> PDGflavors;
     for (const auto& flavor : flavorNames) {
       tagCollections.push_back(edm4hep::ParticleIDCollection());
+      PDGflavors.push_back(to_PDGflavor[flavor]); // retrieve the PDG number from the flavor name
     }
 
     JetObservablesRetriever Retriever;
 
-    // DUMMY 
-    auto tagCollection = edm4hep::ParticleIDCollection();
-
     for (const auto& jet : inputJets) {
+      // retrieve the input observables to the network from the jet
       Jet j = Retriever.retrieve_input_observables(jet, primVerticies);
+      // run the tagger on the jet
       rv::RVec<float> probabilities = tagger(j, model_path, json_path);
 
       if (probabilities.size() != flavorNames.size()) {
@@ -216,13 +226,8 @@ struct JetTagger
         auto jetTag = tagCollections[i].create();
         jetTag.setParticle(jet);
         jetTag.setLikelihood(probabilities[i]);
-        // jetTag.setType(i);
+        jetTag.setPDG(PDGflavors[i]);
       }
-      // int tagValue = 0; 
-      // // Handle tag collection
-      // auto jetTag = tagCollection.create();
-      // jetTag.setParticle(jet);
-      // jetTag.setType(tagValue); // maybe alter this
     }
 
     return tagCollections;
