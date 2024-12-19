@@ -88,7 +88,7 @@ private:
     * @param p: the particle object to fill
     * @param h: the helix object with the track parametrization
     */
-    void fill_track_IP(const edm4hep::ReconstructedParticle& jet, const edm4hep::ReconstructedParticle& particle, Pfcand& p, Helix& h, const edm4hep::Vector3f& prim_vertex);
+    void fill_track_IP(const edm4hep::ReconstructedParticle& jet, const edm4hep::ReconstructedParticle& particle, Pfcand& p, Helix& h);
 
 };
 

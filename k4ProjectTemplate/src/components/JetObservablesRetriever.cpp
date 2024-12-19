@@ -36,7 +36,7 @@ Jet JetObservablesRetriever::retrieve_input_observables(const edm4hep::Reconstru
       if (n_tracks == 1) { // charged particle
         fill_cov_matrix(p, particle); // covariance matrix
         Helix h = calculate_helix_params(particle, prim_vertex); // calculate track parameters described by a helix parametrization
-        fill_track_IP(jet, particle, p, h, prim_vertex); // impact parameters
+        fill_track_IP(jet, particle, p, h); // impact parameters
       } else if (n_tracks == 0) { // neutral particle
         fill_track_params_neutral(p);
       } else {
@@ -141,6 +141,7 @@ void JetObservablesRetriever::pid_flags(Pfcand& p, const edm4hep::ReconstructedP
 }
 
 void JetObservablesRetriever::fill_cov_matrix(Pfcand& p, const edm4hep::ReconstructedParticle& particle){
+  // approximation because this is wrt to (0,0,0) and not wrt to the primary vertex
   // get the track
   auto track = particle.getTracks()[0].getTrackStates()[0]; // get info at interaction point
   // diagonal elements
@@ -242,23 +243,24 @@ Helix JetObservablesRetriever::calculate_helix_params(const edm4hep::Reconstruct
   return h;
 }
 
-void JetObservablesRetriever::fill_track_IP(const edm4hep::ReconstructedParticle& jet, const edm4hep::ReconstructedParticle& particle, Pfcand& p, Helix& h, const edm4hep::Vector3f& prim_vertex){
+void JetObservablesRetriever::fill_track_IP(const edm4hep::ReconstructedParticle& jet, const edm4hep::ReconstructedParticle& particle, Pfcand& p, Helix& h){
   // IP
   p.pfcand_d0 = h.d0;
   p.pfcand_z0 = h.z0;
 
   // signed IP
-  TVector3 jet_p(jet.getMomentum().x, jet.getMomentum().y, jet.getMomentum().z); 
-  TVector3 part_p(particle.getMomentum().x, particle.getMomentum().y, particle.getMomentum().z);
+  TVector3 jet_p(jet.getMomentum().x, jet.getMomentum().y, jet.getMomentum().z); // for neutrals: wrt (0,0,0); for charged: track momentum at closest approach to (0,0,0)
+  TVector3 part_p(particle.getMomentum().x, particle.getMomentum().y, particle.getMomentum().z); // same 
 
   // calculate distance of closest approach in 3d - like in https://github.com/HEP-FCC/FCCAnalyses/blob/d39a711a703244ee2902f5d2191ad1e2367363ac/analyzers/dataframe/src/JetConstituentsUtils.cc#L616-L646 
-  TVector3 n = part_p.Cross(jet_p).Unit(); // direction of closest approach
-  TVector3 part_pnt(- h.d0 * std::sin(h.phi), h.d0 * std::cos(h.phi), h.z0); // point on particle track
-  TVector3 jet_pnt(prim_vertex.x, prim_vertex.y, prim_vertex.z) ; //edm4hep::Vector3f(0,0,0); // point on jet - THIS DIFFERS FROM THE FCCANALYSIS IMPLEMENTATION
+  TVector3 n = part_p.Cross(jet_p).Unit(); // direction of closest approach; wrt to (0,0,0)
+  TVector3 part_pnt(- h.d0 * std::sin(h.phi), h.d0 * std::cos(h.phi), h.z0); // point on particle track; wrt to PV NOT (0,0,0) - not correct 
+  TVector3 jet_pnt(0,0,0) ; // point on jet
   const float d_3d = n.Dot(part_pnt - jet_pnt); // distance of closest approach
   p.pfcand_JetDistVal = d_3d;
 
-  // calculate signed 2D impact parameter - like in https://github.com/HEP-FCC/FCCAnalyses/blob/d39a711a703244ee2902f5d2191ad1e2367363ac/analyzers/dataframe/src/JetConstituentsUtils.cc#L392-L419 
+  // calculate signed 2D impact parameter - like in // https://github.com/HEP-FCC/FCCAnalyses/blob/d39a711a703244ee2902f5d2191ad1e2367363ac/analyzers/dataframe/src/JetConstituentsUtils.cc#L450-L475 
+  // approximation bc part_pnt is wrt to PV and jet_p is wrt to (0,0,0)
   const float sip2d = std::copysign(std::abs(h.d0), part_pnt.X() * jet_p.X() + part_pnt.Y() * jet_p.Y()); // dot product between part and jet in 2D: if angle between track and jet greater 90 deg -> negative sign; if smaller 90 deg -> positive sign
   p.pfcand_Sip2dVal = sip2d;
   p.pfcand_Sip2dSig = (p.pfcand_cov_d0d0 > 0) ? (sip2d / std::sqrt(p.pfcand_cov_d0d0)) : -999;

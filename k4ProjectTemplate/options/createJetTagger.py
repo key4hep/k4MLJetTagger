@@ -32,10 +32,15 @@ svc.Output = "output_jettagging.root"
 #    "keep RefinedJetTags",
 #]
 
+
+flavor_collection_names = ["RefinedJetTag_G", "RefinedJetTag_U", "RefinedJetTag_S", "RefinedJetTag_C", "RefinedJetTag_B", "RefinedJetTag_D", "RefinedJetTag_TAU"]
 transformer = JetTagger("JetTagger",
+                        model_path="/afs/cern.ch/work/s/saaumill/public/onnx_export/fullsimCLD240_2mio.onnx",
+                        json_path="/afs/cern.ch/work/s/saaumill/public/onnx_export/preprocess_fullsimCLD240_2mio.json",
+                        flavor_collection_names = flavor_collection_names, # to make sure the order and nameing is correct
                         InputJets=["RefinedVertexJets"],
                         InputPrimaryVertices=["PrimaryVertices"],
-                        OutputIDCollections=["RefinedJetTags"])
+                        OutputIDCollections=flavor_collection_names)
 
 ApplicationMgr(TopAlg=[transformer],
                EvtSel="NONE",
