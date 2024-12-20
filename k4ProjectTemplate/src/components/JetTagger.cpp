@@ -72,7 +72,8 @@ rv::RVec<float> tagger(Jet& jet, const std::string& model_path, const std::strin
 * @brief Gaudi transformer that builds edm4hep::ParticleIDCollection objects (!plural, one for each flavor) for each jet in edm4hep::ReconstructedParticleCollection. 
 *
 * We retrieve a description of the jet constituents which serve as an input to a neural network. The network is loaded as an ONNX model. 
-* We run inference on each jet.
+* The inference is run on each jet. The output of the network is a vector of probabilities for each jet flavor.
+* We create one ParticleID collection per flavor create, link it to the jet and set the likelihood and PDG number.
 *
 * @author Sara Aumiller
 */
