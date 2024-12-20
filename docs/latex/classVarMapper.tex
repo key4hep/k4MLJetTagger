@@ -1,0 +1,85 @@
+\hypertarget{classVarMapper}{}\doxysection{Var\+Mapper Class Reference}
+\label{classVarMapper}\index{VarMapper@{VarMapper}}
+
+
+A utility class for mapping variable names between FCCAnalyses and Key4\+HEP conventions.  
+
+
+
+
+{\ttfamily \#include $<$Helpers.\+h$>$}
+
+\doxysubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{classVarMapper_a1978fb4d3ae8c3483b77bffa13cb9306}{Var\+Mapper}} ()
+\begin{DoxyCompactList}\small\item\em Default constructor. \end{DoxyCompactList}\item 
+std\+::string \mbox{\hyperlink{classVarMapper_a923fb3ff200061a50063c98d24657f5a}{map\+Key4hep\+To\+FCCAn}} (const std\+::string \&key4hep\+Name) const
+\begin{DoxyCompactList}\small\item\em Maps a Key4\+HEP variable name to an FCCAnalyses variable name. \end{DoxyCompactList}\item 
+std\+::string \mbox{\hyperlink{classVarMapper_a8fc2e66e6430940545e78f326eb81613}{map\+FCCAn\+To\+Key4hep}} (const std\+::string \&FCCAn\+Name) const
+\begin{DoxyCompactList}\small\item\em Maps an FCCAnalyses variable name to a Key4\+HEP variable name. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+A utility class for mapping variable names between FCCAnalyses and Key4\+HEP conventions. 
+
+This class provides methods to map variable names used in FCCAnalyses to those in Key4\+HEP and vice versa. It maintains two internal mappings for bidirectional conversion.
+
+Example\+: \mbox{\hyperlink{classVarMapper}{Var\+Mapper}} mapper; std\+::string FCCAn\+Name = mapper.\+map\+Key4hep\+To\+FCCAn(\char`\"{}key4hep\+\_\+variable\char`\"{}); std\+::string key4hep\+Name = mapper.\+map\+FCCAn\+To\+Key4hep(\char`\"{}\+FCCAn\+\_\+variable\char`\"{}); 
+
+\doxysubsection{Constructor \& Destructor Documentation}
+\mbox{\Hypertarget{classVarMapper_a1978fb4d3ae8c3483b77bffa13cb9306}\label{classVarMapper_a1978fb4d3ae8c3483b77bffa13cb9306}} 
+\index{VarMapper@{VarMapper}!VarMapper@{VarMapper}}
+\index{VarMapper@{VarMapper}!VarMapper@{VarMapper}}
+\doxysubsubsection{\texorpdfstring{VarMapper()}{VarMapper()}}
+{\footnotesize\ttfamily Var\+Mapper\+::\+Var\+Mapper (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+
+
+Default constructor. 
+
+Initializes the variable mappings between FCCAnalyses and Key4\+HEP. 
+
+\doxysubsection{Member Function Documentation}
+\mbox{\Hypertarget{classVarMapper_a8fc2e66e6430940545e78f326eb81613}\label{classVarMapper_a8fc2e66e6430940545e78f326eb81613}} 
+\index{VarMapper@{VarMapper}!mapFCCAnToKey4hep@{mapFCCAnToKey4hep}}
+\index{mapFCCAnToKey4hep@{mapFCCAnToKey4hep}!VarMapper@{VarMapper}}
+\doxysubsubsection{\texorpdfstring{mapFCCAnToKey4hep()}{mapFCCAnToKey4hep()}}
+{\footnotesize\ttfamily std\+::string Var\+Mapper\+::map\+FCCAn\+To\+Key4hep (\begin{DoxyParamCaption}\item[{const std\+::string \&}]{FCCAn\+Name }\end{DoxyParamCaption}) const}
+
+
+
+Maps an FCCAnalyses variable name to a Key4\+HEP variable name. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em FCCAn\+Name} & The variable name in FCCAnalyses format. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+The corresponding variable name in Key4\+HEP format. 
+\end{DoxyReturn}
+\mbox{\Hypertarget{classVarMapper_a923fb3ff200061a50063c98d24657f5a}\label{classVarMapper_a923fb3ff200061a50063c98d24657f5a}} 
+\index{VarMapper@{VarMapper}!mapKey4hepToFCCAn@{mapKey4hepToFCCAn}}
+\index{mapKey4hepToFCCAn@{mapKey4hepToFCCAn}!VarMapper@{VarMapper}}
+\doxysubsubsection{\texorpdfstring{mapKey4hepToFCCAn()}{mapKey4hepToFCCAn()}}
+{\footnotesize\ttfamily std\+::string Var\+Mapper\+::map\+Key4hep\+To\+FCCAn (\begin{DoxyParamCaption}\item[{const std\+::string \&}]{key4hep\+Name }\end{DoxyParamCaption}) const}
+
+
+
+Maps a Key4\+HEP variable name to an FCCAnalyses variable name. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em key4hep\+Name} & The variable name in Key4\+HEP format. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+The corresponding variable name in FCCAnalyses format. 
+\end{DoxyReturn}
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+k4\+Project\+Template/src/components/\mbox{\hyperlink{Helpers_8h}{Helpers.\+h}}\item 
+k4\+Project\+Template/src/components/\mbox{\hyperlink{Helpers_8cpp}{Helpers.\+cpp}}\end{DoxyCompactItemize}

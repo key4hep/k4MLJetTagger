@@ -1,0 +1,81 @@
+This repository started from a k4-\/project-\/template to implement Jet-\/\+Flavor Tagging in key4hep for CLD full simulation at 240 GeV. The workflow is as follows\+:
+\begin{DoxyEnumerate}
+\item First, extract jet contituent variables (such as kinematics, track parameters, PID...) from every jet in the event.
+\item Use these variables as input to a neural network (Particle Transformer). Here, we run inference on an ONNX exported trained network on 2 million jets / flavor.
+\item Create a new collection that returns the probability for each flavor (\$H\textbackslash{}rightarrow u \textbackslash{}bar\{u\}\$, \$H\textbackslash{}rightarrow d \textbackslash{}bar\{d\}\$, \$H\textbackslash{}rightarrow c \textbackslash{}bar\{c\}\$, \$H\textbackslash{}rightarrow s \textbackslash{}bar\{s\}\$, \$H\textbackslash{}rightarrow b \textbackslash{}bar\{b\}\$, \$H\textbackslash{}rightarrow g g\$, \$H\textbackslash{}rightarrow \textbackslash{}tau$^\wedge$-\/ \textbackslash{}tau$^\wedge$+\$).
+\end{DoxyEnumerate}\hypertarget{md_README_autotoc_md2}{}\doxysection{Dependencies}\label{md_README_autotoc_md2}
+
+\begin{DoxyItemize}
+\item ROOT
+\item PODIO
+\item Gaudi
+\item k4\+FWCore
+\end{DoxyItemize}\hypertarget{md_README_autotoc_md3}{}\doxysection{Installation}\label{md_README_autotoc_md3}
+Within the {\ttfamily Jet\+Tagging} directory run\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{cd /afs/cern.ch/work/s/saaumill/public/JetTagging/}
+\DoxyCodeLine{source ./setup.sh}
+\DoxyCodeLine{k4\_local\_repo}
+\DoxyCodeLine{mkdir build}
+\DoxyCodeLine{cd build}
+\DoxyCodeLine{cmake .. -\/DCMAKE\_INSTALL\_PREFIX=../install -\/G Ninja -\/DPython\_EXECUTABLE=\$(which python3)}
+\DoxyCodeLine{ninja install}
+
+\end{DoxyCode}
+\hypertarget{md_README_autotoc_md4}{}\doxysection{Execute Examples}\label{md_README_autotoc_md4}
+Make sure that {\ttfamily ../install/lib} and {\ttfamily ../install/python} are in {\ttfamily LD\+\_\+\+LIBRARY\+\_\+\+PATH} and {\ttfamily PYTHONPATH} respectively ({\ttfamily k4\+\_\+local\+\_\+repo} should take care of this). If they are not, they can be added by running\+: 
+\begin{DoxyCode}{0}
+\DoxyCodeLine{export LD\_LIBRARY\_PATH=\$PWD/../install/lib:\$LD\_LIBRARY\_PATH}
+\DoxyCodeLine{export PYTHONPATH=\$PWD/../install/python:\$PYTHONPATH}
+
+\end{DoxyCode}
+ and then run the tagger like this\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{k4run ../k4ProjectTemplate/options/createJetTagger.py}
+
+\end{DoxyCode}
+
+
+or these dummy examples\+: 
+\begin{DoxyCode}{0}
+\DoxyCodeLine{k4run ../k4ProjectTemplate/options/createHelloWorld.py}
+\DoxyCodeLine{k4run ../k4ProjectTemplate/options/createExampleEventData.py}
+
+\end{DoxyCode}
+\hypertarget{md_README_autotoc_md5}{}\doxysection{Extras}\label{md_README_autotoc_md5}
+In the {\ttfamily extras} folder you can find helpful resources.\hypertarget{md_README_autotoc_md6}{}\doxysubsection{Changing the inference model}\label{md_README_autotoc_md6}
+If you wish to use a different model for tagging, you will need to export it to \href{https://onnx.ai/}{\texttt{ ONNX}}. Here, we discribe how to transform a model with \href{https://github.com/hqucms/weaver-core}{\texttt{ weaver}} from {\ttfamily .pt} to {\ttfamily .onnx}.
+
+To export your favorite model {\ttfamily best\+\_\+model.\+pt} (e.\+g. \href{https://arxiv.org/abs/2202.03772}{\texttt{ Particle Transformer}}) using {\ttfamily weaver} to onnx, run\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{python3 -\/m weaver.train \(\backslash\)}
+\DoxyCodeLine{-\/c myConfigFromTraining.auto.yaml \(\backslash\)}
+\DoxyCodeLine{-\/n /path-\/to/particle\_transformer/networks/example\_ParticleTransformer.py \(\backslash\)}
+\DoxyCodeLine{-\/m /path-\/to/best\_model.pt \(\backslash\)}
+\DoxyCodeLine{-\/-\/export-\/onnx my-\/onnx-\/model.onnx}
+
+\end{DoxyCode}
+
+
+For that, we need an appropriate envirnoment as the one provided by {\ttfamily weaver} does not work for the conversion to ONNX. The envirnoment can be set-\/up with the YAML file in {\ttfamily extras} like\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{conda env create -\/f env\_for\_onnx.yml}
+\DoxyCodeLine{conda activate weaver}
+
+\end{DoxyCode}
+
+
+{\ttfamily torch\+\_\+geometric} is still not supported by this envirnoment (not needed for using Particle Transformer).\hypertarget{md_README_autotoc_md7}{}\doxysection{References\+:}\label{md_README_autotoc_md7}
+
+\begin{DoxyEnumerate}
+\item \href{https://cds.cern.ch/record/691746/files/lhcb-98-064.pdf}{\texttt{ lhcb-\/98-\/064 COMP}}
+\item \href{https://lhcb.github.io/DevelopKit/02a-gaudi-helloworld}{\texttt{ Hello World in the Gaudi Framework}} 
+\end{DoxyEnumerate}

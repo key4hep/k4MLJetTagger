@@ -1,0 +1,157 @@
+\hypertarget{classONNXRuntime}{}\doxysection{ONNXRuntime Class Reference}
+\label{classONNXRuntime}\index{ONNXRuntime@{ONNXRuntime}}
+
+
+A wrapper class for managing ONNX model inference using ONNX Runtime.  
+
+
+
+
+{\ttfamily \#include $<$ONNXRuntime.\+h$>$}
+
+\doxysubsection*{Public Types}
+\begin{DoxyCompactItemize}
+\item 
+{\footnotesize template$<$typename T $>$ }\\using \mbox{\hyperlink{classONNXRuntime_acd3c76d73f53d42d0adf58bc26498053}{Tensor}} = std\+::vector$<$ std\+::vector$<$ T $>$ $>$
+\begin{DoxyCompactList}\small\item\em Type alias for a 2D tensor. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{classONNXRuntime_a5e96a6ba1e3485422be0fba049317e70}{ONNXRuntime}} (const std\+::string \&model\+\_\+path=\char`\"{}\char`\"{}, const std\+::vector$<$ std\+::string $>$ \&input\+\_\+names=\{\})
+\begin{DoxyCompactList}\small\item\em Constructor to initialize the \mbox{\hyperlink{classONNXRuntime}{ONNXRuntime}} environment and session. \end{DoxyCompactList}\item 
+virtual \mbox{\hyperlink{classONNXRuntime_abd1b66a2a24ddf3c7e4e2fff40b4a054}{$\sim$\+ONNXRuntime}} ()
+\begin{DoxyCompactList}\small\item\em Destructor to clean up the \mbox{\hyperlink{classONNXRuntime}{ONNXRuntime}} environment and session. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{classONNXRuntime_a5c1ae7394c02525ad70804754de758ce}{ONNXRuntime}} (const \mbox{\hyperlink{classONNXRuntime}{ONNXRuntime}} \&)=delete
+\begin{DoxyCompactList}\small\item\em Prevents copying of \mbox{\hyperlink{classONNXRuntime}{ONNXRuntime}} instances. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{classONNXRuntime}{ONNXRuntime}} \& \mbox{\hyperlink{classONNXRuntime_a79323940c2645421d104511a49477ed7}{operator=}} (const \mbox{\hyperlink{classONNXRuntime}{ONNXRuntime}} \&)=delete
+\begin{DoxyCompactList}\small\item\em Prevents assignment of \mbox{\hyperlink{classONNXRuntime}{ONNXRuntime}} instances. \end{DoxyCompactList}\item 
+const std\+::vector$<$ std\+::string $>$ \& \mbox{\hyperlink{classONNXRuntime_ab607b8026e2d68231a92a0a45fe4245b}{input\+Names}} () const
+\begin{DoxyCompactList}\small\item\em Retrieves the list of input variable names for the model. \end{DoxyCompactList}\item 
+{\footnotesize template$<$typename T $>$ }\\\mbox{\hyperlink{classONNXRuntime_acd3c76d73f53d42d0adf58bc26498053}{Tensor}}$<$ T $>$ \mbox{\hyperlink{classONNXRuntime_a7f0d99551372d10b1009ec1d06bb0d70}{run}} (\mbox{\hyperlink{classONNXRuntime_acd3c76d73f53d42d0adf58bc26498053}{Tensor}}$<$ T $>$ \&input\+\_\+tensor, const \mbox{\hyperlink{classONNXRuntime_acd3c76d73f53d42d0adf58bc26498053}{Tensor}}$<$ long $>$ \&input\+\_\+shape=\{\}, unsigned long long batch\+\_\+size=1ull) const
+\begin{DoxyCompactList}\small\item\em Runs inference on the provided input tensor and returns the output tensor. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+A wrapper class for managing ONNX model inference using ONNX Runtime. 
+
+This class initializes an ONNX Runtime session, manages input/output tensors, and provides an interface for running inference on input data. The implementation supports flexible tensor shapes and data types. 
+
+\doxysubsection{Member Typedef Documentation}
+\mbox{\Hypertarget{classONNXRuntime_acd3c76d73f53d42d0adf58bc26498053}\label{classONNXRuntime_acd3c76d73f53d42d0adf58bc26498053}} 
+\index{ONNXRuntime@{ONNXRuntime}!Tensor@{Tensor}}
+\index{Tensor@{Tensor}!ONNXRuntime@{ONNXRuntime}}
+\doxysubsubsection{\texorpdfstring{Tensor}{Tensor}}
+{\footnotesize\ttfamily template$<$typename T $>$ \\
+using \mbox{\hyperlink{classONNXRuntime_acd3c76d73f53d42d0adf58bc26498053}{ONNXRuntime\+::\+Tensor}} =  std\+::vector$<$std\+::vector$<$T$>$ $>$}
+
+
+
+Type alias for a 2D tensor. 
+
+This template defines a tensor as a 2D vector of the specified data type.
+
+
+\begin{DoxyTemplParams}{Template Parameters}
+{\em T} & Data type of the tensor elements. \\
+\hline
+\end{DoxyTemplParams}
+
+
+\doxysubsection{Constructor \& Destructor Documentation}
+\mbox{\Hypertarget{classONNXRuntime_a5e96a6ba1e3485422be0fba049317e70}\label{classONNXRuntime_a5e96a6ba1e3485422be0fba049317e70}} 
+\index{ONNXRuntime@{ONNXRuntime}!ONNXRuntime@{ONNXRuntime}}
+\index{ONNXRuntime@{ONNXRuntime}!ONNXRuntime@{ONNXRuntime}}
+\doxysubsubsection{\texorpdfstring{ONNXRuntime()}{ONNXRuntime()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily ONNXRuntime\+::\+ONNXRuntime (\begin{DoxyParamCaption}\item[{const std\+::string \&}]{model\+\_\+path = {\ttfamily \char`\"{}\char`\"{}},  }\item[{const std\+::vector$<$ std\+::string $>$ \&}]{input\+\_\+names = {\ttfamily \{\}} }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [explicit]}}
+
+
+
+Constructor to initialize the \mbox{\hyperlink{classONNXRuntime}{ONNXRuntime}} environment and session. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em model\+\_\+path} & Path to the ONNX model file. \\
+\hline
+{\em input\+\_\+names} & List of input variable names to bind during inference. \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{classONNXRuntime_abd1b66a2a24ddf3c7e4e2fff40b4a054}\label{classONNXRuntime_abd1b66a2a24ddf3c7e4e2fff40b4a054}} 
+\index{ONNXRuntime@{ONNXRuntime}!````~ONNXRuntime@{$\sim$ONNXRuntime}}
+\index{````~ONNXRuntime@{$\sim$ONNXRuntime}!ONNXRuntime@{ONNXRuntime}}
+\doxysubsubsection{\texorpdfstring{$\sim$ONNXRuntime()}{~ONNXRuntime()}}
+{\footnotesize\ttfamily ONNXRuntime\+::$\sim$\+ONNXRuntime (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [virtual]}}
+
+
+
+Destructor to clean up the \mbox{\hyperlink{classONNXRuntime}{ONNXRuntime}} environment and session. 
+
+\mbox{\Hypertarget{classONNXRuntime_a5c1ae7394c02525ad70804754de758ce}\label{classONNXRuntime_a5c1ae7394c02525ad70804754de758ce}} 
+\index{ONNXRuntime@{ONNXRuntime}!ONNXRuntime@{ONNXRuntime}}
+\index{ONNXRuntime@{ONNXRuntime}!ONNXRuntime@{ONNXRuntime}}
+\doxysubsubsection{\texorpdfstring{ONNXRuntime()}{ONNXRuntime()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily ONNXRuntime\+::\+ONNXRuntime (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{classONNXRuntime}{ONNXRuntime}} \&}]{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [delete]}}
+
+
+
+Prevents copying of \mbox{\hyperlink{classONNXRuntime}{ONNXRuntime}} instances. 
+
+
+
+\doxysubsection{Member Function Documentation}
+\mbox{\Hypertarget{classONNXRuntime_ab607b8026e2d68231a92a0a45fe4245b}\label{classONNXRuntime_ab607b8026e2d68231a92a0a45fe4245b}} 
+\index{ONNXRuntime@{ONNXRuntime}!inputNames@{inputNames}}
+\index{inputNames@{inputNames}!ONNXRuntime@{ONNXRuntime}}
+\doxysubsubsection{\texorpdfstring{inputNames()}{inputNames()}}
+{\footnotesize\ttfamily const std\+::vector$<$std\+::string$>$\& ONNXRuntime\+::input\+Names (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Retrieves the list of input variable names for the model. 
+
+\begin{DoxyReturn}{Returns}
+A constant reference to the vector of input names. 
+\end{DoxyReturn}
+\mbox{\Hypertarget{classONNXRuntime_a79323940c2645421d104511a49477ed7}\label{classONNXRuntime_a79323940c2645421d104511a49477ed7}} 
+\index{ONNXRuntime@{ONNXRuntime}!operator=@{operator=}}
+\index{operator=@{operator=}!ONNXRuntime@{ONNXRuntime}}
+\doxysubsubsection{\texorpdfstring{operator=()}{operator=()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{classONNXRuntime}{ONNXRuntime}}\& ONNXRuntime\+::operator= (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{classONNXRuntime}{ONNXRuntime}} \&}]{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [delete]}}
+
+
+
+Prevents assignment of \mbox{\hyperlink{classONNXRuntime}{ONNXRuntime}} instances. 
+
+\mbox{\Hypertarget{classONNXRuntime_a7f0d99551372d10b1009ec1d06bb0d70}\label{classONNXRuntime_a7f0d99551372d10b1009ec1d06bb0d70}} 
+\index{ONNXRuntime@{ONNXRuntime}!run@{run}}
+\index{run@{run}!ONNXRuntime@{ONNXRuntime}}
+\doxysubsubsection{\texorpdfstring{run()}{run()}}
+{\footnotesize\ttfamily template$<$typename T $>$ \\
+template \mbox{\hyperlink{classONNXRuntime_acd3c76d73f53d42d0adf58bc26498053}{ONNXRuntime\+::\+Tensor}}$<$ float $>$ ONNXRuntime\+::run (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{classONNXRuntime_acd3c76d73f53d42d0adf58bc26498053}{Tensor}}$<$ T $>$ \&}]{input\+\_\+tensor,  }\item[{const \mbox{\hyperlink{classONNXRuntime_acd3c76d73f53d42d0adf58bc26498053}{Tensor}}$<$ long $>$ \&}]{input\+\_\+shape = {\ttfamily \{\}},  }\item[{unsigned long long}]{batch\+\_\+size = {\ttfamily 1ull} }\end{DoxyParamCaption}) const}
+
+
+
+Runs inference on the provided input tensor and returns the output tensor. 
+
+
+\begin{DoxyTemplParams}{Template Parameters}
+{\em T} & Data type of the tensor elements. \\
+\hline
+\end{DoxyTemplParams}
+
+\begin{DoxyParams}{Parameters}
+{\em input\+\_\+tensor} & Input tensor containing the data for inference. \\
+\hline
+{\em input\+\_\+shape} & Optional tensor specifying the input shape dimensions. \\
+\hline
+{\em batch\+\_\+size} & Batch size for inference (default is 1). \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A tensor containing the inference results. 
+\end{DoxyReturn}
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+k4\+Project\+Template/src/components/\mbox{\hyperlink{ONNXRuntime_8h}{ONNXRuntime.\+h}}\item 
+k4\+Project\+Template/src/components/\mbox{\hyperlink{ONNXRuntime_8cpp}{ONNXRuntime.\+cpp}}\end{DoxyCompactItemize}

@@ -1,0 +1,45 @@
+\hypertarget{JetTagger_8cpp}{}\doxysection{k4\+Project\+Template/src/components/\+Jet\+Tagger.cpp File Reference}
+\label{JetTagger_8cpp}\index{k4ProjectTemplate/src/components/JetTagger.cpp@{k4ProjectTemplate/src/components/JetTagger.cpp}}
+{\ttfamily \#include \char`\"{}Gaudi\+Kernel/\+Msg\+Stream.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}Gaudi/\+Property.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}k4\+FWCore/\+Transformer.\+h\char`\"{}}\newline
+{\ttfamily \#include $<$edm4hep/\+Particle\+IDCollection.\+h$>$}\newline
+{\ttfamily \#include $<$edm4hep/\+Reconstructed\+Particle\+Collection.\+h$>$}\newline
+{\ttfamily \#include $<$edm4hep/\+Vertex\+Collection.\+h$>$}\newline
+{\ttfamily \#include $<$nlohmann/json.\+hpp$>$}\newline
+{\ttfamily \#include $<$fstream$>$}\newline
+{\ttfamily \#include \char`\"{}Structs.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}Jet\+Observables\+Retriever.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}Weaver\+Interface.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}Helpers.\+h\char`\"{}}\newline
+\doxysubsection*{Classes}
+\begin{DoxyCompactItemize}
+\item 
+class \mbox{\hyperlink{structJetTagger}{Jet\+Tagger}}
+\begin{DoxyCompactList}\small\item\em Gaudi transformer that builds edm4hep\+::\+Particle\+IDCollection objects (!plural, one for each flavor) for each jet in edm4hep\+::\+Reconstructed\+Particle\+Collection. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+rv\+::\+RVec$<$ float $>$ \mbox{\hyperlink{JetTagger_8cpp_a11e80c11ddf4092fbeb9238f309b9f5a}{tagger}} (\mbox{\hyperlink{structJet}{Jet}} \&jet, const std\+::string \&model\+\_\+path, const std\+::string \&json\+\_\+path)
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Function Documentation}
+\mbox{\Hypertarget{JetTagger_8cpp_a11e80c11ddf4092fbeb9238f309b9f5a}\label{JetTagger_8cpp_a11e80c11ddf4092fbeb9238f309b9f5a}} 
+\index{JetTagger.cpp@{JetTagger.cpp}!tagger@{tagger}}
+\index{tagger@{tagger}!JetTagger.cpp@{JetTagger.cpp}}
+\doxysubsubsection{\texorpdfstring{tagger()}{tagger()}}
+{\footnotesize\ttfamily rv\+::\+RVec$<$float$>$ tagger (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{structJet}{Jet}} \&}]{jet,  }\item[{const std\+::string \&}]{model\+\_\+path,  }\item[{const std\+::string \&}]{json\+\_\+path }\end{DoxyParamCaption})}
+
+Taggs a jet. The function loads the ONNX model and the JSON configuration file from hardcoded paths, retrieves the input variables for the ONNX model from the \mbox{\hyperlink{structJet}{Jet}} object, runs inference on the input variables and returns the probabilities for each jet flavor. 
+\begin{DoxyParams}{Parameters}
+{\em jet} & the jet object to tag \\
+\hline
+{\em model\+\_\+path} & the path to the ONNX model \\
+\hline
+{\em json\+\_\+path} & the path to the JSON configuration file of the ONNX model \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+\+: tuple of two elements\+: 1. the probabilities for each jet flavor, 2. the names of the jet flavors
+\end{DoxyReturn}

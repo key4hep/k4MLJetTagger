@@ -1,0 +1,53 @@
+\hypertarget{structJetTagger}{}\doxysection{Jet\+Tagger Class Reference}
+\label{structJetTagger}\index{JetTagger@{JetTagger}}
+
+
+Gaudi transformer that builds edm4hep\+::\+Particle\+IDCollection objects (!plural, one for each flavor) for each jet in edm4hep\+::\+Reconstructed\+Particle\+Collection.  
+
+
+Inheritance diagram for Jet\+Tagger\+:\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=1.209503cm]{structJetTagger}
+\end{center}
+\end{figure}
+\doxysubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{structJetTagger_a94887f554bcf6a844f0ce82377945acf}{Jet\+Tagger}} (const std\+::string \&name, ISvc\+Locator $\ast$svc\+Loc)
+\item 
+std\+::vector$<$ edm4hep\+::\+Particle\+IDCollection $>$ \mbox{\hyperlink{structJetTagger_aa190447c9a0495efc830b7a2ac6c6d26}{operator()}} (const edm4hep\+::\+Reconstructed\+Particle\+Collection \&input\+Jets, const edm4hep\+::\+Vertex\+Collection \&prim\+Verticies) const override
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Gaudi transformer that builds edm4hep\+::\+Particle\+IDCollection objects (!plural, one for each flavor) for each jet in edm4hep\+::\+Reconstructed\+Particle\+Collection. 
+
+We retrieve a description of the jet constituents which serve as an input to a neural network. The network is loaded as an ONNX model. The inference is run on each jet. The output of the network is a vector of probabilities for each jet flavor. We create one Particle\+ID collection per flavor create, link it to the jet and set the likelihood and PDG number.
+
+\begin{DoxyAuthor}{Author}
+Sara Aumiller 
+\end{DoxyAuthor}
+
+
+\doxysubsection{Constructor \& Destructor Documentation}
+\mbox{\Hypertarget{structJetTagger_a94887f554bcf6a844f0ce82377945acf}\label{structJetTagger_a94887f554bcf6a844f0ce82377945acf}} 
+\index{JetTagger@{JetTagger}!JetTagger@{JetTagger}}
+\index{JetTagger@{JetTagger}!JetTagger@{JetTagger}}
+\doxysubsubsection{\texorpdfstring{JetTagger()}{JetTagger()}}
+{\footnotesize\ttfamily Jet\+Tagger\+::\+Jet\+Tagger (\begin{DoxyParamCaption}\item[{const std\+::string \&}]{name,  }\item[{ISvc\+Locator $\ast$}]{svc\+Loc }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+\doxysubsection{Member Function Documentation}
+\mbox{\Hypertarget{structJetTagger_aa190447c9a0495efc830b7a2ac6c6d26}\label{structJetTagger_aa190447c9a0495efc830b7a2ac6c6d26}} 
+\index{JetTagger@{JetTagger}!operator()@{operator()}}
+\index{operator()@{operator()}!JetTagger@{JetTagger}}
+\doxysubsubsection{\texorpdfstring{operator()()}{operator()()}}
+{\footnotesize\ttfamily std\+::vector$<$edm4hep\+::\+Particle\+IDCollection$>$ Jet\+Tagger\+::operator() (\begin{DoxyParamCaption}\item[{const edm4hep\+::\+Reconstructed\+Particle\+Collection \&}]{input\+Jets,  }\item[{const edm4hep\+::\+Vertex\+Collection \&}]{prim\+Verticies }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [override]}}
+
+
+
+The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+k4\+Project\+Template/src/components/\mbox{\hyperlink{JetTagger_8cpp}{Jet\+Tagger.\+cpp}}\end{DoxyCompactItemize}

@@ -1,0 +1,64 @@
+\hypertarget{structHelix}{}\doxysection{Helix Struct Reference}
+\label{structHelix}\index{Helix@{Helix}}
+
+
+{\ttfamily \#include $<$Structs.\+h$>$}
+
+\doxysubsection*{Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+float \mbox{\hyperlink{structHelix_a5174719de813b56a5e71c53bcf1e92c5}{d0}}
+\item 
+float \mbox{\hyperlink{structHelix_a36e95e1696bfbd2f0c2df79dd5d55c8d}{phi}}
+\item 
+float \mbox{\hyperlink{structHelix_afe6f956453fb4b239d7eec438bfe7abb}{c}}
+\item 
+float \mbox{\hyperlink{structHelix_a7083a4fd60e79151586b0dabd1aa4aef}{z0}}
+\item 
+float \mbox{\hyperlink{structHelix_a3117d5651dc0b81fea0723b663a13325}{tan\+Lambda}}
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Member Data Documentation}
+\mbox{\Hypertarget{structHelix_afe6f956453fb4b239d7eec438bfe7abb}\label{structHelix_afe6f956453fb4b239d7eec438bfe7abb}} 
+\index{Helix@{Helix}!c@{c}}
+\index{c@{c}!Helix@{Helix}}
+\doxysubsubsection{\texorpdfstring{c}{c}}
+{\footnotesize\ttfamily float Helix\+::c}
+
+\mbox{\Hypertarget{structHelix_a5174719de813b56a5e71c53bcf1e92c5}\label{structHelix_a5174719de813b56a5e71c53bcf1e92c5}} 
+\index{Helix@{Helix}!d0@{d0}}
+\index{d0@{d0}!Helix@{Helix}}
+\doxysubsubsection{\texorpdfstring{d0}{d0}}
+{\footnotesize\ttfamily float Helix\+::d0}
+
+Structure to store the helix parameters of a track. We use following convention (similar to \href{https://github.com/key4hep/EDM4hep/blob/997ab32b886899253c9bc61adea9a21b57bc5a21/edm4hep.yaml\#L195C9-L200}{\texttt{ https\+://github.\+com/key4hep/\+EDM4hep/blob/997ab32b886899253c9bc61adea9a21b57bc5a21/edm4hep.\+yaml\#\+L195\+C9-\/\+L200}} )\+:
+\begin{DoxyItemize}
+\item d0\+: transverse impact parameter
+\item phi\+: azimuthal angle
+\item c\+: signed curvature of the track.\mbox{[}c\mbox{]} = 1/s. To convert to key4hep convention, multiply by 2/c \mbox{[}1/m\mbox{]}.
+\item z0\+: longitudinal impact parameter
+\item tan\+Lambda\+: lambda is the dip angle of the track in r-\/z 
+\end{DoxyItemize}\mbox{\Hypertarget{structHelix_a36e95e1696bfbd2f0c2df79dd5d55c8d}\label{structHelix_a36e95e1696bfbd2f0c2df79dd5d55c8d}} 
+\index{Helix@{Helix}!phi@{phi}}
+\index{phi@{phi}!Helix@{Helix}}
+\doxysubsubsection{\texorpdfstring{phi}{phi}}
+{\footnotesize\ttfamily float Helix\+::phi}
+
+\mbox{\Hypertarget{structHelix_a3117d5651dc0b81fea0723b663a13325}\label{structHelix_a3117d5651dc0b81fea0723b663a13325}} 
+\index{Helix@{Helix}!tanLambda@{tanLambda}}
+\index{tanLambda@{tanLambda}!Helix@{Helix}}
+\doxysubsubsection{\texorpdfstring{tanLambda}{tanLambda}}
+{\footnotesize\ttfamily float Helix\+::tan\+Lambda}
+
+\mbox{\Hypertarget{structHelix_a7083a4fd60e79151586b0dabd1aa4aef}\label{structHelix_a7083a4fd60e79151586b0dabd1aa4aef}} 
+\index{Helix@{Helix}!z0@{z0}}
+\index{z0@{z0}!Helix@{Helix}}
+\doxysubsubsection{\texorpdfstring{z0}{z0}}
+{\footnotesize\ttfamily float Helix\+::z0}
+
+
+
+The documentation for this struct was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+k4\+Project\+Template/src/components/\mbox{\hyperlink{Structs_8h}{Structs.\+h}}\end{DoxyCompactItemize}
