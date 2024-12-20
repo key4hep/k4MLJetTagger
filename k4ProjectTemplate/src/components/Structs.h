@@ -1,6 +1,11 @@
 #ifndef STRUCTS_H
 #define STRUCTS_H
 
+#include <iostream>
+#include <stdexcept>
+#include <vector>
+
+
 struct Pfcand {
   /**
   * Structure to store the observables of a particle / jet constituent. These observables will be used as input features to the neural network for jet flavor tagging with the Particle Transformer. For CLD, these are 33 observables including kinematics, PID and track parameters.
@@ -11,7 +16,7 @@ struct Pfcand {
   * tanLambda | ctngtheta or deta or dlambda | lambda is the dip angle of the track in r-z
   * c | dpt | signed curvature of the track.[c] = 1/s. To convert to key4hep convention, multiply by 2/c [1/m]. 
   * z0 | dz | longitudinal impact parameter
-  * All these transformations/convenstions can be found in VarMapper.cpp
+  * All these transformations/convenstions can be found in the VarMapper class that is in Helpers.cpp
   */
 
   // kinematics

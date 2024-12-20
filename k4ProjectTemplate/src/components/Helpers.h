@@ -1,8 +1,46 @@
-#ifndef VARMAPPER_H
-#define VARMAPPER_H
+#ifndef HELPERS_H
+#define HELPERS_H
 
 #include <unordered_map>
 #include <string>
+#include <fstream>
+#include <iostream>
+#include <nlohmann/json.hpp> // Include a JSON parsing library
+
+#include "Structs.h"
+#include "ROOT/RVec.hxx"
+
+namespace rv = ROOT::VecOps;
+
+
+
+/**
+* Return the input variables for the ONNX model from a Jet object. 
+* The input variables should have the form of {jet -> {var1 -> {constit1, constit2, ...}, var2 -> {...}, ...}}
+* @param jet: the jet object
+* @param input_names: the names of the input variables for the ONNX model.
+* @return: the input variables for the ONNX model
+*/
+rv::RVec<rv::RVec<float>> from_Jet_to_onnx_input(Jet& jet, rv::RVec<std::string>& input_names);
+
+/**
+* Load a JSON file from a given path.
+* @param json_path: the path to the JSON file
+* @return: the JSON object
+*/
+nlohmann::json loadJsonFile(const std::string& json_path);
+
+/**
+* Map the flavor names from weaver convention to the corresponding PDG values.
+*/
+extern const std::map<std::string, int> to_PDGflavor;
+
+/** Check if the flavor names from the JSON configuration file match the flavor collection names in the python config file
+* @param flavorNames: the flavor names from the JSON configuration file
+* @param flavor_collection_names: the flavor collection names from the python config file
+* @return: true if the flavor names match the flavor collection names, false otherwise
+*/
+bool check_flavors(std::vector<std::string>& flavorNames, const std::vector<std::string>& flavor_collection_names);
 
 /**
  * @class VarMapper
@@ -53,4 +91,5 @@ private:
     std::unordered_map<std::string, std::string> map_to_key4hep;
 };
 
-#endif // VARMAPPER_H
+
+#endif // HELPERS_H
