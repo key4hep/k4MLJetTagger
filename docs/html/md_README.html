@@ -71,7 +71,7 @@ $(function() {
 <li>Use these variables as input to a neural network (Particle Transformer). Here, we run inference on an ONNX exported trained network on 2 million jets / flavor.</li>
 <li>Create a new collection that returns the probability for each flavor ($H\rightarrow u \bar{u}$, $H\rightarrow d \bar{d}$, $H\rightarrow c \bar{c}$, $H\rightarrow s \bar{s}$, $H\rightarrow b \bar{b}$, $H\rightarrow g g$, $H\rightarrow \tau^- \tau^+$).</li>
 </ol>
-<h1><a class="anchor" id="autotoc_md2"></a>
+<h1><a class="anchor" id="autotoc_md1"></a>
 Dependencies</h1>
 <ul>
 <li>ROOT</li>
@@ -79,7 +79,7 @@ Dependencies</h1>
 <li>Gaudi</li>
 <li>k4FWCore</li>
 </ul>
-<h1><a class="anchor" id="autotoc_md3"></a>
+<h1><a class="anchor" id="autotoc_md2"></a>
 Installation</h1>
 <p>Within the <code>JetTagging</code> directory run:</p>
 <div class="fragment"><div class="line">cd /afs/cern.ch/work/s/saaumill/public/JetTagging/</div>
@@ -89,7 +89,7 @@ Installation</h1>
 <div class="line">cd build</div>
 <div class="line">cmake .. -DCMAKE_INSTALL_PREFIX=../install -G Ninja -DPython_EXECUTABLE=$(which python3)</div>
 <div class="line">ninja install</div>
-</div><!-- fragment --><h1><a class="anchor" id="autotoc_md4"></a>
+</div><!-- fragment --><h1><a class="anchor" id="autotoc_md3"></a>
 Execute Examples</h1>
 <p>Make sure that <code>../install/lib</code> and <code>../install/python</code> are in <code>LD_LIBRARY_PATH</code> and <code>PYTHONPATH</code> respectively (<code>k4_local_repo</code> should take care of this). If they are not, they can be added by running: </p><div class="fragment"><div class="line">export LD_LIBRARY_PATH=$PWD/../install/lib:$LD_LIBRARY_PATH</div>
 <div class="line">export PYTHONPATH=$PWD/../install/python:$PYTHONPATH</div>
@@ -97,10 +97,10 @@ Execute Examples</h1>
 <div class="fragment"><div class="line">k4run ../k4ProjectTemplate/options/createJetTagger.py</div>
 </div><!-- fragment --><p>or these dummy examples: </p><div class="fragment"><div class="line">k4run ../k4ProjectTemplate/options/createHelloWorld.py</div>
 <div class="line">k4run ../k4ProjectTemplate/options/createExampleEventData.py</div>
-</div><!-- fragment --><h1><a class="anchor" id="autotoc_md5"></a>
+</div><!-- fragment --><h1><a class="anchor" id="autotoc_md4"></a>
 Extras</h1>
 <p>In the <code>extras</code> folder you can find helpful resources.</p>
-<h2><a class="anchor" id="autotoc_md6"></a>
+<h2><a class="anchor" id="autotoc_md5"></a>
 Changing the inference model</h2>
 <p>If you wish to use a different model for tagging, you will need to export it to <a href="https://onnx.ai/">ONNX</a>. Here, we discribe how to transform a model with <a href="https://github.com/hqucms/weaver-core">weaver</a> from <code>.pt</code> to <code>.onnx</code>.</p>
 <p>To export your favorite model <code>best_model.pt</code> (e.g. <a href="https://arxiv.org/abs/2202.03772">Particle Transformer</a>) using <code>weaver</code> to onnx, run:</p>
@@ -113,7 +113,7 @@ Changing the inference model</h2>
 <div class="fragment"><div class="line">conda env create -f env_for_onnx.yml</div>
 <div class="line">conda activate weaver</div>
 </div><!-- fragment --><p><code>torch_geometric</code> is still not supported by this envirnoment (not needed for using Particle Transformer).</p>
-<h1><a class="anchor" id="autotoc_md7"></a>
+<h1><a class="anchor" id="autotoc_md6"></a>
 References:</h1>
 <ol type="1">
 <li><a href="https://cds.cern.ch/record/691746/files/lhcb-98-064.pdf">lhcb-98-064 COMP</a></li>
