@@ -12,6 +12,7 @@
 class JetObservablesRetriever {
 
 public:
+    double Bz; // magnetic field B in z direction in Tesla
 
     /**
     * Function that retrieves the input observables for a jet and its constituents. The input observables are the 35 features per constituent that are used as input to the neural network for jet flavor tagging. The function loops over all jet constituents and fills the input observables for each constituent.

@@ -33,7 +33,6 @@
 #include "WeaverInterface.h"
 #include "Helpers.h"
 
-
 rv::RVec<float> tagger(Jet& jet, const std::string& model_path, const std::string& json_path) {
   /**
   * Taggs a jet. The function loads the ONNX model and the JSON configuration file from hardcoded paths, retrieves the input variables for the ONNX model from the Jet object, runs inference on the input variables and returns the probabilities for each jet flavor.
@@ -109,6 +108,9 @@ struct JetTagger
     }
 
     JetObservablesRetriever Retriever;
+    // get B field from detector
+    double bfield = getBzAtOrigin();
+    Retriever.Bz = 2.0; // hardcoded for now
 
     for (const auto& jet : inputJets) {
       // retrieve the input observables to the network from the jet

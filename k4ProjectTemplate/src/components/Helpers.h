@@ -13,6 +13,12 @@
 namespace rv = ROOT::VecOps;
 
 
+/**
+* Get the magnetic field at the origin by using the detector geometry. 
+* Adapted from: https://github.com/iLCSoft/MarlinUtil/blob/18dd0588a76902551cd06cc9499099f662b48c5f/source/src/GeometryUtil.cc#L5-L21 
+* @return: the magnetic field at the origin
+*/
+double getBzAtOrigin();
 
 /**
 * Return the input variables for the ONNX model from a Jet object. 

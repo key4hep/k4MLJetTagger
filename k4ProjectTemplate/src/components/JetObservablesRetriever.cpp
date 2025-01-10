@@ -191,7 +191,7 @@ Helix JetObservablesRetriever::calculate_helix_params(const edm4hep::Reconstruct
   const int q = particle.getCharge();
   const edm4hep::Vector3f& p = particle.getMomentum();
   // constants
-  const float Bz = 2.0; // magnetic field in T
+  // const float Bz = 2.0; // magnetic field in T - is now public variable of JetObservableRetriever
   const float cSpeed = 2.99792458e8 * 1.0e-9; // speed of light 
 
   // calculate helpers
