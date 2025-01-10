@@ -10,6 +10,8 @@
 #include "Structs.h"
 #include "ROOT/RVec.hxx"
 
+#include <DD4hep/Detector.h> // for Bfield
+
 namespace rv = ROOT::VecOps;
 
 
@@ -18,7 +20,7 @@ namespace rv = ROOT::VecOps;
 * Adapted from: https://github.com/iLCSoft/MarlinUtil/blob/18dd0588a76902551cd06cc9499099f662b48c5f/source/src/GeometryUtil.cc#L5-L21 
 * @return: the magnetic field at the origin
 */
-double getBzAtOrigin();
+double getBzAtOrigin(dd4hep::Detector* theDetector);
 
 /**
 * Return the input variables for the ONNX model from a Jet object. 

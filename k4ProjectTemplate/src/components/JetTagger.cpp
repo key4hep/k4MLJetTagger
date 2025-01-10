@@ -21,9 +21,11 @@
 #include "GaudiKernel/MsgStream.h"
 #include "Gaudi/Property.h"
 #include "k4FWCore/Transformer.h"
+#include "k4Interface/IGeoSvc.h" // for Bfield
 #include <edm4hep/ParticleIDCollection.h>
 #include <edm4hep/ReconstructedParticleCollection.h>
 #include <edm4hep/VertexCollection.h>
+
 
 #include <nlohmann/json.hpp> // Include a JSON parsing library
 #include <fstream>
@@ -32,6 +34,7 @@
 #include "JetObservablesRetriever.h"
 #include "WeaverInterface.h"
 #include "Helpers.h"
+
 
 rv::RVec<float> tagger(Jet& jet, const std::string& model_path, const std::string& json_path) {
   /**
@@ -109,7 +112,9 @@ struct JetTagger
 
     JetObservablesRetriever Retriever;
     // get B field from detector
-    double bfield = getBzAtOrigin();
+    // dd4hep::Detector* theDetector = Gaudi::svcLocator()->service<IGeoSvc>("GeoSvc")->getDetector();
+    // double Bfield = getBzAtOrigin(theDetector);
+ 
     Retriever.Bz = 2.0; // hardcoded for now
 
     for (const auto& jet : inputJets) {

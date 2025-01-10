@@ -1,21 +1,20 @@
 #include "Helpers.h"
 
+#include "Gaudi/Property.h"
+
 #include <DD4hep/DD4hepUnits.h>
 
-double getBzAtOrigin() {
 
-  double bfield(0.0);
-
-  dd4hep::Detector& theDetector = svcLocator()->service<IGeoSvc>("GeoSvc")->getDetector();
-  if ( not (theDetector.state() == dd4hep::Detector::READY) ) {
-    throw std::runtime_error("Detector geometry not initialised, cannot get bfield");
-  }
-  const double position[3]={0,0,0}; // position to calculate magnetic field at (the origin in this case)
-  double magneticFieldVector[3]={0,0,0}; // initialise object to hold magnetic field
-  theDetector.field().magneticField(position,magneticFieldVector); // get the magnetic field vector from DD4hep
-  bfield = magneticFieldVector[2]/dd4hep::tesla; // z component at (0,0,0)
-  return bfield;
-
+double getBzAtOrigin(dd4hep::Detector* theDetector) {
+    double bfield(0.0);
+    if ( not (theDetector->state() == dd4hep::Detector::READY) ) {
+      throw std::runtime_error("Detector geometry not initialised, cannot get bfield");
+    }
+    const double position[3]={0,0,0}; // position to calculate magnetic field at (the origin in this case)
+    double magneticFieldVector[3]={0,0,0}; // initialise object to hold magnetic field
+    theDetector->field().magneticField(position,magneticFieldVector); // get the magnetic field vector from DD4hep
+    bfield = magneticFieldVector[2]/dd4hep::tesla; // z component at (0,0,0)
+    return bfield;
 }
 
 
