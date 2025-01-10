@@ -24,7 +24,7 @@ from Configurables import CollectionMerger
 from k4FWCore import ApplicationMgr, IOSvc
 
 svc = IOSvc("IOSvc")
-svc.Input = "/afs/cern.ch/work/s/saaumill/public/fullsimGEN/cldfullsimHbb_REC.edm4hep.root"
+svc.Input = "/afs/cern.ch/work/s/saaumill/public/fullsimGEN/CLDConfig/CLDConfig/cldfullsimHbb_test2_REC.edm4hep.root"
 svc.Output = "output_jettagging.root"
 #svc.outputCommands = [
 #    "drop *",
@@ -44,7 +44,7 @@ transformer = JetTagger("JetTagger",
 
 ApplicationMgr(TopAlg=[transformer],
                EvtSel="NONE",
-               EvtMax=7,
+               EvtMax=-1,
                ExtSvc=[k4DataSvc("EventDataSvc")],
                OutputLevel=INFO,
                )
