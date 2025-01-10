@@ -23,7 +23,7 @@ We build an Gaudi Tranformer `JetTagger` (in `JetTagging/k4ProjectTemplate/src/c
 Within the `JetTagging` directory run:
 
 ``` bash
-cd /afs/cern.ch/work/s/saaumill/public/JetTagging/
+cd /your/path/to/this/repo/JetTagging/
 source ./setup.sh
 k4_local_repo
 mkdir build
