@@ -115,7 +115,7 @@ VarMapper::VarMapper() {
     map_to_FCCAn["pfcand_erel_log"] = "pfcand_erel_log";
     map_to_FCCAn["pfcand_thetarel"] = "pfcand_thetarel";
     map_to_FCCAn["pfcand_phirel"] = "pfcand_phirel";
-    map_to_FCCAn["pfcand_cov_cc"] = "pfcand_dptdpt";
+    map_to_FCCAn["pfcand_cov_omegaomega"] = "pfcand_dptdpt";
     map_to_FCCAn["pfcand_cov_tanLambdatanLambda"] = "pfcand_detadeta";
     map_to_FCCAn["pfcand_cov_phiphi"] = "pfcand_dphidphi";
     map_to_FCCAn["pfcand_cov_d0d0"] = "pfcand_dxydxy";
@@ -123,13 +123,13 @@ VarMapper::VarMapper() {
     map_to_FCCAn["pfcand_cov_d0z0"] = "pfcand_dxydz";
     map_to_FCCAn["pfcand_cov_phid0"] = "pfcand_dphidxy";
     map_to_FCCAn["pfcand_cov_tanLambdaz0"] = "pfcand_dlambdadz";
-    map_to_FCCAn["pfcand_cov_d0c"] = "pfcand_dxyc";
+    map_to_FCCAn["pfcand_cov_d0omega"] = "pfcand_dxyc";
     map_to_FCCAn["pfcand_cov_d0tanLambda"] = "pfcand_dxyctgtheta";
-    map_to_FCCAn["pfcand_cov_phic"] = "pfcand_phic";
+    map_to_FCCAn["pfcand_cov_phiomega"] = "pfcand_phic";
     map_to_FCCAn["pfcand_cov_phiz0"] = "pfcand_phidz";
     map_to_FCCAn["pfcand_cov_phitanLambda"] = "pfcand_phictgtheta";
-    map_to_FCCAn["pfcand_cov_cz0"] = "pfcand_cdz";
-    map_to_FCCAn["pfcand_cov_ctanLambda"] = "pfcand_cctgtheta";
+    map_to_FCCAn["pfcand_cov_omegaz0"] = "pfcand_cdz";
+    map_to_FCCAn["pfcand_cov_omegatanLambda"] = "pfcand_cctgtheta";
     map_to_FCCAn["pfcand_d0"] = "pfcand_dxy";
     map_to_FCCAn["pfcand_z0"] = "pfcand_dz";
     map_to_FCCAn["pfcand_Sip2dVal"] = "pfcand_btagSip2dVal";

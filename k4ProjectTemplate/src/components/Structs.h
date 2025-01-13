@@ -14,7 +14,7 @@ struct Pfcand {
   * d0  | xy or dxy | transverse impact parameter
   * phi | dphi| azimuthal angle 
   * tanLambda | ctngtheta or deta or dlambda | lambda is the dip angle of the track in r-z
-  * c | dpt | signed curvature of the track.[c] = 1/s. To convert to key4hep convention, multiply by 2/c [1/m]. 
+  * omega | dpt | curvature in [1/mm]
   * z0 | dz | longitudinal impact parameter
   * All these transformations/convenstions can be found in the VarMapper class that is in Helpers.cpp
   */
@@ -30,8 +30,8 @@ struct Pfcand {
 
   // track params
   // cov matrix
-  float pfcand_cov_cc, pfcand_cov_tanLambdatanLambda, pfcand_cov_phiphi, pfcand_cov_d0d0, pfcand_cov_z0z0; 
-  float pfcand_cov_d0z0, pfcand_cov_phid0, pfcand_cov_tanLambdaz0, pfcand_cov_d0c, pfcand_cov_d0tanLambda, pfcand_cov_phic, pfcand_cov_phiz0, pfcand_cov_phitanLambda, pfcand_cov_cz0, pfcand_cov_ctanLambda;
+  float pfcand_cov_omegaomega, pfcand_cov_tanLambdatanLambda, pfcand_cov_phiphi, pfcand_cov_d0d0, pfcand_cov_z0z0; 
+  float pfcand_cov_d0z0, pfcand_cov_phid0, pfcand_cov_tanLambdaz0, pfcand_cov_d0omega, pfcand_cov_d0tanLambda, pfcand_cov_phiomega, pfcand_cov_phiz0, pfcand_cov_phitanLambda, pfcand_cov_omegaz0, pfcand_cov_omegatanLambda;
   // IP
   float pfcand_d0, pfcand_z0;
   float pfcand_Sip2dVal, pfcand_Sip2dSig;
@@ -53,7 +53,7 @@ struct Pfcand {
     std::cout << "pfcand_isNeutralHad: " << pfcand_isNeutralHad << std::endl;
     std::cout << "pfcand_dndx: " << pfcand_dndx << std::endl;
     std::cout << "pfcand_tof: " << pfcand_tof << std::endl;
-    std::cout << "pfcand_cov_cc: " << pfcand_cov_cc << std::endl;
+    std::cout << "pfcand_cov_omegaomega: " << pfcand_cov_omegaomega << std::endl;
     std::cout << "pfcand_cov_tanLambdatanLambda: " << pfcand_cov_tanLambdatanLambda << std::endl;
     std::cout << "pfcand_cov_phiphi: " << pfcand_cov_phiphi << std::endl;
     std::cout << "pfcand_cov_d0d0: " << pfcand_cov_d0d0 << std::endl;
@@ -61,13 +61,13 @@ struct Pfcand {
     std::cout << "pfcand_cov_d0z0: " << pfcand_cov_d0z0 << std::endl;
     std::cout << "pfcand_cov_phid0: " << pfcand_cov_phid0 << std::endl;
     std::cout << "pfcand_cov_tanLambdaz0: " << pfcand_cov_tanLambdaz0 << std::endl;
-    std::cout << "pfcand_cov_d0c: " << pfcand_cov_d0c << std::endl;
+    std::cout << "pfcand_cov_d0omega: " << pfcand_cov_d0omega << std::endl;
     std::cout << "pfcand_cov_d0tanLambda: " << pfcand_cov_d0tanLambda << std::endl;
-    std::cout << "pfcand_cov_phic: " << pfcand_cov_phic << std::endl;
+    std::cout << "pfcand_cov_phiomega: " << pfcand_cov_phiomega << std::endl;
     std::cout << "pfcand_cov_phiz0: " << pfcand_cov_phiz0 << std::endl;
     std::cout << "pfcand_cov_phitanLambda: " << pfcand_cov_phitanLambda << std::endl;
-    std::cout << "pfcand_cov_cz0: " << pfcand_cov_cz0 << std::endl;
-    std::cout << "pfcand_cov_ctanLambda: " << pfcand_cov_ctanLambda << std::endl;
+    std::cout << "pfcand_cov_omegaz0: " << pfcand_cov_omegaz0 << std::endl;
+    std::cout << "pfcand_cov_omegatanLambda: " << pfcand_cov_omegatanLambda << std::endl;
     std::cout << "pfcand_d0: " << pfcand_d0 << std::endl;
     std::cout << "pfcand_z0: " << pfcand_z0 << std::endl;
     std::cout << "pfcand_Sip2dVal: " << pfcand_Sip2dVal << std::endl;
@@ -96,7 +96,7 @@ struct Pfcand {
     else if (attribute == "pfcand_isNeutralHad") return pfcand_isNeutralHad;
     else if (attribute == "pfcand_dndx") return pfcand_dndx;
     else if (attribute == "pfcand_tof") return pfcand_tof;
-    else if (attribute == "pfcand_cov_cc") return pfcand_cov_cc;
+    else if (attribute == "pfcand_cov_omegaomega") return pfcand_cov_omegaomega;
     else if (attribute == "pfcand_cov_tanLambdatanLambda") return pfcand_cov_tanLambdatanLambda;
     else if (attribute == "pfcand_cov_phiphi") return pfcand_cov_phiphi;
     else if (attribute == "pfcand_cov_d0d0") return pfcand_cov_d0d0;
@@ -104,13 +104,13 @@ struct Pfcand {
     else if (attribute == "pfcand_cov_d0z0") return pfcand_cov_d0z0;
     else if (attribute == "pfcand_cov_phid0") return pfcand_cov_phid0;
     else if (attribute == "pfcand_cov_tanLambdaz0") return pfcand_cov_tanLambdaz0;
-    else if (attribute == "pfcand_cov_d0c") return pfcand_cov_d0c;
+    else if (attribute == "pfcand_cov_d0omega") return pfcand_cov_d0omega;
     else if (attribute == "pfcand_cov_d0tanLambda") return pfcand_cov_d0tanLambda;
-    else if (attribute == "pfcand_cov_phic") return pfcand_cov_phic;
+    else if (attribute == "pfcand_cov_phiomega") return pfcand_cov_phiomega;
     else if (attribute == "pfcand_cov_phiz0") return pfcand_cov_phiz0;
     else if (attribute == "pfcand_cov_phitanLambda") return pfcand_cov_phitanLambda;
-    else if (attribute == "pfcand_cov_cz0") return pfcand_cov_cz0;
-    else if (attribute == "pfcand_cov_ctanLambda") return pfcand_cov_ctanLambda;
+    else if (attribute == "pfcand_cov_omegaz0") return pfcand_cov_omegaz0;
+    else if (attribute == "pfcand_cov_omegatanLambda") return pfcand_cov_omegatanLambda;
     else if (attribute == "pfcand_d0") return pfcand_d0;
     else if (attribute == "pfcand_z0") return pfcand_z0;
     else if (attribute == "pfcand_Sip2dVal") return pfcand_Sip2dVal;
@@ -131,14 +131,14 @@ struct Jet {
 
 struct Helix{
   /**
-  * Structure to store the helix parameters of a track. We use following convention (similar to https://github.com/key4hep/EDM4hep/blob/997ab32b886899253c9bc61adea9a21b57bc5a21/edm4hep.yaml#L195C9-L200 ):
+  * Structure to store the helix parameters of a track wrt to the primary vertex. We use following convention (similar to https://github.com/key4hep/EDM4hep/blob/997ab32b886899253c9bc61adea9a21b57bc5a21/edm4hep.yaml#L195C9-L200 ):
   * - d0: transverse impact parameter
   * - phi: azimuthal angle 
-  * - c: signed curvature of the track.[c] = 1/s. To convert to key4hep convention, multiply by 2/c [1/m]. 
+  * - c: signed curvature of the track. Be careful. c is the curvature but for describing the track params, omega [1/mm] is more handy and can be calculated with omega = c*10**(-3) * (-1), see https://github.com/HEP-FCC/FCCAnalyses/blob/pre-edm4hep1/analyzers/dataframe/src/ReconstructedParticle2Track.cc#L194-L217
   * - z0: longitudinal impact parameter
   * - tanLambda: lambda is the dip angle of the track in r-z
   */
-  float d0, phi, c, z0, tanLambda;
+  float d0, phi, omega, z0, tanLambda;
 };
 
 #endif // STRUCTS_H

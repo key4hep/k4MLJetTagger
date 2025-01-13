@@ -83,7 +83,7 @@ float JetObservablesRetriever::get_relative_angle(const edm4hep::ReconstructedPa
 
 void JetObservablesRetriever::fill_track_params_neutral(Pfcand& p){
   // cov matrix
-  p.pfcand_cov_cc = -9;
+  p.pfcand_cov_omegaomega = -9;
   p.pfcand_cov_tanLambdatanLambda = -9;
   p.pfcand_cov_phiphi = -9;
   p.pfcand_cov_d0d0 = -9;
@@ -91,13 +91,13 @@ void JetObservablesRetriever::fill_track_params_neutral(Pfcand& p){
   p.pfcand_cov_d0z0 = -9;
   p.pfcand_cov_phid0 = -9;
   p.pfcand_cov_tanLambdaz0 = -9;
-  p.pfcand_cov_d0c = -9;
+  p.pfcand_cov_d0omega = -9;
   p.pfcand_cov_d0tanLambda = -9;
-  p.pfcand_cov_phic = -9;
+  p.pfcand_cov_phiomega = -9;
   p.pfcand_cov_phiz0 = -9;
   p.pfcand_cov_phitanLambda = -9;
-  p.pfcand_cov_cz0 = -9;
-  p.pfcand_cov_ctanLambda = -9;
+  p.pfcand_cov_omegaz0 = -9;
+  p.pfcand_cov_omegatanLambda = -9;
   // IP
   p.pfcand_d0 = -9;
   p.pfcand_z0 = -9;
@@ -147,20 +147,20 @@ void JetObservablesRetriever::fill_cov_matrix(Pfcand& p, const edm4hep::Reconstr
   // diagonal elements
   p.pfcand_cov_d0d0 = track.covMatrix[0];
   p.pfcand_cov_phiphi = track.covMatrix[2];
-  p.pfcand_cov_cc = track.covMatrix[5]; // omega
+  p.pfcand_cov_omegaomega = track.covMatrix[5]; // omega
   p.pfcand_cov_z0z0 = track.covMatrix[9];
   p.pfcand_cov_tanLambdatanLambda = track.covMatrix[14]; // tanLambda
   // off-diagonal elements
   p.pfcand_cov_d0z0 = track.covMatrix[6];
   p.pfcand_cov_phid0 = track.covMatrix[1];
   p.pfcand_cov_tanLambdaz0 = track.covMatrix[13];
-  p.pfcand_cov_d0c = track.covMatrix[3];
+  p.pfcand_cov_d0omega = track.covMatrix[3];
   p.pfcand_cov_d0tanLambda = track.covMatrix[10];
-  p.pfcand_cov_phic = track.covMatrix[4];
+  p.pfcand_cov_phiomega = track.covMatrix[4];
   p.pfcand_cov_phiz0 = track.covMatrix[7];
   p.pfcand_cov_phitanLambda = track.covMatrix[11];
-  p.pfcand_cov_cz0 = track.covMatrix[8];
-  p.pfcand_cov_ctanLambda = track.covMatrix[12];
+  p.pfcand_cov_omegaz0 = track.covMatrix[8];
+  p.pfcand_cov_omegatanLambda = track.covMatrix[12];
 
 }
 
@@ -202,8 +202,9 @@ Helix JetObservablesRetriever::calculate_helix_params(const edm4hep::Reconstruct
   const float cross = x.x * p.y - x.y * p.x;
   const float discrim = pt*pt - 2 * a * cross + a*a * r2;
 
-  // helix parameters
+  // helix parameters wrt to primary vertex
   Helix h;
+  h.omega = track.omega; // curvature [1/mm] does not change with respect to primary vertex
 
   // calculate d0
   if (discrim>0){
@@ -216,15 +217,15 @@ Helix JetObservablesRetriever::calculate_helix_params(const edm4hep::Reconstruct
     h.d0 = -9;
   }
 
-  // calculate c
-  h.c = a/ (2 * pt);
+  // calculate c - conviently to calculate with but to get omega in [1/mm]: omega = c*10**(-3) * (-1), see https://github.com/HEP-FCC/FCCAnalyses/blob/pre-edm4hep1/analyzers/dataframe/src/ReconstructedParticle2Track.cc#L194-L217 
+  const float curv = a/ (2 * pt);
 
   // calculate z0
-  float b = h.c * std::sqrt(std::max(r2 - h.d0*h.d0, float(0))/ (1 + 2 * h.c * h.d0));
+  float b = curv * std::sqrt(std::max(r2 - h.d0*h.d0, float(0))/ (1 + 2 * curv * h.d0));
   if (std::abs(b)>1){
     b = std::signbit(b);
   }
-  const float st = std::asin(b) / h.c;
+  const float st = std::asin(b) / curv;
   const float ct = p.z / pt;
   const float dot = x.x * p.x + x.y * p.y;
   if (dot>0){
