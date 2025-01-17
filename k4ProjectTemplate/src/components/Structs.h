@@ -135,6 +135,7 @@ struct Pfcand {
 
 struct Jet {
     std::vector<Pfcand> constituents; 
+    int flavor_fromMC_HjjZvv; // jet flavor from MC which is extracted from the the H(jj)Z(vv) process by looking at the daughters of the H boson
 };
 
 struct Helix{

@@ -124,7 +124,7 @@ StatusCode JetObsWriter::execute(const EventContext&) const {
   }
 
   return StatusCode::SUCCESS;
-  }
+}
 
 void JetObsWriter::initializeTree() {
 
