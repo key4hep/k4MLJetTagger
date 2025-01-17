@@ -45,9 +45,13 @@ k4run ../k4ProjectTemplate/options/createJetTagger.py
 
 You may find helpful resources in the `extras` folder. 
 
+### Retraining a model
+
+Coming soon. 
+
 ### Changing the inference model - exporting the model to ONNX
 
-If you wish to use a different model for tagging, you will need to export it to [ONNX](https://onnx.ai/). Here, we discribe how to transform a model with [weaver](https://github.com/hqucms/weaver-core) from `.pt` to `.onnx`. 
+If you wish to use a different model for tagging, you will need to export the trained model to [ONNX](https://onnx.ai/). Here, we discribe how to transform a model with [weaver](https://github.com/hqucms/weaver-core) from `.pt` to `.onnx`. 
 
 To export your favorite model `best_model.pt` (e.g. [Particle Transformer](https://arxiv.org/abs/2202.03772)) using `weaver` to onnx, run:
 
@@ -80,9 +84,11 @@ conda activate weaver
 
 ### Adding new input observables for tagging
 
-- You need to train a new model. 
-- Export the model to ONNX as described above. 
-- Extract the wanted parameter in `JetObservablesRetriever` and modify the `Pfcand` Struct in `Structs.h` by adding the new observables as an attribute. 
+- Extract the wanted parameter in `JetObservablesRetriever` and modify the `Pfcand` Struct in `Structs.h` by adding the new observables as an attribute.
+- Modify `JetObsWriter` and add your new observable to be saved in the output root file.
+- Retrieve a root file (default `jetconst_obs.root`) by running `k4run ../k4ProjectTemplate/options/retrieveJetConstObs.py` which uses the `JetObsWriter`.
+- Use the root output `jetconst_obs.root` to _retrain the model_.
+- Convert your trained model to ONNX as explained above.
 
 ### When do I need to train a new model and exchange it here? 
 - If you want to run at a different energy.

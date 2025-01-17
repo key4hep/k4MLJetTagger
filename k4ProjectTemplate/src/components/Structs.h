@@ -29,7 +29,7 @@ struct Pfcand {
   int pfcand_dndx, pfcand_tof; // dummy, filled with 0
 
   // track params
-  // cov matrix
+  // cov matrix - 15 values related to 5 Helix (see struct) parameters
   float pfcand_cov_omegaomega, pfcand_cov_tanLambdatanLambda, pfcand_cov_phiphi, pfcand_cov_d0d0, pfcand_cov_z0z0; 
   float pfcand_cov_d0z0, pfcand_cov_phid0, pfcand_cov_tanLambdaz0, pfcand_cov_d0omega, pfcand_cov_d0tanLambda, pfcand_cov_phiomega, pfcand_cov_phiz0, pfcand_cov_phitanLambda, pfcand_cov_omegaz0, pfcand_cov_omegatanLambda;
   // IP
@@ -123,6 +123,14 @@ struct Pfcand {
     else if (attribute == "pfcand_p") return pfcand_p;
     else throw std::invalid_argument("Attribute not found: " + attribute);
   };
+
+  std::vector<std::string> get_attribute_names(){
+    /**
+    * Return a list of strings with all the attributes names of the Struct Pfcand.
+    * @return: a list of strings with all the attributes names
+    */
+    return {"pfcand_erel_log", "pfcand_thetarel", "pfcand_phirel", "pfcand_e", "pfcand_p", "pfcand_type", "pfcand_charge", "pfcand_isEl", "pfcand_isMu", "pfcand_isGamma", "pfcand_isChargedHad", "pfcand_isNeutralHad", "pfcand_dndx", "pfcand_tof", "pfcand_cov_omegaomega", "pfcand_cov_tanLambdatanLambda", "pfcand_cov_phiphi", "pfcand_cov_d0d0", "pfcand_cov_z0z0", "pfcand_cov_d0z0", "pfcand_cov_phid0", "pfcand_cov_tanLambdaz0", "pfcand_cov_d0omega", "pfcand_cov_d0tanLambda", "pfcand_cov_phiomega", "pfcand_cov_phiz0", "pfcand_cov_phitanLambda", "pfcand_cov_omegaz0", "pfcand_cov_omegatanLambda", "pfcand_d0", "pfcand_z0", "pfcand_Sip2dVal", "pfcand_Sip2dSig", "pfcand_Sip3dVal", "pfcand_Sip3dSig", "pfcand_JetDistVal", "pfcand_JetDistSig"};
+  };
 };
 
 struct Jet {
@@ -131,10 +139,10 @@ struct Jet {
 
 struct Helix{
   /**
-  * Structure to store the helix parameters of a track wrt to the primary vertex. We use following convention (similar to https://github.com/key4hep/EDM4hep/blob/997ab32b886899253c9bc61adea9a21b57bc5a21/edm4hep.yaml#L195C9-L200 ):
+  * Structure to store the helix parameters of a track wrt to the primary vertex. We use the key4hep convention (https://github.com/key4hep/EDM4hep/blob/997ab32b886899253c9bc61adea9a21b57bc5a21/edm4hep.yaml#L195C9-L200 ):
   * - d0: transverse impact parameter
   * - phi: azimuthal angle 
-  * - c: signed curvature of the track. Be careful. c is the curvature but for describing the track params, omega [1/mm] is more handy and can be calculated with omega = c*10**(-3) * (-1), see https://github.com/HEP-FCC/FCCAnalyses/blob/pre-edm4hep1/analyzers/dataframe/src/ReconstructedParticle2Track.cc#L194-L217
+  * - omega: signed curvature of the track in [1/mm]
   * - z0: longitudinal impact parameter
   * - tanLambda: lambda is the dip angle of the track in r-z
   */

@@ -16,34 +16,35 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
-from Gaudi.Configuration import INFO
-from Configurables import JetTagger
+from Gaudi.Configuration import INFO, WARNING
+from Configurables import JetObsWriter
 from Configurables import k4DataSvc
 from Configurables import EventDataSvc
 from Configurables import CollectionMerger
+from Configurables import THistSvc
 from k4FWCore import ApplicationMgr, IOSvc
 
 svc = IOSvc("IOSvc")
 svc.Input = "/afs/cern.ch/work/s/saaumill/public/fullsimGEN/CLDConfig/CLDConfig/cldfullsimHbb_test2_REC.edm4hep.root"
-svc.Output = "output_jettagging.root"
-#svc.outputCommands = [
-#    "drop *",
-#    "keep RefinedVertexJets",
-#    "keep RefinedJetTags",
-#]
+#svc.Output = "output_jettagging.root"
 
+algList = []
 
-flavor_collection_names = ["RefinedJetTag_G", "RefinedJetTag_U", "RefinedJetTag_S", "RefinedJetTag_C", "RefinedJetTag_B", "RefinedJetTag_D", "RefinedJetTag_TAU"]
-transformer = JetTagger("JetTagger",
-                        model_path="/afs/cern.ch/work/s/saaumill/public/onnx_export/fullsimCLD240_2mio.onnx",
-                        json_path="/afs/cern.ch/work/s/saaumill/public/onnx_export/preprocess_fullsimCLD240_2mio.json",
-                        flavor_collection_names = flavor_collection_names, # to make sure the order and nameing is correct
-                        InputJets=["RefinedVertexJets"],
-                        InputPrimaryVertices=["PrimaryVertices"],
-                        OutputIDCollections=flavor_collection_names,
-                        )
+# retrieve jet constituent observables for tagging
 
-ApplicationMgr(TopAlg=[transformer],
+MyJetObsWriter = JetObsWriter("MyJetObsWriter")
+MyJetObsWriter.InputJets = "RefinedVertexJets"
+MyJetObsWriter.InputPrimaryVertices = "PrimaryVertices"
+THistSvc().Output = ["rec DATAFILE='jetconst_obs.root' TYP='ROOT' OPT='RECREATE'"]
+# define root output file
+THistSvc().OutputLevel = WARNING
+THistSvc().PrintAll = False
+THistSvc().AutoSave = True
+THistSvc().AutoFlush = True
+
+algList.append(MyJetObsWriter)
+
+ApplicationMgr(TopAlg=algList,
                EvtSel="NONE",
                EvtMax=-1,
                ExtSvc=[k4DataSvc("EventDataSvc")],
