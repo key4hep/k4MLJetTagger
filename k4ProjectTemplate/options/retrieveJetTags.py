@@ -26,7 +26,6 @@ from k4FWCore import ApplicationMgr, IOSvc
 
 svc = IOSvc("IOSvc")
 svc.Input = "/afs/cern.ch/work/s/saaumill/public/fullsimGEN/CLDConfig/CLDConfig/cldfullsimHbb_test2_REC.edm4hep.root"
-#svc.Input = "/afs/cern.ch/work/s/saaumill/public/JetTagging/build/output_jettagging_dummy.root"
 
 algList = []
 
@@ -50,14 +49,13 @@ transformer_mcjets = JetMCPIDFinder("JetMCPIDFinder",
 MyJetPIDRetriever = JetPIDRetriever("JetPIDRetriever")
 MyJetPIDRetriever.InputJets = "RefinedVertexJets"
 MyJetPIDRetriever.RefinedJetTag_G = "RefinedJetTag_G"
-MyJetPIDRetriever.Pid = "RefinedVertexJets_PID_RefinedVertex"
-# MyJetPIDRetriever.RefinedJetTag_U = "RefinedJetTag_U"
-# MyJetPIDRetriever.RefinedJetTag_D = "RefinedJetTag_D"
-# MyJetPIDRetriever.RefinedJetTag_S = "RefinedJetTag_S"
-# MyJetPIDRetriever.RefinedJetTag_C = "RefinedJetTag_C"
-# MyJetPIDRetriever.RefinedJetTag_B = "RefinedJetTag_B"
-# MyJetPIDRetriever.RefinedJetTag_TAU = "RefinedJetTag_TAU"
-# MyJetPIDRetriever.MCJetTag = "MCJetTag"
+MyJetPIDRetriever.RefinedJetTag_U = "RefinedJetTag_U"
+MyJetPIDRetriever.RefinedJetTag_D = "RefinedJetTag_D"
+MyJetPIDRetriever.RefinedJetTag_S = "RefinedJetTag_S"
+MyJetPIDRetriever.RefinedJetTag_C = "RefinedJetTag_C"
+MyJetPIDRetriever.RefinedJetTag_B = "RefinedJetTag_B"
+MyJetPIDRetriever.RefinedJetTag_TAU = "RefinedJetTag_TAU"
+MyJetPIDRetriever.MCJetTag = "MCJetTag"
 THistSvc().Output = ["rec DATAFILE='jettags.root' TYP='ROOT' OPT='RECREATE'"]
 # define root output file
 THistSvc().OutputLevel = WARNING

@@ -1,5 +1,5 @@
-#ifndef JETOBSWRITER_H
-#define JETOBSWRITER_H
+#ifndef JETPIDRETRIEVER_H
+#define JETPIDRETRIEVER_H
 
 #include "k4FWCore/DataHandle.h"
 #include "k4FWCore/MetaDataHandle.h"
@@ -36,24 +36,7 @@ class JetPIDRetriever : public Gaudi::Algorithm {
     /// Constructor.
     JetPIDRetriever(const std::string& name, ISvcLocator* svcLoc);
     /// Destructor.
-    ~JetPIDRetriever() {
-
-        delete recojet_isG;
-        delete score_recojet_isG;
-        delete recojet_isU;
-        delete score_recojet_isU;
-        delete recojet_isD;
-        delete score_recojet_isD;
-        delete recojet_isS;
-        delete score_recojet_isS;
-        delete recojet_isC;
-        delete score_recojet_isC;
-        delete recojet_isB;
-        delete score_recojet_isB;
-        delete recojet_isTAU;
-        delete score_recojet_isTAU;
-
-    };
+    ~JetPIDRetriever() {};
     /// Initialize.
     virtual StatusCode initialize();
     /// Initialize tree.
@@ -71,36 +54,36 @@ class JetPIDRetriever : public Gaudi::Algorithm {
         mutable DataHandle<edm4hep::ReconstructedParticleCollection> jets_handle {"RefinedVertexJets", Gaudi::DataHandle::Reader, this};
         mutable DataHandle<edm4hep::ParticleIDCollection> reco_jettag_G_handle {"RefinedJetTag_G", Gaudi::DataHandle::Reader, this};
         mutable DataHandle<edm4hep::ParticleIDCollection> pid_handle {"RefinedVertexJets_PID_RefinedVertex", Gaudi::DataHandle::Reader, this};
-        // mutable DataHandle<edm4hep::ParticleIDCollection> reco_jettag_U_handle {"RefinedJetTag_U", Gaudi::DataHandle::Reader, this};
-        // mutable DataHandle<edm4hep::ParticleIDCollection> reco_jettag_D_handle {"RefinedJetTag_D", Gaudi::DataHandle::Reader, this};
-        // mutable DataHandle<edm4hep::ParticleIDCollection> reco_jettag_S_handle {"RefinedJetTag_S", Gaudi::DataHandle::Reader, this};
-        // mutable DataHandle<edm4hep::ParticleIDCollection> reco_jettag_C_handle {"RefinedJetTag_C", Gaudi::DataHandle::Reader, this};
-        // mutable DataHandle<edm4hep::ParticleIDCollection> reco_jettag_B_handle {"RefinedJetTag_B", Gaudi::DataHandle::Reader, this};
-        // mutable DataHandle<edm4hep::ParticleIDCollection> reco_jettag_TAU_handle {"RefinedJetTag_TAU", Gaudi::DataHandle::Reader, this};
-        // mutable DataHandle<edm4hep::ParticleIDCollection> mc_jettag_handle {"MCJetTag", Gaudi::DataHandle::Reader, this};
+        mutable DataHandle<edm4hep::ParticleIDCollection> reco_jettag_U_handle {"RefinedJetTag_U", Gaudi::DataHandle::Reader, this};
+        mutable DataHandle<edm4hep::ParticleIDCollection> reco_jettag_D_handle {"RefinedJetTag_D", Gaudi::DataHandle::Reader, this};
+        mutable DataHandle<edm4hep::ParticleIDCollection> reco_jettag_S_handle {"RefinedJetTag_S", Gaudi::DataHandle::Reader, this};
+        mutable DataHandle<edm4hep::ParticleIDCollection> reco_jettag_C_handle {"RefinedJetTag_C", Gaudi::DataHandle::Reader, this};
+        mutable DataHandle<edm4hep::ParticleIDCollection> reco_jettag_B_handle {"RefinedJetTag_B", Gaudi::DataHandle::Reader, this};
+        mutable DataHandle<edm4hep::ParticleIDCollection> reco_jettag_TAU_handle {"RefinedJetTag_TAU", Gaudi::DataHandle::Reader, this};
+        mutable DataHandle<edm4hep::ParticleIDCollection> mc_jettag_handle {"MCJetTag", Gaudi::DataHandle::Reader, this};
 
 
         SmartIF<ITHistSvc> m_ths;  ///< THistogram service
 
         mutable TTree* t_jettag{nullptr};
-        std::vector<float> *recojet_isG = nullptr;
-        std::vector<float> *score_recojet_isG = nullptr;
-        std::vector<float> *recojet_isU = nullptr;
-        std::vector<float> *score_recojet_isU = nullptr;
-        std::vector<float> *recojet_isD = nullptr;
-        std::vector<float> *score_recojet_isD = nullptr;
-        std::vector<float> *recojet_isS = nullptr;
-        std::vector<float> *score_recojet_isS = nullptr;
-        std::vector<float> *recojet_isC = nullptr;
-        std::vector<float> *score_recojet_isC = nullptr;
-        std::vector<float> *recojet_isB = nullptr;
-        std::vector<float> *score_recojet_isB = nullptr;
-        std::vector<float> *recojet_isTAU = nullptr;
-        std::vector<float> *score_recojet_isTAU = nullptr;
 
+        mutable bool recojet_isG;
+        mutable float score_recojet_isG;
+        mutable bool recojet_isU;
+        mutable float score_recojet_isU;
+        mutable bool recojet_isD;
+        mutable float score_recojet_isD;
+        mutable bool recojet_isS;
+        mutable float score_recojet_isS;
+        mutable bool recojet_isC;
+        mutable float score_recojet_isC;
+        mutable bool recojet_isB;
+        mutable float score_recojet_isB;
+        mutable bool recojet_isTAU;
+        mutable float score_recojet_isTAU;
 
         mutable std::int32_t evNum;
 
 };
 
-#endif // JETOBSWRITER_H
+#endif // JETPIDRETRIEVER_H
