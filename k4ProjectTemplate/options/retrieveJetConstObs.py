@@ -26,7 +26,6 @@ from k4FWCore import ApplicationMgr, IOSvc
 
 svc = IOSvc("IOSvc")
 svc.Input = "/afs/cern.ch/work/s/saaumill/public/fullsimGEN/CLDConfig/CLDConfig/cldfullsimHbb_test2_REC.edm4hep.root"
-#svc.Output = "output_jettagging.root"
 
 algList = []
 

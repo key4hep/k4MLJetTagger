@@ -17,7 +17,7 @@
 # limitations under the License.
 #
 from Gaudi.Configuration import INFO
-from Configurables import JetTagger
+from Configurables import JetTagger, JetMCPIDFinder
 from Configurables import k4DataSvc
 from Configurables import EventDataSvc
 from Configurables import CollectionMerger
@@ -26,7 +26,7 @@ from k4FWCore import ApplicationMgr, IOSvc
 svc = IOSvc("IOSvc")
 svc.Input = "/eos/experiment/fcc/prod/fcc/ee/test_spring2024/240gev/Hbb/CLD_o2_v05/rec/00016783/000/Hbb_rec_16783_1.root"
 #svc.Input = "/afs/cern.ch/work/s/saaumill/public/fullsimGEN/CLDConfig/CLDConfig/cldfullsimHbb_test2_REC.edm4hep.root"
-svc.Output = "output_jettagging.root"
+svc.Output = "output_jettagging_dummy.root"
 
 #svc.outputCommands = [
 #    "drop *",
@@ -36,7 +36,7 @@ svc.Output = "output_jettagging.root"
 
 
 flavor_collection_names = ["RefinedJetTag_G", "RefinedJetTag_U", "RefinedJetTag_S", "RefinedJetTag_C", "RefinedJetTag_B", "RefinedJetTag_D", "RefinedJetTag_TAU"]
-transformer = JetTagger("JetTagger",
+transformer_reco = JetTagger("JetTagger",
                         model_path="/afs/cern.ch/work/s/saaumill/public/onnx_export/fullsimCLD240_2mio.onnx",
                         json_path="/afs/cern.ch/work/s/saaumill/public/onnx_export/preprocess_fullsimCLD240_2mio.json",
                         flavor_collection_names = flavor_collection_names, # to make sure the order and nameing is correct
@@ -45,7 +45,12 @@ transformer = JetTagger("JetTagger",
                         OutputIDCollections=flavor_collection_names,
                         )
 
-ApplicationMgr(TopAlg=[transformer],
+transformer_MC = JetMCPIDFinder("JetMCPIDFinder",
+                        InputJets=["RefinedVertexJets"],
+                        MCParticles=["MCParticles"],
+                        )
+
+ApplicationMgr(TopAlg=[transformer_reco, transformer_MC],
                EvtSel="NONE",
                EvtMax=20,
                ExtSvc=[k4DataSvc("EventDataSvc")],

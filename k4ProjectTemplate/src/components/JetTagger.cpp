@@ -122,6 +122,13 @@ struct JetTagger
       Jet j = Retriever.retrieve_input_observables(jet, primVerticies);
       // run the tagger on the jet
       rv::RVec<float> probabilities = tagger(j, model_path, json_path);
+      
+      // Compute the highest probability
+      // auto maxIt = std::max_element(probabilities.begin(), probabilities.end());
+      // float maxProb = *maxIt;
+      // auto maxIndex = std::distance(probabilities.begin(), maxIt);
+      // info() << "Jet with highest probability for flavor " << flavorNames[maxIndex] << " has probability " << maxProb << endmsg;
+
 
       if (probabilities.size() != flavorNames.size()) {
         error() << "Number of probabilities returned by the network does not match number of flavors stated in the network config json" << endmsg;

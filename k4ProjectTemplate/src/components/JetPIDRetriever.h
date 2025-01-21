@@ -13,6 +13,9 @@
 #include "TH1F.h"
 #include "TGraph.h"
 
+#include <edm4hep/utils/ParticleIDUtils.h>
+#include <edm4hep/ParticleIDCollection.h>
+
 /**
  * @class JetPIDRetriever
  * @brief This class is a Gaudi algorithm for writing jet PIDs to a TTree.
@@ -65,20 +68,21 @@ class JetPIDRetriever : public Gaudi::Algorithm {
 
     private:
         mutable DataHandle<edm4hep::EventHeaderCollection> ev_handle {"EventHeader", Gaudi::DataHandle::Reader, this};
-        mutable DataHandle<edm4hep::ParticleIDCollection> reco_jettag_isG_handle {"RefindJetTag_isG", Gaudi::DataHandle::Reader, this};
-        mutable DataHandle<edm4hep::ParticleIDCollection> reco_jettag_isU_handle {"RefindJetTag_isU", Gaudi::DataHandle::Reader, this};
-        mutable DataHandle<edm4hep::ParticleIDCollection> reco_jettag_isD_handle {"RefindJetTag_isD", Gaudi::DataHandle::Reader, this};
-        mutable DataHandle<edm4hep::ParticleIDCollection> reco_jettag_isS_handle {"RefindJetTag_isS", Gaudi::DataHandle::Reader, this};
-        mutable DataHandle<edm4hep::ParticleIDCollection> reco_jettag_isC_handle {"RefindJetTag_isC", Gaudi::DataHandle::Reader, this};
-        mutable DataHandle<edm4hep::ParticleIDCollection> reco_jettag_isB_handle {"RefindJetTag_isB", Gaudi::DataHandle::Reader, this};
-        mutable DataHandle<edm4hep::ParticleIDCollection> reco_jettag_isTAU_handle {"RefindJetTag_isTAU", Gaudi::DataHandle::Reader, this};
-        mutable DataHandle<edm4hep::ParticleIDCollection> mc_jettag_handle {"MCJetTag", Gaudi::DataHandle::Reader, this};
+        mutable DataHandle<edm4hep::ReconstructedParticleCollection> jets_handle {"RefinedVertexJets", Gaudi::DataHandle::Reader, this};
+        mutable DataHandle<edm4hep::ParticleIDCollection> reco_jettag_G_handle {"RefinedJetTag_G", Gaudi::DataHandle::Reader, this};
+        mutable DataHandle<edm4hep::ParticleIDCollection> pid_handle {"RefinedVertexJets_PID_RefinedVertex", Gaudi::DataHandle::Reader, this};
+        // mutable DataHandle<edm4hep::ParticleIDCollection> reco_jettag_U_handle {"RefinedJetTag_U", Gaudi::DataHandle::Reader, this};
+        // mutable DataHandle<edm4hep::ParticleIDCollection> reco_jettag_D_handle {"RefinedJetTag_D", Gaudi::DataHandle::Reader, this};
+        // mutable DataHandle<edm4hep::ParticleIDCollection> reco_jettag_S_handle {"RefinedJetTag_S", Gaudi::DataHandle::Reader, this};
+        // mutable DataHandle<edm4hep::ParticleIDCollection> reco_jettag_C_handle {"RefinedJetTag_C", Gaudi::DataHandle::Reader, this};
+        // mutable DataHandle<edm4hep::ParticleIDCollection> reco_jettag_B_handle {"RefinedJetTag_B", Gaudi::DataHandle::Reader, this};
+        // mutable DataHandle<edm4hep::ParticleIDCollection> reco_jettag_TAU_handle {"RefinedJetTag_TAU", Gaudi::DataHandle::Reader, this};
+        // mutable DataHandle<edm4hep::ParticleIDCollection> mc_jettag_handle {"MCJetTag", Gaudi::DataHandle::Reader, this};
 
 
         SmartIF<ITHistSvc> m_ths;  ///< THistogram service
 
         mutable TTree* t_jettag{nullptr};
-
         std::vector<float> *recojet_isG = nullptr;
         std::vector<float> *score_recojet_isG = nullptr;
         std::vector<float> *recojet_isU = nullptr;
@@ -93,6 +97,9 @@ class JetPIDRetriever : public Gaudi::Algorithm {
         std::vector<float> *score_recojet_isB = nullptr;
         std::vector<float> *recojet_isTAU = nullptr;
         std::vector<float> *score_recojet_isTAU = nullptr;
+
+
+        mutable std::int32_t evNum;
 
 };
 
