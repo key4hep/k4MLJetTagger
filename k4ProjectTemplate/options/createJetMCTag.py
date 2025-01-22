@@ -17,7 +17,7 @@
 # limitations under the License.
 #
 from Gaudi.Configuration import INFO
-from Configurables import JetMCPIDFinder
+from Configurables import JetMCTagger
 from Configurables import k4DataSvc
 from Configurables import EventDataSvc
 from Configurables import CollectionMerger
@@ -27,7 +27,7 @@ svc = IOSvc("IOSvc")
 svc.Input = "/afs/cern.ch/work/s/saaumill/public/fullsimGEN/CLDConfig/CLDConfig/cldfullsimHbb_test2_REC.edm4hep.root"
 svc.Output = "output_jetMCtagging.root"
 
-transformer = JetMCPIDFinder("JetMCPIDFinder",
+transformer = JetMCTagger("JetMCTagger",
                         InputJets=["RefinedVertexJets"],
                         MCParticles=["MCParticles"],
                         )

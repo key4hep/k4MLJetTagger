@@ -23,9 +23,17 @@ from Configurables import EventDataSvc
 from Configurables import CollectionMerger
 from Configurables import THistSvc
 from k4FWCore import ApplicationMgr, IOSvc
+from k4FWCore.parseArgs import parser
+
+# parse the custom arguments
+parser_group = parser.add_argument_group("writeJetConstObs.py custom options")
+parser_group.add_argument("--inputFiles", action="extend", nargs="+", metavar=("file1", "file2"), help="One or multiple input files", 
+                        default=["/eos/experiment/fcc/prod/fcc/ee/test_spring2024/240gev/Hbb/CLD_o2_v05/rec/00016783/000/Hbb_rec_16783_99.root"])
+parser_group.add_argument("--outputFile", help="Output file name", default="output_jettags.root")
+args = parser.parse_known_args()[0]
 
 svc = IOSvc("IOSvc")
-svc.Input = "/afs/cern.ch/work/s/saaumill/public/fullsimGEN/CLDConfig/CLDConfig/cldfullsimHbb_test2_REC.edm4hep.root"
+svc.Input = args.inputFiles
 
 algList = []
 
@@ -56,7 +64,7 @@ MyJetTagWriter.RefinedJetTag_C = "RefinedJetTag_C"
 MyJetTagWriter.RefinedJetTag_B = "RefinedJetTag_B"
 MyJetTagWriter.RefinedJetTag_TAU = "RefinedJetTag_TAU"
 MyJetTagWriter.MCJetTag = "MCJetTag"
-THistSvc().Output = ["rec DATAFILE='jettags.root' TYP='ROOT' OPT='RECREATE'"]
+THistSvc().Output =["rec DATAFILE='{}' TYP='ROOT' OPT='RECREATE'".format(args.outputFile)]
 # define root output file
 THistSvc().OutputLevel = WARNING
 THistSvc().PrintAll = False
