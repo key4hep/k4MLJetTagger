@@ -63,7 +63,7 @@ int findMCPIDfromHiggsDaughters(const edm4hep::MCParticleCollection& MCParticles
 
 
 /**
-* @class JetMCPIDFinder
+* @class JetMCTagger
 * @brief Gaudi transformer that attaches a edm4hep::ParticleIDCollection object "MCJetTag" to each jet in the input collection "RefinedVertexJets".
 *
 * WARNING: This uses the assumption of H(jj)Z(vv) events!!!
@@ -72,9 +72,9 @@ int findMCPIDfromHiggsDaughters(const edm4hep::MCParticleCollection& MCParticles
 *
 * @author Sara Aumiller
 */
-struct JetMCPIDFinder
+struct JetMCTagger
     : k4FWCore::Transformer<edm4hep::ParticleIDCollection(const edm4hep::ReconstructedParticleCollection&, const edm4hep::MCParticleCollection& )> {
-  JetMCPIDFinder(const std::string& name, ISvcLocator* svcLoc)
+  JetMCTagger(const std::string& name, ISvcLocator* svcLoc)
     : Transformer(name, svcLoc, 
                   {
                     KeyValues("InputJets", {"RefinedVertexJets"}),
@@ -102,4 +102,4 @@ struct JetMCPIDFinder
   };
 };
 
-DECLARE_COMPONENT(JetMCPIDFinder)
+DECLARE_COMPONENT(JetMCTagger)

@@ -1,5 +1,5 @@
-#ifndef JETPIDRETRIEVER_H
-#define JETPIDRETRIEVER_H
+#ifndef JETTAGWRITER_H
+#define JETTAGWRITER_H
 
 #include "k4FWCore/DataHandle.h"
 #include "k4FWCore/MetaDataHandle.h"
@@ -17,7 +17,7 @@
 #include <edm4hep/ParticleIDCollection.h>
 
 /**
- * @class JetPIDRetriever
+ * @class JetTagWriter
  * @brief This class is a Gaudi algorithm for writing jet PIDs to a TTree.
  *
  * The algorithm follows the Gaudi framework's lifecycle, with the initialize() method being called at the start,
@@ -30,13 +30,13 @@
  * 
  * @author Sara Aumiller
  */
-class JetPIDRetriever : public Gaudi::Algorithm {
+class JetTagWriter : public Gaudi::Algorithm {
 
     public:
     /// Constructor.
-    JetPIDRetriever(const std::string& name, ISvcLocator* svcLoc);
+    JetTagWriter(const std::string& name, ISvcLocator* svcLoc);
     /// Destructor.
-    ~JetPIDRetriever() {};
+    ~JetTagWriter() {};
     /// Initialize.
     virtual StatusCode initialize();
     /// Initialize tree.
@@ -86,4 +86,4 @@ class JetPIDRetriever : public Gaudi::Algorithm {
 
 };
 
-#endif // JETPIDRETRIEVER_H
+#endif // JETTAGWRITER_H

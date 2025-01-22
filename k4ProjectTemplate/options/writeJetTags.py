@@ -17,7 +17,7 @@
 # limitations under the License.
 #
 from Gaudi.Configuration import INFO, WARNING
-from Configurables import JetPIDRetriever, JetTagger, JetMCPIDFinder
+from Configurables import JetTagWriter, JetTagger, JetMCTagger
 from Configurables import k4DataSvc
 from Configurables import EventDataSvc
 from Configurables import CollectionMerger
@@ -40,22 +40,22 @@ transformer_recojets = JetTagger("JetTagger",
                         OutputIDCollections=flavor_collection_names,
                         )
 # run MC tagger
-transformer_mcjets = JetMCPIDFinder("JetMCPIDFinder",
+transformer_mcjets = JetMCTagger("JetMCTagger",
                         InputJets=["RefinedVertexJets"],
                         MCParticles=["MCParticles"],
                         )
 
 # retrieve jet PID
-MyJetPIDRetriever = JetPIDRetriever("JetPIDRetriever")
-MyJetPIDRetriever.InputJets = "RefinedVertexJets"
-MyJetPIDRetriever.RefinedJetTag_G = "RefinedJetTag_G"
-MyJetPIDRetriever.RefinedJetTag_U = "RefinedJetTag_U"
-MyJetPIDRetriever.RefinedJetTag_D = "RefinedJetTag_D"
-MyJetPIDRetriever.RefinedJetTag_S = "RefinedJetTag_S"
-MyJetPIDRetriever.RefinedJetTag_C = "RefinedJetTag_C"
-MyJetPIDRetriever.RefinedJetTag_B = "RefinedJetTag_B"
-MyJetPIDRetriever.RefinedJetTag_TAU = "RefinedJetTag_TAU"
-MyJetPIDRetriever.MCJetTag = "MCJetTag"
+MyJetTagWriter = JetTagWriter("JetTagWriter")
+MyJetTagWriter.InputJets = "RefinedVertexJets"
+MyJetTagWriter.RefinedJetTag_G = "RefinedJetTag_G"
+MyJetTagWriter.RefinedJetTag_U = "RefinedJetTag_U"
+MyJetTagWriter.RefinedJetTag_D = "RefinedJetTag_D"
+MyJetTagWriter.RefinedJetTag_S = "RefinedJetTag_S"
+MyJetTagWriter.RefinedJetTag_C = "RefinedJetTag_C"
+MyJetTagWriter.RefinedJetTag_B = "RefinedJetTag_B"
+MyJetTagWriter.RefinedJetTag_TAU = "RefinedJetTag_TAU"
+MyJetTagWriter.MCJetTag = "MCJetTag"
 THistSvc().Output = ["rec DATAFILE='jettags.root' TYP='ROOT' OPT='RECREATE'"]
 # define root output file
 THistSvc().OutputLevel = WARNING
@@ -66,7 +66,7 @@ THistSvc().AutoFlush = True
 # append all algorithms to algList
 algList.append(transformer_recojets)
 algList.append(transformer_mcjets)
-algList.append(MyJetPIDRetriever)
+algList.append(MyJetTagWriter)
 
 ApplicationMgr(TopAlg=algList,
                EvtSel="NONE",

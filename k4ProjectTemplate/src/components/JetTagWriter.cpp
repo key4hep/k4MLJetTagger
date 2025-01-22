@@ -31,12 +31,12 @@
 
 #include "Structs.h"
 #include "JetObservablesRetriever.h"
-#include "JetPIDRetriever.h"
+#include "JetTagWriter.h"
 #include "Helpers.h"
 
-DECLARE_COMPONENT(JetPIDRetriever)
+DECLARE_COMPONENT(JetTagWriter)
 
-JetPIDRetriever::JetPIDRetriever(const std::string& name, ISvcLocator* svcLoc) : Gaudi::Algorithm(name, svcLoc) {
+JetTagWriter::JetTagWriter(const std::string& name, ISvcLocator* svcLoc) : Gaudi::Algorithm(name, svcLoc) {
     declareProperty("InputJets", jets_handle, "Collection of refined jets");
     declareProperty("RefinedJetTag_G", reco_jettag_G_handle, "Collection for jet flavor tag G");
     declareProperty("RefinedJetTag_U", reco_jettag_U_handle, "Collection for jet flavor tag U");
@@ -48,7 +48,7 @@ JetPIDRetriever::JetPIDRetriever(const std::string& name, ISvcLocator* svcLoc) :
     declareProperty("MCJetTag", mc_jettag_handle, "Collection for MC Jet Tag");
 }
 
-StatusCode JetPIDRetriever::initialize() {
+StatusCode JetTagWriter::initialize() {
   if (Gaudi::Algorithm::initialize().isFailure()) return StatusCode::FAILURE;
 
   m_ths = service("THistSvc", true);
@@ -68,7 +68,7 @@ StatusCode JetPIDRetriever::initialize() {
   return StatusCode::SUCCESS;
 }
 
-StatusCode JetPIDRetriever::execute(const EventContext&) const {
+StatusCode JetTagWriter::execute(const EventContext&) const {
 
   auto evs = ev_handle.get();
   evNum = (*evs)[0].getEventNumber();
@@ -177,7 +177,7 @@ StatusCode JetPIDRetriever::execute(const EventContext&) const {
   return StatusCode::SUCCESS;
 }
 
-void JetPIDRetriever::initializeTree() {
+void JetTagWriter::initializeTree() {
 
   t_jettag->Branch("recojet_isG", &recojet_isG, "recojet_isG/O");
   t_jettag->Branch("score_recojet_isG", &score_recojet_isG, "score_recojet_isG/F");
@@ -197,7 +197,7 @@ void JetPIDRetriever::initializeTree() {
   return;
 }
 
-void JetPIDRetriever::cleanTree() const {
+void JetTagWriter::cleanTree() const {
 
   recojet_isG = false;
   recojet_isU = false;
@@ -219,7 +219,7 @@ void JetPIDRetriever::cleanTree() const {
   return;
 }
 
-StatusCode JetPIDRetriever::finalize() {
+StatusCode JetTagWriter::finalize() {
   if (Gaudi::Algorithm::finalize().isFailure()) return StatusCode::FAILURE;
 
   return StatusCode::SUCCESS;
