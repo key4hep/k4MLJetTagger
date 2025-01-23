@@ -78,7 +78,6 @@ StatusCode JetTagWriter::execute(const EventContext&) const {
   // Get the pointers to the collections
   const edm4hep::ReconstructedParticleCollection *jet_coll_ptr = jets_handle.get();
   const edm4hep::ParticleIDCollection *reco_jettag_G_coll_ptr = reco_jettag_G_handle.get();
-  const edm4hep::ParticleIDCollection *pid_coll_ptr = pid_handle.get();
   const edm4hep::ParticleIDCollection *reco_jettag_U_coll_ptr = reco_jettag_U_handle.get();
   const edm4hep::ParticleIDCollection *reco_jettag_D_coll_ptr = reco_jettag_D_handle.get();
   const edm4hep::ParticleIDCollection *reco_jettag_S_coll_ptr = reco_jettag_S_handle.get();
@@ -89,7 +88,6 @@ StatusCode JetTagWriter::execute(const EventContext&) const {
   // Create references to the collections
   const edm4hep::ReconstructedParticleCollection &jet_coll = *jet_coll_ptr;
   const edm4hep::ParticleIDCollection &reco_jettag_G_coll = *reco_jettag_G_coll_ptr;
-  const edm4hep::ParticleIDCollection &pid_coll = *pid_coll_ptr;
   const edm4hep::ParticleIDCollection &reco_jettag_U_coll = *reco_jettag_U_coll_ptr;
   const edm4hep::ParticleIDCollection &reco_jettag_D_coll = *reco_jettag_D_coll_ptr;
   const edm4hep::ParticleIDCollection &reco_jettag_S_coll = *reco_jettag_S_coll_ptr;

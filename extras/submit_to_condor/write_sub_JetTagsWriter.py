@@ -4,7 +4,7 @@ def generate_sub_file():
     num_files = 5
     start_indices = range(0, 100, num_files) # total of 100 files per flavor with 1000 events each
     base_command = "/eos/experiment/fcc/prod/fcc/ee/test_spring2024/240gev/{pattern}/CLD_o2_v05/rec/{prod}/*/{pattern}_rec_*.root"
-    output_base = "/eos/experiment/fcc/ee/datasets/CLD_full_tagging_results_key4hep/"
+    output_base = "/eos/experiment/fcc/ee/datasets/CLD_fullsim_tagging_results_key4hep/"
     
     # Prepare the header of the file
     header = """# run commands for analysis,
@@ -18,7 +18,7 @@ error                 = /afs/cern.ch/work/s/saaumill/public/condor/std-condor-re
 log                   = /afs/cern.ch/work/s/saaumill/public/condor/std-condor-results/job.$(ClusterId).$(ClusterId).log
 
 +AccountingGroup = "group_u_FCC.local_gen"
-+JobFlavour    = "longlunch"
++JobFlavour    = "workday"
 """
 
     # Prepare the content with arguments

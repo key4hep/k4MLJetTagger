@@ -68,6 +68,6 @@ fi
 python /afs/cern.ch/work/f/fccsw/public/FCCutils/eoscopy.py ./job/out.root ${OUTPUT_FILE}
 echo "Ran script successfully!"
 end_time=$(date +%s)
-execution_time=$((end_time - start_time)) # rouhgly 2h for index 0 to 1000
+execution_time=$((end_time - start_time)) # 5705 sec for 4 files (with 1000 events each) = 1.58 hours -> longlunch not enough, choose workingday
 echo "Execution time: $execution_time seconds"
 

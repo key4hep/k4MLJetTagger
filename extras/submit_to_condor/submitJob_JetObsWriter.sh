@@ -77,5 +77,5 @@ python /afs/cern.ch/work/f/fccsw/public/FCCutils/eoscopy.py ./job/out.root ${OUT
 echo "Ran script successfully!"
 end_time=$(date +%s)
 execution_time=$((end_time - start_time)) # rouhgly 2h for index 0 to 1000
-echo "Execution time: $execution_time seconds" # 1624 sec for 4 files (with 1000 events each) = 27 min
+echo "Execution time: $execution_time seconds" # 1624 sec for 4 files (with 1000 events each) = 27 min 
 

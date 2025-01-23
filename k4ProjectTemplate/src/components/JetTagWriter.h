@@ -53,7 +53,6 @@ class JetTagWriter : public Gaudi::Algorithm {
         mutable DataHandle<edm4hep::EventHeaderCollection> ev_handle {"EventHeader", Gaudi::DataHandle::Reader, this};
         mutable DataHandle<edm4hep::ReconstructedParticleCollection> jets_handle {"RefinedVertexJets", Gaudi::DataHandle::Reader, this};
         mutable DataHandle<edm4hep::ParticleIDCollection> reco_jettag_G_handle {"RefinedJetTag_G", Gaudi::DataHandle::Reader, this};
-        mutable DataHandle<edm4hep::ParticleIDCollection> pid_handle {"RefinedVertexJets_PID_RefinedVertex", Gaudi::DataHandle::Reader, this};
         mutable DataHandle<edm4hep::ParticleIDCollection> reco_jettag_U_handle {"RefinedJetTag_U", Gaudi::DataHandle::Reader, this};
         mutable DataHandle<edm4hep::ParticleIDCollection> reco_jettag_D_handle {"RefinedJetTag_D", Gaudi::DataHandle::Reader, this};
         mutable DataHandle<edm4hep::ParticleIDCollection> reco_jettag_S_handle {"RefinedJetTag_S", Gaudi::DataHandle::Reader, this};

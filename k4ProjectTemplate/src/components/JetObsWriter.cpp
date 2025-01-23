@@ -77,6 +77,7 @@ StatusCode JetObsWriter::execute(const EventContext&) const {
   const edm4hep::VertexCollection &prim_vertex_coll = *prim_vertex_coll_ptr;
 
   JetObservablesRetriever Retriever;
+  Retriever.Bz = 2.0; // hardcoded for now
 
   for (const auto& jet : jet_coll) { // loop over all jets in the event
     cleanTree();

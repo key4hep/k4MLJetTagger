@@ -127,7 +127,7 @@ def plot_IP(df1, df2, index1, index2, l1='df1', l2='df2', bins=50):
         'pfcand_JetDistVal': [-0.5, 0.5],
         'pfcand_JetDistSig': [-50, 50]}
     
-    fig, axs = plt.subplots(3, 2, figsize=(12, 8), constrained_layout=True)
+    fig, axs = plt.subplots(4, 2, figsize=(12, 8), constrained_layout=True)
     
     for i, ax in enumerate(axs.flat):
 
