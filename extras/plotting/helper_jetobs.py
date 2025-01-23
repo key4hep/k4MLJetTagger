@@ -16,7 +16,6 @@ matplotlib.rcParams.update(
     }
 )
 
-
 # helpers
 
 def plot_kinematics(df1, df2, figsize=(12, 7), bins=50, l1='df1', l2='df2'):
@@ -59,7 +58,6 @@ def plot_pidflags(df1, df2, figsize=(12, 7), bins=10, l1='df1', l2='df2'):
     plt.tight_layout()
     plt.show()
 
-
 # retreive charged particles
 
 def get_index_charged_particles(df, ptype='cpart'):
@@ -78,7 +76,6 @@ def get_index_charged_particles(df, ptype='cpart'):
         bool_list[index] = True
         mask_bool_chad.append(bool_list)
     return mask_bool_chad
-
 
 def get_value_highest_energy_particle(df, k=3, ptype='cpart'):
     """return the index of the k highest energy charged particle in each event"""
@@ -113,10 +110,9 @@ def get_chad_elements(df_value, index):
             e_3.append(df_value[i][index_list[2]])
     return [np.array(e_1), np.array(e_2), np.array(e_3)]
 
-
 # plots for charged particles 
 
-def plot_IP(df1, df2, index1, index2, l1='df1', l2='df2', bins=50):
+def plot_IP(df1, df2, index1, index2, l1='df1', l2='df2', bins=70):
     keys = ['pfcand_d0', 'pfcand_z0', 'pfcand_Sip2dVal', 'pfcand_Sip2dSig', 'pfcand_Sip3dVal', 'pfcand_Sip3dSig', 'pfcand_JetDistVal', 'pfcand_JetDistSig']
     r = {'pfcand_d0': [-1, 1],
         'pfcand_z0': [-1, 1],
@@ -163,7 +159,6 @@ def plot_IP(df1, df2, index1, index2, l1='df1', l2='df2', bins=50):
         ax.set_yscale('log')
     
     plt.show()
-
 
 def plot_cov_matrix(df1, df2, index1, index2, l1='df1', l2='df2', bins=50):
     keys = [
@@ -237,4 +232,3 @@ def plot_cov_matrix(df1, df2, index1, index2, l1='df1', l2='df2', bins=50):
             ax[i].legend()
             ax[i].grid(True)
     plt.show()
-
