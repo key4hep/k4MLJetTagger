@@ -74,10 +74,6 @@ Here a quick overview of the source files in this repo:
 - `Helpers`: Other helpers
 
 
-## Extras
-
-You may find helpful resources in the `extras` folder. 
-
 ## Useful comments
 
 Find some documentation on how to work with this repo below.
@@ -133,6 +129,29 @@ conda activate weaver
 - If you want to use a different detector setup. 
 
 So generally speaking, if the input to the network changes. *This* network implemented was trained on CLD full simulation at 240 GeV (`/eos/experiment/fcc/prod/fcc/ee/test_spring2024/240gev/Hbb/CLD_o2_v05/rec/`). Check out the performance in this [publication](https://repository.cern/records/4pcr6-r0d06).
+
+## Extra section
+
+You may find helpful resources in the `extras` folder. 
+
+- *Creation of a conda env for onnx export*: To export a model trained with weaver you need an appropriate envirnoment. You can set it up with `env_for_onnx.yml`. See [this section](#changing-the-inference-model---exporting-the-model-to-onnx).
+- *Submitting jobs to condor*: You will find `jettagswriter.sub` which submits the `writeJetTags.py` steering file to condor to run it on large data samples. It produces root files with the saved jet tags (reco from the tagger and MC). **Please** run `python write_sub_JetTagsWriter.py` to create the `.sub` file with your output paths and data etc. by modifiying the python script. Same for `jetobswriter.sub` which submits a job to condor to run the `writeJetConstObs.py` steering file. For more information about condor jobs, see this [documentation](https://batchdocs.web.cern.ch/local/quick.html).
+
+```
+# go on lxplus
+cd /path/to/JetTagging/extras/submit_to_condor/
+# MODIFY the python script to match your data, paths and job
+python write_sub_JetObsWriter.py
+# check if jetobswriter.sub looks ok
+
+condor_submit jetobswriter.sub
+```
+
+- *Plots*: You can find some plotting scripts in `extras/plotting`: 
+    - `jetobs_comparison.ipynb` is a notebook that plots the distribution of jet constituent observables used for tagging retrieved with a steering file like `writeJetConstObs.py` that uses the Gaudi algorithm `JetObsWriter`. The notebook compares the distributions of two jet observables from different root files. The helper functions for this notebook are defined in `helper_jetobs.py`
+    - `rocs_comparison.ipynb` is a notebook that compares two ROC curves for different flavors. The data used for the ROCs should come from two root files retrieved with a steering file like `writeJetTags.py` that uses the Gaudi algorithm `JetTagsWriter`. The helper functions for this notebook are defined in `helper_rocs.py`
+
+
 
 ## Open problems / further work
 

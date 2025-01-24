@@ -22,13 +22,17 @@ matplotlib.rcParams.update(
 
 # constum path for saving data
 
-path = "./"
+#path = "./"
+path = "/afs/cern.ch/work/s/saaumill/public/FullSimTagger/notebooks/plots_from_key4hep"
 
-
-def load_data(file_name):
+def load_data(file_name, key='JetTags;1'):
+    print(f"Loading data from {file_name}...")
     file = uproot.open(file_name)
-    tree = file['Events;1']
+    print(f"Data loaded.")
+    tree = file[key]
+    print(f"Converting data to numpy...")
     data = tree.arrays(library="np")
+    print(f"Data converted.")
     return data
 
 def invalid_ind(data):
@@ -293,7 +297,8 @@ def all_rocs(data1, data2, label1, label2, save=False, name=None, bbox_anc=(0.6,
     
     if save:
         plt.savefig("{}/{}.pdf".format(path, name))
-    plt.show()
+    else:
+        plt.show()
 
 # non-binary discriminates
 
@@ -375,6 +380,6 @@ def non_binary_disc(data1, data2, dic, label1, label2, dicx=None, save=False, na
     ax[lax].add_artist(legend_colorful)
     if save:
         plt.savefig("{}/{}.pdf".format(path, name))
-    
-    plt.show()
+    else:
+        plt.show()
         

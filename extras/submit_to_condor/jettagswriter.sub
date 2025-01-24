@@ -10,6 +10,7 @@ log                   = /afs/cern.ch/work/s/saaumill/public/condor/std-condor-re
 
 +AccountingGroup = "group_u_FCC.local_gen"
 +JobFlavour    = "workday"
+
 arguments="0 5 '/eos/experiment/fcc/prod/fcc/ee/test_spring2024/240gev/Huu/CLD_o2_v05/rec/00016774/*/Huu_rec_*.root' /eos/experiment/fcc/ee/datasets/CLD_fullsim_tagging_results_key4hep/ /eos/experiment/fcc/ee/datasets/CLD_fullsim_tagging_results_key4hep/Huu_0.root"
 queue
 arguments="5 5 '/eos/experiment/fcc/prod/fcc/ee/test_spring2024/240gev/Huu/CLD_o2_v05/rec/00016774/*/Huu_rec_*.root' /eos/experiment/fcc/ee/datasets/CLD_fullsim_tagging_results_key4hep/ /eos/experiment/fcc/ee/datasets/CLD_fullsim_tagging_results_key4hep/Huu_1.root"
