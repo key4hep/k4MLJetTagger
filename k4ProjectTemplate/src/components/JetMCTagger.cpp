@@ -55,9 +55,15 @@ int findMCPIDfromHiggsDaughters(const edm4hep::MCParticleCollection& MCParticles
     if(expectedFlavors.count(j_pid) == 1){
       return j_pid;
     }
+  } else if (HiggsDaughtersPDG.size() == 2 && HiggsDaughtersPDG[0]== 21 && HiggsDaughtersPDG[1] == 21){  
+    // if the daughters are gluons they don't have opposite sign
+    return 21;
+
   } else {
-    log << MSG::ERROR << "Higgs Boson has more than 2 daughters or they are not the same. Returning dummy value 0 for MC jet flavor." << endmsg;
+    log << MSG::WARNING << "Higgs Boson has more than 2 daughters or they are not the same. Returning dummy value 0 for MC jet flavor." << endmsg;
+    return 0; // dummy value
   }
+  log << MSG::WARNING << "Something went wrong with determining the Higgs daughters. Returning dummy value 0 for MC jet flavor." << endmsg;
   return 0; // dummy value
 }
 

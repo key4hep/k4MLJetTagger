@@ -5,7 +5,8 @@ import matplotlib.pyplot as plt
 from helper_rocs import *
 
 path1 = "/afs/cern.ch/work/s/saaumill/public/tagging_performance/FCCnote/fullsimCLD240_2mio.root"
-path2 = "/eos/experiment/fcc/ee/datasets/CLD_fullsim_tagging_results_key4hep/hadded/results_key4hep_fullsim_tagging_small.root"
+path2 = "/eos/experiment/fcc/ee/datasets/CLD_fullsim_tagging_results_key4hep/hadded/mini/results.root"
+#path2 = "/eos/experiment/fcc/ee/datasets/CLD_fullsim_tagging_results_key4hep/hadded/results_key4hep_fullsim_tagging_small.root"
 #path2 = "/afs/cern.ch/work/s/saaumill/public/tagging_performance/FCCnote/fastsimCLD240_noPID_2mio.root"
 
 print("Loading data...")

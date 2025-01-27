@@ -139,6 +139,9 @@ struct JetTagger
         jetTag.setParticle(jet);
         jetTag.setLikelihood(probabilities[i]);
         jetTag.setPDG(PDGflavors[i]);
+        if(flavorNames[i] == "recojet_isG") {
+          info() << "For flavor " << flavorNames[i] << " we have aprobability of " << probabilities[i] << endmsg;
+        }
       }
     }
 
