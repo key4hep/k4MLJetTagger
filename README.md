@@ -101,6 +101,8 @@ Here a quick overview of the source files in this repo:
 
 So generally speaking, if the input to the network changes. *This* network implemented was trained on CLD full simulation at 240 GeV (`/eos/experiment/fcc/prod/fcc/ee/test_spring2024/240gev/Hbb/CLD_o2_v05/rec/`). Check out the performance in this [publication](https://repository.cern/records/4pcr6-r0d06).
 
+<img src="./extras/flowchart.png" alt="JetTagger-flowchart" width="70%">
+
 ### How to retrain a model
 0. Do some changed that require retraining.
 1. Create a dataset to train the model on. The data should be stored in a root file and you can use the `JetObsWriter` to create them. You normally need ~1-2 mio jets/flavor to train a new model, that is why I recommend to create the root file using condor. Follow the instructions [here](#extra-section) to do so. 
@@ -225,7 +227,7 @@ condor_submit jetobswriter.sub
 ## Open problems / further work
 
 - The magnetic field $B$ of the detector is needed at one point to calculate the helix parameters of the tracks with respect to the primary vertex. The magnetic field is hard coded at the moment. It would be possible to retrieve it from the detector geometry (code already added, see the `Helper` file) but therefore one must load the detector in the steering file, e.g. like [this](https://github.com/key4hep/CLDConfig/blob/ae99dbed8e34390036e29ca09897dc0ed7759030/CLDConfig/CLDReconstruction.py#L61-L66). As we use the v05 version of CLD at the moment, loading the detector is slow and not worth it to only set $Bz=2.0$ (in my opinion). With a newer detector version (e.g. v07) this might be worth investigating.
-- Currently, the network used was trained using the FCCAnalyses convention for naming the jet constituents observables. The naming is quite confused, this is why I used the `VarMapper` in `Helpers` to use a more intuitive naming. In the future, if retraining a model, I highly suggest switching to the convention used here to get rid of the FCCAnalyses convention. You only need to modify the function `from_Jet_to_onnx_input` in the `Helpers` where the `VarMapper` is used to switch conventions. 
+- Currently, the network used was trained using the [FCCAnalyses convention](https://github.com/HEP-FCC/FCCAnalyses/blob/fa672d4326bcf2f43252d3554a138b53dcba15a4/examples/FCCee/weaver/config.py#L31) for naming the jet constituents observables. The naming is quite confusing, this is why I used the my own convention that matches the [key4hep convention](https://github.com/key4hep/EDM4hep/blob/997ab32b886899253c9bc61adea9a21b57bc5a21/edm4hep.yaml#L195-L199). The class `VarMapper` in `Helpers` helps to switch between the two conventions. In the future, if retraining a model, I highly suggest switching to the convention used here when training the model to get rid of the FCCAnalyses convention. To do so, train the network with a yaml file like `extras/config_for_weaver_training.yaml` and root files created with `writeJetConstObs.py` which use the key4hep convention. For running inference here in key4hep, you only need to modify the function `from_Jet_to_onnx_input` in `Helpers` where the `VarMapper` is used. Remove it, there should be no need for converting conventions anymore. 
 
 
 ## Further links:

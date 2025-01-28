@@ -7,6 +7,7 @@ from matplotlib.lines import Line2D
 # set the style
 from cycler import cycler
 import matplotlib
+import time
 
 plt.rc('axes', prop_cycle=cycler('color', ['#73b06f', '#e6701b', '#007090', '#e7298a', '#802392', '#ffad08', '#56b4e9']))
 #matplotlib.rcParams["text.usetex"] = True
@@ -22,17 +23,16 @@ matplotlib.rcParams.update(
 
 # constum path for saving data
 
-#path = "./"
-path = "/afs/cern.ch/work/s/saaumill/public/FullSimTagger/notebooks/plots_from_key4hep"
+path = "./"
+#path = "/afs/cern.ch/work/s/saaumill/public/FullSimTagger/notebooks/plots_from_key4hep"
 
 def load_data(file_name, key='JetTags;1'):
-    print(f"Loading data from {file_name}...")
+    t1 = time.time()
     file = uproot.open(file_name)
-    print(f"Data loaded.")
     tree = file[key]
-    print(f"Converting data to numpy...")
     data = tree.arrays(library="np")
-    print(f"Data converted.")
+    t2 = time.time()
+    print(f"Time to load data: {t2-t1}")
     return data
 
 def invalid_ind(data):
