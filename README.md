@@ -235,3 +235,20 @@ condor_submit jetobswriter.sub
 
 - [ONNX implemention in FCCAnalyses](https://github.com/HEP-FCC/FCCAnalyses/tree/master/addons/ONNXRuntime): Strongly inspired this code.
 - [k4-project-template](https://github.com/key4hep/k4-project-template)
+
+## Citation
+
+If you find this code helpful and use it in your research, please cite:
+
+```
+@manual{aumiller_2024_4pcr6-r0d06,
+  title        = {Jet Flavor Tagging Performance at FCC-ee},
+  author       = {Aumiller, Sara and
+                  Garcia, Dolores and
+                  Selvaggi, Michele},
+  month        = nov,
+  year         = 2024,
+  doi          = {10.17181/4pcr6-r0d06},
+  url          = {https://doi.org/10.17181/4pcr6-r0d06}
+}
+```
