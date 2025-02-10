@@ -60,7 +60,7 @@ def plot_pidflags(df1, df2, figsize=(12, 7), bins=10, l1='df1', l2='df2'):
 
 # retreive charged particles
 
-def get_index_charged_particles(df, ptype='cpart'):
+def get_index_charged_particles(df, ptype='cpart', fastsim=False):
     """Choose particle type: cpart, npart, photon"""
     types = df['pfcand_type']
     if ptype=='cpart':
@@ -69,6 +69,12 @@ def get_index_charged_particles(df, ptype='cpart'):
         num = [2112]
     elif ptype=='photon':
         num = [22]
+    # fastsim is different... overwrite in that case
+    if fastsim:
+        if ptype=='cpart':
+            num = [0]
+        elif ptype=='npart':
+            num = [130]
     mask_bool_chad = []
     for i in range(types.shape[0]):
         index = np.where(np.isin(types[i], num))[0]
@@ -77,10 +83,10 @@ def get_index_charged_particles(df, ptype='cpart'):
         mask_bool_chad.append(bool_list)
     return mask_bool_chad
 
-def get_value_highest_energy_particle(df, k=3, ptype='cpart'):
+def get_value_highest_energy_particle(df, k=3, ptype='cpart', fastsim=False):
     """return the index of the k highest energy charged particle in each event"""
     particles_e = df['pfcand_e']
-    mask_chad = get_index_charged_particles(df, ptype=ptype)
+    mask_chad = get_index_charged_particles(df, ptype=ptype, fastsim=fastsim)
     index_charged = []
     for i  in range(particles_e.shape[0]):
         part_e = particles_e[i]
