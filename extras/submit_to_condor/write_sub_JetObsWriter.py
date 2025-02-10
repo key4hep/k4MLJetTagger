@@ -8,11 +8,15 @@ def generate_sub_file():
 
 
     # Define file patterns and other fixed values
-    data_pattern = {"Huu": "00016774", "Hdd": "00016771", "Hss": "00016777", "Hcc": "00016780", "Hbb": "00016783", "Hgg": "00016768", "Htautau": "00016765"}
+    # data_pattern = {"Huu": "00016774", "Hdd": "00016771", "Hss": "00016777", "Hcc": "00016780", "Hbb": "00016783", "Hgg": "00016768", "Htautau": "00016765"}
     num_files = 5 # How many files to process per job
     start_indices = range(0, 100, num_files) # total of 100 files per flavor with 1000 events each
     base_command = "/eos/experiment/fcc/prod/fcc/ee/test_spring2024/240gev/{pattern}/CLD_o2_v05/rec/{prod}/*/{pattern}_rec_*.root" # YOUR DATA HERE
-    output_base = "/eos/experiment/fcc/ee/datasets/CLD_fullsim_tagging_from_key4hep/" # YOUR OUTPUT PATH HERE
+    # output_base = "/eos/experiment/fcc/ee/datasets/CLD_fullsim_tagging_from_key4hep/" # YOUR OUTPUT PATH HERE
+
+    data_pattern = {"Huu": "00016808", "Hcc": "00016810"} 
+    output_base = "/eos/experiment/fcc/ee/datasets/CLD_fullsim_tagging_debug_tracks/with_fixesPV/"
+
     
     # Prepare the header of the file
     header = """# run commands for analysis,
