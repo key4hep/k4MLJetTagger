@@ -24,6 +24,7 @@
 #include "k4Interface/IGeoSvc.h" // for Bfield
 #include <edm4hep/ParticleIDCollection.h>
 #include <edm4hep/ReconstructedParticleCollection.h>
+#include "edm4hep/MCParticleCollection.h"
 #include <edm4hep/VertexCollection.h>
 
 
@@ -34,12 +35,14 @@
 #include "JetObservablesRetriever.h"
 #include "JetObsWriter.h"
 #include "Helpers.h"
+#include "DebugHelpers.h"
 
 DECLARE_COMPONENT(JetObsWriter)
 
 JetObsWriter::JetObsWriter(const std::string& name, ISvcLocator* svcLoc) : Gaudi::Algorithm(name, svcLoc) {
   declareProperty("InputJets", inputJets_handle, "Collection for input Jets");
   declareProperty("InputPrimaryVertices", inputPrimaryVertices_handle, "Collection for input Primary Vertices");
+  declareProperty("InputMCParticles", inputMCParticles_handle, "Collection for input MC Particles");
 }
 
 StatusCode JetObsWriter::initialize() {
@@ -72,9 +75,11 @@ StatusCode JetObsWriter::execute(const EventContext&) const {
   // Get the pointers to the collections
   const edm4hep::ReconstructedParticleCollection *jet_coll_ptr = inputJets_handle.get();
   const edm4hep::VertexCollection *prim_vertex_coll_ptr = inputPrimaryVertices_handle.get();
+  const edm4hep::MCParticleCollection *mc_coll_ptr = inputMCParticles_handle.get();
   // Create references to the collections
   const edm4hep::ReconstructedParticleCollection &jet_coll = *jet_coll_ptr;
   const edm4hep::VertexCollection &prim_vertex_coll = *prim_vertex_coll_ptr;
+  const edm4hep::MCParticleCollection &mc_coll = *mc_coll_ptr;
 
   JetObservablesRetriever Retriever;
   Retriever.Bz = 2.0; // hardcoded for now
@@ -121,6 +126,20 @@ StatusCode JetObsWriter::execute(const EventContext&) const {
       pfcand_JetDistVal->push_back(pfc.pfcand_JetDistVal);
       pfcand_JetDistSig->push_back(pfc.pfcand_JetDistSig);
     }
+    // PV variables
+    const edm4hep::Vector3f prim_vertex = Retriever.get_primary_vertex(prim_vertex_coll);
+    jet_PV_x = prim_vertex.x;
+    jet_PV_y = prim_vertex.y;
+    jet_PV_z = prim_vertex.z;
+    jet_PV_id = evNum;
+    // MC PV variables
+    const edm4hep::MCParticle MCquark = get_MC_quark(mc_coll);
+    const edm4hep::Vector3d MCprim_vertex = MCquark.getVertex();
+    jet_MCPV_x = MCprim_vertex.x;
+    jet_MCPV_y = MCprim_vertex.y;
+    jet_MCPV_z = MCprim_vertex.z;
+
+    
     t_jetcst->Fill();
   }
 
@@ -205,6 +224,15 @@ void JetObsWriter::initializeTree() {
   t_jetcst->Branch("pfcand_JetDistVal", &pfcand_JetDistVal);
   t_jetcst->Branch("pfcand_JetDistSig", &pfcand_JetDistSig);
 
+  // PV variables
+  t_jetcst->Branch("jet_PV_x", &jet_PV_x);
+  t_jetcst->Branch("jet_PV_y", &jet_PV_y);
+  t_jetcst->Branch("jet_PV_z", &jet_PV_z);
+  t_jetcst->Branch("jet_PV_id", &jet_PV_id);
+  t_jetcst->Branch("jet_MCPV_x", &jet_MCPV_x);
+  t_jetcst->Branch("jet_MCPV_y", &jet_MCPV_y);
+  t_jetcst->Branch("jet_MCPV_z", &jet_MCPV_z);
+
   return;
 }
 
@@ -246,6 +274,15 @@ void JetObsWriter::cleanTree() const {
   pfcand_Sip3dSig->clear();
   pfcand_JetDistVal->clear();
   pfcand_JetDistSig->clear();
+
+  float dummy_value = -999.0;
+  jet_PV_x = dummy_value;
+  jet_PV_y = dummy_value;
+  jet_PV_z = dummy_value;
+  jet_PV_id = -1;
+  jet_MCPV_x = dummy_value;
+  jet_MCPV_y = dummy_value;
+  jet_MCPV_z = dummy_value;
 
   return;
 }

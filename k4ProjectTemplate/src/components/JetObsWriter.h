@@ -92,7 +92,7 @@ class JetObsWriter : public Gaudi::Algorithm {
         mutable DataHandle<edm4hep::EventHeaderCollection> ev_handle {"EventHeader", Gaudi::DataHandle::Reader, this};
         mutable DataHandle<edm4hep::ReconstructedParticleCollection> inputJets_handle {"InputJets", Gaudi::DataHandle::Reader, this};
         mutable DataHandle<edm4hep::VertexCollection> inputPrimaryVertices_handle {"InputPrimaryVertices", Gaudi::DataHandle::Reader, this};
-
+        mutable DataHandle<edm4hep::MCParticleCollection> inputMCParticles_handle {"InputMCParticles", Gaudi::DataHandle::Reader, this};
 
         SmartIF<ITHistSvc> m_ths;  ///< THistogram service
 
@@ -135,6 +135,14 @@ class JetObsWriter : public Gaudi::Algorithm {
         mutable std::vector<float> *pfcand_Sip3dSig = nullptr;
         mutable std::vector<float> *pfcand_JetDistVal = nullptr;
         mutable std::vector<float> *pfcand_JetDistSig = nullptr;
+        // debug variables
+        mutable float jet_PV_x;
+        mutable float jet_PV_y;
+        mutable float jet_PV_z;
+        mutable int jet_PV_id;
+        mutable double jet_MCPV_x;
+        mutable double jet_MCPV_y;
+        mutable double jet_MCPV_z;
 
         mutable std::int32_t evNum;
 

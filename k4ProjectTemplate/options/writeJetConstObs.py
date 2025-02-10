@@ -43,6 +43,7 @@ algList = []
 MyJetObsWriter = JetObsWriter("MyJetObsWriter")
 MyJetObsWriter.InputJets = "RefinedVertexJets"
 MyJetObsWriter.InputPrimaryVertices = "PrimaryVertices"
+MyJetObsWriter.InputMCParticles = "MCParticles"
 # define root output file
 THistSvc().Output =["rec DATAFILE='{}' TYP='ROOT' OPT='RECREATE'".format(args.outputFile)]
 THistSvc().OutputLevel = WARNING
