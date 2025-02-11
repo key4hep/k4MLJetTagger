@@ -17,11 +17,14 @@ def generate_sub_file():
     # data_pattern = {"Huu": "00016808", "Hcc": "00016810"} 
     # output_base = "/eos/experiment/fcc/ee/datasets/CLD_fullsim_tagging_debug_tracks/with_fixesPV/" # new data with fixed PV beamspot params
 
-    data_pattern = {"Huu": "00016808"} 
-    output_base = "/eos/experiment/fcc/ee/datasets/CLD_fullsim_tagging_debug_tracks/with_fixesPV/with_HiggsMCPV/" # as above, but saving jet_MCPV_x etc using the Higgs, not the daughters
+    # data_pattern = {"Huu": "00016808"} 
+    # output_base = "/eos/experiment/fcc/ee/datasets/CLD_fullsim_tagging_debug_tracks/with_fixesPV/with_HiggsMCPV/" # as above, but saving jet_MCPV_x etc using the Higgs, not the daughters
 
     # data_pattern = {"Huu": "00016774"}
-    # output_base = "/eos/experiment/fcc/ee/datasets/CLD_fullsim_tagging_debug_tracks/checking_firstprod_Juraj_00016774/" # checking the first production campaign from Juraj, use Higgs daughters for jet_MCPV_x etc for consistency
+    # output_base = "/eos/experiment/fcc/ee/datasets/CLD_fullsim_tagging_debug_tracks/checking_firstprod_Juraj_00016774/saving_MCPV_fromDaughters/" # checking the first production campaign from Juraj
+
+    data_pattern = {"Huu": "00016774"}
+    output_base = "/eos/experiment/fcc/ee/datasets/CLD_fullsim_tagging_debug_tracks/checking_firstprod_Juraj_00016774/saving_MCPV_fromHiggs/" # checking the first production campaign from Juraj
 
 
     """ NOTE

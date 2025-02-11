@@ -9,7 +9,7 @@ edm4hep::MCParticle get_MC_quark(const edm4hep::MCParticleCollection& mc_coll){
         if(mc_part.getPDG() == higgs_pid){
             // // const edm4hep::Vector3d higgs_vertex = mc_part.getVertex();
             // // std::cout << "Higgs vertex: " << higgs_vertex.x << ", " << higgs_vertex.y << ", " << higgs_vertex.z << std::endl;
-            // // auto daughters = mc_part.getDaughters();
+            // auto daughters = mc_part.getDaughters();
             // if (daughters.size() != 2){
             //     throw std::invalid_argument("Higgs has " + std::to_string(daughters.size()) + " daughters. Expected 2.");
             // }
