@@ -37,6 +37,9 @@ Jet JetObservablesRetriever::retrieve_input_observables(const edm4hep::Reconstru
         fill_cov_matrix(p, particle); // covariance matrix
         Helix h = calculate_helix_params(particle, prim_vertex); // calculate track parameters described by a helix parametrization
         fill_track_IP(jet, particle, p, h); // impact parameters
+        // debug
+        auto track = particle.getTracks()[0].getTrackStates()[0]; // get info at interaction point
+        p.pfcand_d0_wrt_000 = track.D0;
       } else if (n_tracks == 0) { // neutral particle
         fill_track_params_neutral(p);
       } else {
@@ -44,6 +47,8 @@ Jet JetObservablesRetriever::retrieve_input_observables(const edm4hep::Reconstru
       }
 
       //p.print_values();
+
+
 
       // add the pfcand to the jet
       j.constituents.push_back(p);
@@ -107,6 +112,8 @@ void JetObservablesRetriever::fill_track_params_neutral(Pfcand& p){
   p.pfcand_Sip3dSig = -200;
   p.pfcand_JetDistVal = -9;
   p.pfcand_JetDistSig = -200;
+  // debug
+  p.pfcand_d0_wrt_000 = -9;
   
 }
 

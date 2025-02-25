@@ -125,6 +125,9 @@ StatusCode JetObsWriter::execute(const EventContext&) const {
       pfcand_Sip3dSig->push_back(pfc.pfcand_Sip3dSig);
       pfcand_JetDistVal->push_back(pfc.pfcand_JetDistVal);
       pfcand_JetDistSig->push_back(pfc.pfcand_JetDistSig);
+
+      //debug
+      pfcand_d0_wrt_000->push_back(pfc.pfcand_d0_wrt_000);
     }
     // PV variables
     const edm4hep::Vector3f prim_vertex = Retriever.get_primary_vertex(prim_vertex_coll);
@@ -178,6 +181,7 @@ void JetObsWriter::initializeTree() {
   pfcand_cov_omegaz0 = new std::vector<float>();
   pfcand_cov_omegatanLambda = new std::vector<float>();
   pfcand_d0 = new std::vector<float>();
+  pfcand_d0_wrt_000 = new std::vector<float>();
   pfcand_z0 = new std::vector<float>();
   pfcand_Sip2dVal = new std::vector<float>();
   pfcand_Sip2dSig = new std::vector<float>();
@@ -216,6 +220,7 @@ void JetObsWriter::initializeTree() {
   t_jetcst->Branch("pfcand_cov_omegaz0", &pfcand_cov_omegaz0);
   t_jetcst->Branch("pfcand_cov_omegatanLambda", &pfcand_cov_omegatanLambda);
   t_jetcst->Branch("pfcand_d0", &pfcand_d0);
+  t_jetcst->Branch("pfcand_d0_wrt_000", &pfcand_d0_wrt_000);
   t_jetcst->Branch("pfcand_z0", &pfcand_z0);
   t_jetcst->Branch("pfcand_Sip2dVal", &pfcand_Sip2dVal);
   t_jetcst->Branch("pfcand_Sip2dSig", &pfcand_Sip2dSig);
@@ -267,6 +272,7 @@ void JetObsWriter::cleanTree() const {
   pfcand_cov_omegaz0->clear();
   pfcand_cov_omegatanLambda->clear();
   pfcand_d0->clear();
+  pfcand_d0_wrt_000->clear();
   pfcand_z0->clear();
   pfcand_Sip2dVal->clear();
   pfcand_Sip2dSig->clear();

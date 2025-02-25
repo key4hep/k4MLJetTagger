@@ -38,6 +38,9 @@ struct Pfcand {
   float pfcand_Sip3dVal, pfcand_Sip3dSig;
   float pfcand_JetDistVal, pfcand_JetDistSig;
 
+  // debug
+  float pfcand_d0_wrt_000;
+
   void print_values(){
     std::cout << "pfcand_e" << pfcand_e << std::endl;
     std::cout << "pfcand_p" << pfcand_p << std::endl;
@@ -76,6 +79,8 @@ struct Pfcand {
     std::cout << "pfcand_Sip3dSig: " << pfcand_Sip3dSig << std::endl;
     std::cout << "pfcand_JetDistVal: " << pfcand_JetDistVal << std::endl;
     std::cout << "pfcand_JetDistSig: " << pfcand_JetDistSig << std::endl;
+    // debug 
+    std::cout << "pfcand_d0_wrt_000: " << pfcand_d0_wrt_000 << std::endl;
   }
 
   float get_attribute(std::string& attribute){
@@ -121,6 +126,8 @@ struct Pfcand {
     else if (attribute == "pfcand_JetDistSig") return pfcand_JetDistSig;
     else if (attribute == "pfcand_e") return pfcand_e;
     else if (attribute == "pfcand_p") return pfcand_p;
+    // debug
+    else if (attribute == "pfcand_d0_wrt_000") return pfcand_d0_wrt_000;
     else throw std::invalid_argument("Attribute not found: " + attribute);
   };
 
@@ -129,7 +136,7 @@ struct Pfcand {
     * Return a list of strings with all the attributes names of the Struct Pfcand.
     * @return: a list of strings with all the attributes names
     */
-    return {"pfcand_erel_log", "pfcand_thetarel", "pfcand_phirel", "pfcand_e", "pfcand_p", "pfcand_type", "pfcand_charge", "pfcand_isEl", "pfcand_isMu", "pfcand_isGamma", "pfcand_isChargedHad", "pfcand_isNeutralHad", "pfcand_dndx", "pfcand_tof", "pfcand_cov_omegaomega", "pfcand_cov_tanLambdatanLambda", "pfcand_cov_phiphi", "pfcand_cov_d0d0", "pfcand_cov_z0z0", "pfcand_cov_d0z0", "pfcand_cov_phid0", "pfcand_cov_tanLambdaz0", "pfcand_cov_d0omega", "pfcand_cov_d0tanLambda", "pfcand_cov_phiomega", "pfcand_cov_phiz0", "pfcand_cov_phitanLambda", "pfcand_cov_omegaz0", "pfcand_cov_omegatanLambda", "pfcand_d0", "pfcand_z0", "pfcand_Sip2dVal", "pfcand_Sip2dSig", "pfcand_Sip3dVal", "pfcand_Sip3dSig", "pfcand_JetDistVal", "pfcand_JetDistSig"};
+    return {"pfcand_erel_log", "pfcand_thetarel", "pfcand_phirel", "pfcand_e", "pfcand_p", "pfcand_type", "pfcand_charge", "pfcand_isEl", "pfcand_isMu", "pfcand_isGamma", "pfcand_isChargedHad", "pfcand_isNeutralHad", "pfcand_dndx", "pfcand_tof", "pfcand_cov_omegaomega", "pfcand_cov_tanLambdatanLambda", "pfcand_cov_phiphi", "pfcand_cov_d0d0", "pfcand_cov_z0z0", "pfcand_cov_d0z0", "pfcand_cov_phid0", "pfcand_cov_tanLambdaz0", "pfcand_cov_d0omega", "pfcand_cov_d0tanLambda", "pfcand_cov_phiomega", "pfcand_cov_phiz0", "pfcand_cov_phitanLambda", "pfcand_cov_omegaz0", "pfcand_cov_omegatanLambda", "pfcand_d0", "pfcand_z0", "pfcand_Sip2dVal", "pfcand_Sip2dSig", "pfcand_Sip3dVal", "pfcand_Sip3dSig", "pfcand_JetDistVal", "pfcand_JetDistSig", "pfcand_d0_wrt_000"};
   };
 };
 

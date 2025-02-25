@@ -67,6 +67,7 @@ class JetObsWriter : public Gaudi::Algorithm {
         delete pfcand_cov_omegaz0;
         delete pfcand_cov_omegatanLambda;
         delete pfcand_d0;
+        delete pfcand_d0_wrt_000;
         delete pfcand_z0;
         delete pfcand_Sip2dVal;
         delete pfcand_Sip2dSig;
@@ -128,6 +129,7 @@ class JetObsWriter : public Gaudi::Algorithm {
         mutable std::vector<float> *pfcand_cov_omegaz0 = nullptr;
         mutable std::vector<float> *pfcand_cov_omegatanLambda = nullptr;
         mutable std::vector<float> *pfcand_d0 = nullptr;
+        mutable std::vector<float> *pfcand_d0_wrt_000 = nullptr;
         mutable std::vector<float> *pfcand_z0 = nullptr;
         mutable std::vector<float> *pfcand_Sip2dVal = nullptr;
         mutable std::vector<float> *pfcand_Sip2dSig = nullptr;
