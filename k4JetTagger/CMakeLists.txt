@@ -35,7 +35,6 @@ gaudi_add_module(k4JetTaggerPlugins
                       ROOT::Tree
                       ROOT::Physics
                       onnxruntime::onnxruntime
-                      torch
                       )
 
 install(TARGETS k4JetTaggerPlugins

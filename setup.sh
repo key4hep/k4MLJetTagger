@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# Script to setup key4hep nightly environment that allows to use (py)torch, ONNX and Marlin.
+# Script to setup key4hep nightly environment that allows to use ONNX
 
 
 source /cvmfs/sw-nightlies.hsf.org/key4hep/setup.sh

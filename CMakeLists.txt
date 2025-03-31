@@ -50,13 +50,6 @@ else()
   message("ONNX Runtime not found!")
 endif()
 
-find_package(Torch)
-if(Torch_FOUND)
-  message("Torch inference library found.")
-else()
-  message("Torch not found!")
-endif()
-
 #---------------------------------------------------------------
 
 include(cmake/Key4hepConfig.cmake)
