@@ -19,7 +19,7 @@ limitations under the License.
 CMAKE_MINIMUM_REQUIRED(VERSION 3.12)
 
 
-project(k4ProjectTemplate)
+project(k4JetTagger)
 
 # please keep this layout for version setting, used by the automatic tagging script
 set(PACKAGE_VERSION_MAJOR 1)
@@ -65,6 +65,6 @@ include(GNUInstallDirs)
 
 include(CTest)
 
-add_subdirectory(k4ProjectTemplate)
+add_subdirectory(k4JetTagger)
 
 include(cmake/CreateProjectConfig.cmake)

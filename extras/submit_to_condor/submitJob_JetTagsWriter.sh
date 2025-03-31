@@ -52,8 +52,8 @@ middle_time=$((preproc_time - start_time))
 echo "time before running script: $middle_time seconds" 
 
 # CHANGE FILE HERE
-#k4run /afs/cern.ch/work/s/saaumill/public/JetTagging/k4ProjectTemplate/options/writeJetConstObs.py --inputFiles="./job/merged_input_${pattern}.root" --outputFile="./job/out.root" 
-k4run /afs/cern.ch/work/s/saaumill/public/JetTagging/k4ProjectTemplate/options/writeJetTags.py --inputFiles="./job/merged_input_${pattern}.root" --outputFile="./job/out.root"
+#k4run /afs/cern.ch/work/s/saaumill/public/JetTagging/k4JetTagger/options/writeJetConstObs.py --inputFiles="./job/merged_input_${pattern}.root" --outputFile="./job/out.root" 
+k4run /afs/cern.ch/work/s/saaumill/public/JetTagging/k4JetTagger/options/writeJetTags.py --inputFiles="./job/merged_input_${pattern}.root" --outputFile="./job/out.root"
 
 echo "job done ... "
 job_endtime=$(date +%s)
