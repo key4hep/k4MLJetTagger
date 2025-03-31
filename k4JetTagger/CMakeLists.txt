@@ -55,19 +55,8 @@ function(set_test_env _testname)
     )
 endfunction()
 
-add_test(NAME CreateExampleEventData
+add_test(NAME createJetTags
                WORKING_DIRECTORY ${PROJECT_SOURCE_DIR}
-               COMMAND k4run k4JetTagger/options/createExampleEventData.py)
-set_test_env(CreateExampleEventData)
-
-add_test(NAME ReadExampleEventData
-               WORKING_DIRECTORY ${PROJECT_SOURCE_DIR}
-               COMMAND k4run k4JetTagger/options/readExampleEventData.py)
-set_test_env(ReadExampleEventData)
-set_property(TEST ReadExampleEventData APPEND PROPERTY DEPENDS CreateExampleEventData)
-
-add_test(NAME HelloWorldAlg
-               WORKING_DIRECTORY ${PROJECT_SOURCE_DIR}
-               COMMAND k4run k4JetTagger/options/createHelloWorld.py)
-set_test_env(HelloWorldAlg)
+               COMMAND k4run k4JetTagger/options/createJetTags.py)
+set_test_env(createJetTags)
 
