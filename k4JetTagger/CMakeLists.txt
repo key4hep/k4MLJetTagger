@@ -66,5 +66,5 @@ ExternalData_Add_Target(backward_compat_tests)
 ExternalData_Add_Test(backward_compat_tests
         NAME createJetTags
         WORKING_DIRECTORY ${PROJECT_SOURCE_DIR}
-        COMMAND k4run k4JetTagger/options/createJetTags.py --inputFiles=DATA{${PROJECT_SOURCE_DIR}/input_files/test_spring2024_240gev_Hbb_CLD_o2_v05.root})
+        COMMAND k4run k4JetTagger/options/createJetTags.py --inputFiles=DATA{${PROJECT_SOURCE_DIR}/test/input_files/test_spring2024_240gev_Hbb_CLD_o2_v05.root})
 set_test_env(createJetTags)
