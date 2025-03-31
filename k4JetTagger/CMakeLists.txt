@@ -55,8 +55,16 @@ function(set_test_env _testname)
     )
 endfunction()
 
-add_test(NAME createJetTags
-               WORKING_DIRECTORY ${PROJECT_SOURCE_DIR}
-               COMMAND k4run k4JetTagger/options/createJetTags.py)
-set_test_env(createJetTags)
+#--------------------------------- 
 
+include(ExternalData)
+list(APPEND ExternalData_URL_TEMPLATES
+  "https://key4hep.web.cern.ch:443/testFiles/k4JetTagger/%(hash)"
+)
+ExternalData_Add_Target(backward_compat_tests)
+
+ExternalData_Add_Test(backward_compat_tests
+        NAME createJetTags
+        WORKING_DIRECTORY ${PROJECT_SOURCE_DIR}
+        COMMAND k4run k4JetTagger/options/createJetTags.py --inputFiles=DATA{${PROJECT_SOURCE_DIR}/input_files/test_spring2024_240gev_Hbb_CLD_o2_v05.root})
+set_test_env(createJetTags)
