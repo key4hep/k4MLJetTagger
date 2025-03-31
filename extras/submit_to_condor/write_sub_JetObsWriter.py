@@ -26,18 +26,20 @@ def generate_sub_file():
     # data_pattern = {"Huu": "00016774"}
     # output_base = "/eos/experiment/fcc/ee/datasets/CLD_fullsim_tagging_debug_tracks/checking_firstprod_Juraj_00016774/saving_MCPV_fromHiggs/" # checking the first production campaign from Juraj
 
-    data_pattern = {"Huu": "00016823"}
-    output_base = "/eos/experiment/fcc/ee/datasets/CLD_fullsim_tagging_debug_tracks/with_fixedSmearing/" # new data with fixed smearing. Manually checked that MC PV from daughters and Higgs are the same.
+    # data_pattern = {"Huu": "00016823"}
+    # output_base = "/eos/experiment/fcc/ee/datasets/CLD_fullsim_tagging_debug_tracks/with_fixedSmearing/" # new data with fixed smearing. Manually checked that MC PV from daughters and Higgs are the same.
 
+    # data_pattern = {"Huu": "00016823"}
+    # output_base = "/eos/experiment/fcc/ee/datasets/CLD_fullsim_tagging_debug_tracks/check_d0_wrt_to_000_from_00016823/" # Save d0_wrt_to_000 and compare to d0 (wrt_to_PV)
 
     """ NOTE
     The different numbers in the input path file refer to the different production campaigns. 
     Taking Huu: 
     - 00016774: First big production campaign from Juraj with newest key4hep stack to validate my tagger (done)
     - 00016808: Fixing PV beamspot params done by Juraj
-    - 00016823: Fixing the double smearing in the vertex by Juraj
+    - 00016823: Fixing the double smearing in the vertex by Juraj - MC PV from daughters and Higgs are the same now. 
 
-    In 00016808, the MC PV are not correct!! Let's see if they are in 00016774, because I have not checked the PV back then.
+    In 00016808, the MC PV are not correct!! Same for 00016774. 
 
     """
 

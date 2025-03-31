@@ -55,7 +55,7 @@ algList.append(MyJetObsWriter)
 
 ApplicationMgr(TopAlg=algList,
                EvtSel="NONE",
-               EvtMax=200,
+               EvtMax=-1,
                ExtSvc=[k4DataSvc("EventDataSvc")],
                OutputLevel=INFO,
                )
