@@ -2,7 +2,7 @@
 
 This is an implementation of jet-flavor tagging to key4hep for CLD full simulation at 240 GeV using the [k4-project Template](https://github.com/key4hep/k4-project-template).
 
-We build a Gaudi Transformer `JetTagger` (in `JetTagging/k4ProjectTemplate/src/components/JetTagger.cpp`) that works as follows:
+We build a Gaudi Transformer `JetTagger` (in `JetTagging/k4JetTagger/src/components/JetTagger.cpp`) that works as follows:
 1. First, it extracts jet constituent variables (such as kinematics, track parameters, PID...) from every jet in the event with `JetObservablesRetriever`.
 2. Then, it uses these variables as input to a neural network ([Particle Transformer](https://arxiv.org/abs/2202.03772)). Here, we run inference on an [ONNX](https://onnx.ai/) exported trained network on 2 million jets/flavor using [weaver](https://github.com/hqucms/weaver-core). The code is in `WeaverInterface` and `ONNXRuntime`.
 3. Create $N$ (here: 7) new collections `RefinedJetTag_X` that saves the probability for each flavor $X$ ($H\rightarrow u \bar{u}$, $H\rightarrow d \bar{d}$, $H\rightarrow c \bar{c}$, $H\rightarrow s \bar{s}$, $H\rightarrow b \bar{b}$, $H\rightarrow g g$, $H\rightarrow \tau^- \tau^+$).
@@ -44,14 +44,14 @@ ninja install
 Run the tagger by including the transformer `JetTagger` in a steering file like `createJetTags.py` and run it like this:
 
 ``` bash
-k4run ../k4ProjectTemplate/options/createJetTags.py
+k4run ../k4JetTagger/options/createJetTags.py
 ```
 
 This will return your edm4hep input file with the added `RefinedJetTag_X` collections. 
 
 ## Infomation about the steering files provided 
 
-There are four steering files provided in this repo in `/JetTagging/k4ProjectTemplate/options/`. They either start with `create`, which refers to a steering file that will append a new collection to the input edm4hep files provided, or they start with `write` and only produce root files as an output. 
+There are four steering files provided in this repo in `/JetTagging/k4JetTagger/options/`. They either start with `create`, which refers to a steering file that will append a new collection to the input edm4hep files provided, or they start with `write` and only produce root files as an output. 
 
 - `createJetTags.py`: tags every jet using ML and appends 7 new PID collections `RefinedJetTag_X` with `X` being the 7 flavors (U, D, S, C, B, G, TAU). 
 - `createJetMCTag.py`: appends one PID collection, `MCJetTag` that refers to the MC jet flavor. **Warning**: This **assumes H(jj)Z(vv)** events as it checks the PDG of the daughter particles of the Higgs Boson in the event.
@@ -182,7 +182,7 @@ conda activate weaver
 
 ### Changing the inference model - adjusting the code
 
-- you need to change the paths to the model and its JSON config file in the steering file (here: `JetTagging/k4ProjectTemplate/options/createJetTags.py`) by setting `model_path` and `json_path` in the `JetTagger` transformer initialization. 
+- you need to change the paths to the model and its JSON config file in the steering file (here: `JetTagging/k4JetTagger/options/createJetTags.py`) by setting `model_path` and `json_path` in the `JetTagger` transformer initialization. 
 - You should not need to change anything apart from the steering file, assuming: 
     - You adopted the `flavor_collection_names` in the steering file `createJetTags.py` matching the **order, label, and size** that the network expects. E.g., if the network expects the first output to represent the probability of a $b$-jet, then the first item in the list `flavor_collection_names` needs to be `yourCollectionName_B`. If your network distinguishes between $n$ flavors, make sure to provide $n$ collection names. 
     - You used weaver to train your model. (If not, you need to adapt a lot. Start building your own `WeaverInterface` header and source file, adopt the way the Struct `Jet` is transformed to fit the input formatted expected by your network (here done in `Helpers` with this function: `from_Jet_to_onnx_input`) and change the handling of the `json` config file if needed, including the extraction of all necessary inputs in the `tagger` function in `JetTagger.cpp`)
@@ -194,7 +194,7 @@ conda activate weaver
 
 - Extract the wanted parameter in `JetObservablesRetriever` and modify the `Pfcand` Struct in `Structs.h` by adding the new observables as an attribute.
 - Modify `JetObsWriter` and add your new observable to be saved in the output root file.
-- Retrieve a root file (default `jetconst_obs.root`) by running `k4run ../k4ProjectTemplate/options/writeJetConstObs.py` which uses the `JetObsWriter`. To create larger data, submit the jobs to condor (see `extras/submit_to_condor`) explained [here](#extra-section). 
+- Retrieve a root file (default `jetconst_obs.root`) by running `k4run ../k4JetTagger/options/writeJetConstObs.py` which uses the `JetObsWriter`. To create larger data, submit the jobs to condor (see `extras/submit_to_condor`) explained [here](#extra-section). 
 - Use the root output (`jetconst_obs.root`, or to be more precise, the root files from your condor submission because you need plenty of data to retrain a model) to _retrain the model_.
 - Convert your trained model to ONNX as explained [above](#changing-the-inference-model---exporting-the-model-to-onnx).
 
