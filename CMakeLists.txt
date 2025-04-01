@@ -62,9 +62,4 @@ add_subdirectory(k4JetTagger)
 
 include(cmake/CreateProjectConfig.cmake)
 
-#-----------------------------------------------------------------
-include(ExternalData)
-list(APPEND ExternalData_URL_TEMPLATES
-  "https://key4hep.web.cern.ch:443/testFiles/k4JetTagger/%(hash)"
-)
-ExternalData_Add_Target(backward_compat_tests)
+
