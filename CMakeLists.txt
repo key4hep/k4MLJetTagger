@@ -59,6 +59,7 @@ include(GNUInstallDirs)
 include(CTest)
 
 add_subdirectory(k4JetTagger)
+add_subdirectory(test)
 
 include(cmake/CreateProjectConfig.cmake)
 
