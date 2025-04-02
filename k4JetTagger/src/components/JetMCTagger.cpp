@@ -89,9 +89,19 @@ struct JetMCTagger
                   {KeyValues("OutputIDCollection", {"MCJetTag"})}
                   ) {}
 
+  // initialize
+
+  StatusCode initialize() override {
+    
+    warning() << "!!! Finding the MC PID of jets uses the assumption of H(jj)Z(vv) events!!! " << endmsg;
+    
+    return StatusCode::SUCCESS;
+  }
+
+  // operator
+
   edm4hep::ParticleIDCollection operator()(const edm4hep::ReconstructedParticleCollection& inputJets, const edm4hep::MCParticleCollection& MCParticles) const override{
     // info() << "Finding MC PID of " << inputJets.size() << " input jets" << endmsg;
-    warning() << "Fining the MC PID of jets uses the assumption of H(jj)Z(vv) events!!! " << endmsg;
 
     auto tagCollection = edm4hep::ParticleIDCollection();
 

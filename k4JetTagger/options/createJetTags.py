@@ -31,6 +31,7 @@ parser_group.add_argument("--inputFiles", nargs="+", metavar=("file1", "file2"),
 parser_group.add_argument("--outputFile", help="Output file name", default="output_jettags.root")
 parser_group.add_argument("--onnx_model", help="Path to ONNX model used for tagging", default="/eos/experiment/fcc/ee/jet_flavour_tagging/fullsim_test_spring2024/fullsimCLD240_2mio.onnx")
 parser_group.add_argument("--json_onnx_config", help="Path to JSON config file for ONNX model used for tagging", default="/eos/experiment/fcc/ee/jet_flavour_tagging/fullsim_test_spring2024/preprocess_fullsimCLD240_2mio.json")
+parser_group.add_argument("--num_events", help="Number of events to process (-1 means all)", default=-1)
 
 
 args = parser.parse_known_args()[0]
@@ -58,7 +59,7 @@ transformer = JetTagger("JetTagger",
 
 ApplicationMgr(TopAlg=[transformer],
                EvtSel="NONE",
-               EvtMax=20,
+               EvtMax=args.num_events,
                ExtSvc=[k4DataSvc("EventDataSvc")],
                OutputLevel=INFO,
                )
