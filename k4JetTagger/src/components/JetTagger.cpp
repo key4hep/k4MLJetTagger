@@ -66,17 +66,9 @@ struct JetTagger
     tagCollections.resize(flavorNames.size());
 
 
-    // initialize the JetObservablesRetriever object
-    JetObservablesRetriever Retriever;
-    // get B field from detector
-    // dd4hep::Detector* theDetector = Gaudi::svcLocator()->service<IGeoSvc>("GeoSvc")->getDetector();
-    // double Bfield = getBzAtOrigin(theDetector);
- 
-    Retriever.Bz = 2.0; // hardcoded for now
-
     for (const auto& jet : inputJets) {
       // retrieve the input observables to the network from the jet
-      Jet j = Retriever.retrieve_input_observables(jet, primVerticies);
+      Jet j = retriever->retrieve_input_observables(jet, primVerticies);
 
       // Convert the Jet object to the input format for the ONNX model
       rv::RVec<rv::RVec<float>> jet_const_data = from_Jet_to_onnx_input(j, vars);
@@ -123,7 +115,7 @@ struct JetTagger
     }
     
 
-    // initialize the WeaverInterface object
+    // WeaverInterface object
 
     // retrieve the input variable to onnx model from json file
     for (const auto& var : json_config["pf_features"]["var_names"]) {
@@ -137,6 +129,15 @@ struct JetTagger
     // Create the WeaverInterface object
     weaver = std::make_unique<WeaverInterface>(model_path, json_path, vars);
 
+
+    // JetObservablesRetriever object
+    retriever = std::make_unique<JetObservablesRetriever>();
+    // get B field from detector (this is computatially expensive, so we hardcode it for now)
+    // dd4hep::Detector* theDetector = Gaudi::svcLocator()->service<IGeoSvc>("GeoSvc")->getDetector();
+    // double Bfield = getBzAtOrigin(theDetector);
+ 
+    retriever->Bz = 2.0; // hardcoded for now
+
     
     return StatusCode::SUCCESS;
   }
@@ -146,8 +147,10 @@ struct JetTagger
     nlohmann::json json_config;
     std::vector<std::string> flavorNames; // e.g. "recojet_isX" with X being the jet flavor (G, U, S, C, B, D, TAU)
     std::vector<int> PDGflavors;
-    mutable std::unique_ptr<WeaverInterface> weaver;
     rv::RVec<std::string> vars; // e.g. pfcand_isEl, ... input names that onnx model expects
+
+    mutable std::unique_ptr<WeaverInterface> weaver;
+    mutable std::unique_ptr<JetObservablesRetriever> retriever;
 
 
     Gaudi::Property<std::string> model_path{

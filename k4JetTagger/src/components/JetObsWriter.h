@@ -93,6 +93,8 @@ class JetObsWriter : public Gaudi::Algorithm {
         mutable DataHandle<edm4hep::ReconstructedParticleCollection> inputJets_handle {"InputJets", Gaudi::DataHandle::Reader, this};
         mutable DataHandle<edm4hep::VertexCollection> inputPrimaryVertices_handle {"InputPrimaryVertices", Gaudi::DataHandle::Reader, this};
 
+        mutable JetObservablesRetriever* retriever;
+
 
         SmartIF<ITHistSvc> m_ths;  ///< THistogram service
 

@@ -59,6 +59,11 @@ StatusCode JetObsWriter::initialize() {
 
   initializeTree();
 
+  // JetObservablesRetriever object
+  retriever = new JetObservablesRetriever();
+  retriever->Bz = 2.0; // hardcoded for now
+
+  
   return StatusCode::SUCCESS;
 }
 
@@ -76,12 +81,10 @@ StatusCode JetObsWriter::execute(const EventContext&) const {
   const edm4hep::ReconstructedParticleCollection &jet_coll = *jet_coll_ptr;
   const edm4hep::VertexCollection &prim_vertex_coll = *prim_vertex_coll_ptr;
 
-  JetObservablesRetriever Retriever;
-  Retriever.Bz = 2.0; // hardcoded for now
 
   for (const auto& jet : jet_coll) { // loop over all jets in the event
     cleanTree();
-    Jet j = Retriever.retrieve_input_observables(jet, prim_vertex_coll); // get all observables
+    Jet j = retriever->retrieve_input_observables(jet, prim_vertex_coll); // get all observables
     for (const auto& pfc : j.constituents) { // loop over all jet constituents / pfcands
       pfcand_erel_log->push_back(pfc.pfcand_erel_log);
       pfcand_thetarel->push_back(pfc.pfcand_thetarel);
