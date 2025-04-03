@@ -36,39 +36,6 @@
 #include "Helpers.h"
 
 
-rv::RVec<float> tagger(Jet& jet, const std::string& model_path, const std::string& json_path) {
-  /**
-  * Taggs a jet. The function loads the ONNX model and the JSON configuration file from hardcoded paths, retrieves the input variables for the ONNX model from the Jet object, runs inference on the input variables and returns the probabilities for each jet flavor.
-  * @param jet: the jet object to tag
-  * @param model_path: the path to the ONNX model
-  * @param json_path: the path to the JSON configuration file of the ONNX model
-  * @return: tuple of two elements: 1. the probabilities for each jet flavor, 2. the names of the jet flavors
-  */
-  // Load json configuration file
-  nlohmann::json json_config = loadJsonFile(json_path);
-
-  // retrieve the input variable to onnx model from json file
-  rv::RVec<std::string> vars; // e.g. pfcand_isEl, ...
-  for (const auto& var : json_config["pf_features"]["var_names"]) {
-    vars.push_back(var.get<std::string>());
-  }
-  for (const auto& var : json_config["pf_vectors"]["var_names"]) { // not sure if this is the solution here
-    vars.push_back(var.get<std::string>());
-  }
-  // variables in pf_points are already included in pf_features
-
-  // Create the WeaverInterface object
-  WeaverInterface weaver(model_path, json_path, vars);
-
-  // Convert the Jet object to the input format for the ONNX model
-  rv::RVec<rv::RVec<float>> jet_const_data = from_Jet_to_onnx_input(jet, vars);
-
-  // Run inference on the input variables - returns the 7 probabilities for each jet flavor
-  rv::RVec<float> probabilities = weaver.run(jet_const_data);
-
-  return probabilities;
-}
-
 /**
 * @class JetTagger
 * @brief Gaudi transformer that builds edm4hep::ParticleIDCollection objects (!plural, one for each flavor) for each jet in edm4hep::ReconstructedParticleCollection. 
@@ -90,40 +57,27 @@ struct JetTagger
                   {KeyValues("OutputIDCollections", {"RefinedJetTags"})}
                   ) {}
 
+  // operator
   std::vector<edm4hep::ParticleIDCollection> operator()(const edm4hep::ReconstructedParticleCollection& inputJets, const edm4hep::VertexCollection& primVerticies) const override{
     info() << "Tagging " << inputJets.size() << " input jets" << endmsg;
-    // Load JSON configuration to retrieve how many flavors are tagged
-    nlohmann::json json_config = loadJsonFile(json_path);
-    std::vector<std::string> flavorNames = json_config["output_names"]; // e.g. "recojet_isX" with X being the jet flavor (G, U, S, C, B, D, TAU)
-
-    // check if flavorNames matches order and size of the output collections
-    if (!check_flavors(flavorNames, flavor_collection_names)) {
-      error() << "ATTENTION! Output flavor collection names MUST match ONNX model output flavors!" << endmsg;
-      info() << "Flavors expected from network in this order: " << flavorNames << endmsg;
-    }
     
     // create n ParticleIDCollection objects, one for each flavor & retrieve the PDG number for each flavor
     std::vector<edm4hep::ParticleIDCollection> tagCollections;
-    std::vector<int> PDGflavors;
-    for (const auto& flavor : flavorNames) {
-      tagCollections.push_back(edm4hep::ParticleIDCollection());
-      PDGflavors.push_back(to_PDGflavor.at(flavor)); // retrieve the PDG number from the flavor name
-    }
+    tagCollections.resize(flavorNames.size());
 
-    JetObservablesRetriever Retriever;
-    // get B field from detector
-    // dd4hep::Detector* theDetector = Gaudi::svcLocator()->service<IGeoSvc>("GeoSvc")->getDetector();
-    // double Bfield = getBzAtOrigin(theDetector);
- 
-    Retriever.Bz = 2.0; // hardcoded for now
 
     for (const auto& jet : inputJets) {
       // retrieve the input observables to the network from the jet
-      Jet j = Retriever.retrieve_input_observables(jet, primVerticies);
-      // run the tagger on the jet
-      rv::RVec<float> probabilities = tagger(j, model_path, json_path);
+      Jet j = retriever->retrieve_input_observables(jet, primVerticies);
+
+      // Convert the Jet object to the input format for the ONNX model
+      rv::RVec<rv::RVec<float>> jet_const_data = from_Jet_to_onnx_input(j, vars);
+
+      // Run inference on the input variables - returns the 7 probabilities for each jet flavor
+      rv::RVec<float> probabilities = weaver->run(jet_const_data);
       
-      // Compute the highest probability
+      // Uncomment for debugging: Compute the highest probability & its flavor 
+
       // auto maxIt = std::max_element(probabilities.begin(), probabilities.end());
       // float maxProb = *maxIt;
       // auto maxIndex = std::distance(probabilities.begin(), maxIt);
@@ -133,7 +87,7 @@ struct JetTagger
       if (probabilities.size() != flavorNames.size()) {
         error() << "Number of probabilities returned by the network does not match number of flavors stated in the network config json" << endmsg;
       }
-
+      // fill the ParticleIDCollection objects
       for (unsigned int i = 0; i < flavorNames.size(); i++) {
         auto jetTag = tagCollections[i].create();
         jetTag.setParticle(jet);
@@ -145,17 +99,70 @@ struct JetTagger
     return tagCollections;
   };
 
+  // initialize
+  StatusCode initialize() override {
+    // Load the JSON configuration file and retrieve the flavor names
+    json_config = loadJsonFile(json_path);
+    flavorNames = json_config["output_names"]; // e.g. "recojet_isX" with X being the jet flavor (G, U, S, C, B, D, TAU)
+
+    // check if flavorNames matches order and size of the output collections
+    if (!check_flavors(flavorNames, flavor_collection_names)) {
+      error() << "ATTENTION! Output flavor collection names MUST match ONNX model output flavors!" << endmsg;
+      info() << "Flavors expected from network in this order: " << flavorNames << endmsg;
+    }
+    for (const auto& flavor : flavorNames) {
+      PDGflavors.push_back(to_PDGflavor.at(flavor)); // retrieve the PDG number from the flavor name
+    }
+    
+
+    // WeaverInterface object
+
+    // retrieve the input variable to onnx model from json file
+    for (const auto& var : json_config["pf_features"]["var_names"]) {
+      vars.push_back(var.get<std::string>());
+    }
+    for (const auto& var : json_config["pf_vectors"]["var_names"]) { // not sure if this is the solution here
+      vars.push_back(var.get<std::string>());
+    }
+    // variables in pf_points are already included in pf_features
+
+    // Create the WeaverInterface object
+    weaver = std::make_unique<WeaverInterface>(model_path, json_path, vars);
+
+
+    // JetObservablesRetriever object
+    retriever = std::make_unique<JetObservablesRetriever>();
+    // get B field from detector (this is computatially expensive, so we hardcode it for now)
+    // dd4hep::Detector* theDetector = Gaudi::svcLocator()->service<IGeoSvc>("GeoSvc")->getDetector();
+    // double Bfield = getBzAtOrigin(theDetector);
+ 
+    retriever->Bz = 2.0; // hardcoded for now
+
+    
+    return StatusCode::SUCCESS;
+  }
+
+  // properties
   private: 
+    nlohmann::json json_config;
+    std::vector<std::string> flavorNames; // e.g. "recojet_isX" with X being the jet flavor (G, U, S, C, B, D, TAU)
+    std::vector<int> PDGflavors;
+    rv::RVec<std::string> vars; // e.g. pfcand_isEl, ... input names that onnx model expects
+
+    mutable std::unique_ptr<WeaverInterface> weaver;
+    mutable std::unique_ptr<JetObservablesRetriever> retriever;
+
+
     Gaudi::Property<std::string> model_path{
       this,
       "model_path",
-      "/afs/cern.ch/work/s/saaumill/public/onnx_export/fullsimCLD240_2mio.onnx", 
+      "/eos/experiment/fcc/ee/jet_flavour_tagging/fullsim_test_spring2024/fullsimCLD240_2mio.onnx", 
       "Path to the ONNX model"
     };
     Gaudi::Property<std::string> json_path{
       this, 
       "json_path",
-      "/afs/cern.ch/work/s/saaumill/public/onnx_export/preprocess_fullsimCLD240_2mio.json",
+      "/eos/experiment/fcc/ee/jet_flavour_tagging/fullsim_test_spring2024/preprocess_fullsimCLD240_2mio.json",
       "Path to the JSON configuration file for the ONNX model"
     };
     Gaudi::Property<std::vector<std::string>> flavor_collection_names{

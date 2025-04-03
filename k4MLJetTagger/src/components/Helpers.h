@@ -29,7 +29,7 @@ double getBzAtOrigin(dd4hep::Detector* theDetector);
 * @param input_names: the names of the input variables for the ONNX model.
 * @return: the input variables for the ONNX model
 */
-rv::RVec<rv::RVec<float>> from_Jet_to_onnx_input(Jet& jet, rv::RVec<std::string>& input_names);
+rv::RVec<rv::RVec<float>> from_Jet_to_onnx_input(Jet& jet, const rv::RVec<std::string>& input_names);
 
 /**
 * Load a JSON file from a given path.

@@ -74,7 +74,7 @@ bool check_flavors(std::vector<std::string>& flavorNames, const std::vector<std:
   return true;
 }
 
-rv::RVec<rv::RVec<float>> from_Jet_to_onnx_input(Jet& jet, rv::RVec<std::string>& input_names){
+rv::RVec<rv::RVec<float>> from_Jet_to_onnx_input(Jet& jet, const rv::RVec<std::string>& input_names){
   /**
   * Return the input variables for the ONNX model from a Jet object. 
   * The input variables should have the form of {jet -> {var1 -> {constit1, constit2, ...}, var2 -> {...}, ...}}

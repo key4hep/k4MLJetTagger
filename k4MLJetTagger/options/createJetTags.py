@@ -22,11 +22,22 @@ from Configurables import k4DataSvc
 from Configurables import EventDataSvc
 from Configurables import CollectionMerger
 from k4FWCore import ApplicationMgr, IOSvc
+from k4FWCore.parseArgs import parser
+
+# parse the custom arguments
+parser_group = parser.add_argument_group("createJetTags.py custom options")
+parser_group.add_argument("--inputFiles", nargs="+", metavar=("file1", "file2"), help="One or multiple input files", 
+                        default=["/eos/experiment/fcc/prod/fcc/ee/test_spring2024/240gev/Hbb/CLD_o2_v05/rec/00016783/000/Hbb_rec_16783_99.root"])
+parser_group.add_argument("--outputFile", help="Output file name", default="output_jettags.root")
+parser_group.add_argument("--onnx_model", help="Path to ONNX model used for tagging", default="/eos/experiment/fcc/ee/jet_flavour_tagging/fullsim_test_spring2024/fullsimCLD240_2mio.onnx")
+parser_group.add_argument("--json_onnx_config", help="Path to JSON config file for ONNX model used for tagging", default="/eos/experiment/fcc/ee/jet_flavour_tagging/fullsim_test_spring2024/preprocess_fullsimCLD240_2mio.json")
+parser_group.add_argument("--num_ev", type=int, help="Number of events to process (-1 means all)", default=-1)
+
+args = parser.parse_known_args()[0]
 
 svc = IOSvc("IOSvc")
-#svc.Input = "/eos/experiment/fcc/prod/fcc/ee/test_spring2024/240gev/Hbb/CLD_o2_v05/rec/00016783/000/Hbb_rec_16783_1.root"
-svc.Input = "/eos/experiment/fcc/prod/fcc/ee/test_spring2024/240gev/Hbb/CLD_o2_v05/rec/00016783/000/Hbb_rec_16783_99.root"
-svc.Output = "output_jettagging.root"
+svc.Input = args.inputFiles
+svc.Output = args.outputFile
 
 #svc.outputCommands = [
 #    "drop *",
@@ -37,8 +48,8 @@ svc.Output = "output_jettagging.root"
 
 flavor_collection_names = ["RefinedJetTag_G", "RefinedJetTag_U", "RefinedJetTag_S", "RefinedJetTag_C", "RefinedJetTag_B", "RefinedJetTag_D", "RefinedJetTag_TAU"]
 transformer = JetTagger("JetTagger",
-                        model_path="/afs/cern.ch/work/s/saaumill/public/onnx_export/fullsimCLD240_2mio.onnx",
-                        json_path="/afs/cern.ch/work/s/saaumill/public/onnx_export/preprocess_fullsimCLD240_2mio.json",
+                        model_path=args.onnx_model,
+                        json_path=args.json_onnx_config,
                         flavor_collection_names = flavor_collection_names, # to make sure the order and nameing is correct
                         InputJets=["RefinedVertexJets"],
                         InputPrimaryVertices=["PrimaryVertices"],
@@ -47,7 +58,7 @@ transformer = JetTagger("JetTagger",
 
 ApplicationMgr(TopAlg=[transformer],
                EvtSel="NONE",
-               EvtMax=20,
+               EvtMax=args.num_ev,
                ExtSvc=[k4DataSvc("EventDataSvc")],
                OutputLevel=INFO,
                )

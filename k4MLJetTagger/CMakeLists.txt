@@ -22,7 +22,7 @@ include_directories(${CMAKE_SOURCE_DIR}/src/components)
 find_package(ROOT REQUIRED COMPONENTS Core Hist Tree Physics)
 
 file(GLOB _plugin_sources src/components/*.cpp)
-gaudi_add_module(k4JetTaggerPlugins
+gaudi_add_module(k4MLJetTaggerPlugins
                  SOURCES ${_plugin_sources}
                  LINK Gaudi::GaudiKernel
                       k4FWCore::k4FWCore
@@ -35,10 +35,9 @@ gaudi_add_module(k4JetTaggerPlugins
                       ROOT::Tree
                       ROOT::Physics
                       onnxruntime::onnxruntime
-                      torch
                       )
 
-install(TARGETS k4JetTaggerPlugins
+install(TARGETS k4MLJetTaggerPlugins
   EXPORT ${CMAKE_PROJECT_NAME}Targets
   RUNTIME DESTINATION "${CMAKE_INSTALL_BINDIR}" COMPONENT bin
   LIBRARY DESTINATION "${CMAKE_INSTALL_LIBDIR}" COMPONENT shlib
@@ -49,26 +48,10 @@ include(CTest)
 
 function(set_test_env _testname)
   set_property(TEST ${_testname} APPEND PROPERTY ENVIRONMENT
-    LD_LIBRARY_PATH=${CMAKE_BINARY_DIR}:$<TARGET_FILE_DIR:k4JetTaggerPlugins>:$<TARGET_FILE_DIR:ROOT::Core>:$<TARGET_FILE_DIR:k4FWCore::k4FWCore>:$<TARGET_FILE_DIR:EDM4HEP::edm4hep>:$<TARGET_FILE_DIR:podio::podio>:$ENV{LD_LIBRARY_PATH}
+    LD_LIBRARY_PATH=${CMAKE_BINARY_DIR}:$<TARGET_FILE_DIR:k4MLJetTaggerPlugins>:$<TARGET_FILE_DIR:ROOT::Core>:$<TARGET_FILE_DIR:k4FWCore::k4FWCore>:$<TARGET_FILE_DIR:EDM4HEP::edm4hep>:$<TARGET_FILE_DIR:podio::podio>:$ENV{LD_LIBRARY_PATH}
     PYTHONPATH=${CMAKE_BINARY_DIR}/${CMAKE_PROJECT_NAME}/genConfDir:$<TARGET_FILE_DIR:k4FWCore::k4FWCore>/../python:$ENV{PYTHONPATH}
     PATH=$<TARGET_FILE_DIR:k4FWCore::k4FWCore>/../bin:$ENV{PATH}
-    k4JetTagger=${CMAKE_CURRENT_LIST_DIR}/
+    k4MLJetTagger=${CMAKE_CURRENT_LIST_DIR}/
     )
 endfunction()
-
-add_test(NAME CreateExampleEventData
-               WORKING_DIRECTORY ${PROJECT_SOURCE_DIR}
-               COMMAND k4run k4JetTagger/options/createExampleEventData.py)
-set_test_env(CreateExampleEventData)
-
-add_test(NAME ReadExampleEventData
-               WORKING_DIRECTORY ${PROJECT_SOURCE_DIR}
-               COMMAND k4run k4JetTagger/options/readExampleEventData.py)
-set_test_env(ReadExampleEventData)
-set_property(TEST ReadExampleEventData APPEND PROPERTY DEPENDS CreateExampleEventData)
-
-add_test(NAME HelloWorldAlg
-               WORKING_DIRECTORY ${PROJECT_SOURCE_DIR}
-               COMMAND k4run k4JetTagger/options/createHelloWorld.py)
-set_test_env(HelloWorldAlg)
 

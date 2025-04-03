@@ -10,7 +10,7 @@ WeaverInterface::WeaverInterface(const std::string& onnx_filename,
                                  const rv::RVec<std::string>& vars)
     : variables_names_(vars.begin(), vars.end()) {
   if (onnx_filename.empty())
-    throw std::runtime_error("ONNX modeld input file not specified!");
+    throw std::runtime_error("ONNX model input file not specified!");
   if (json_filename.empty())
     throw std::runtime_error("JSON preprocessed input file not specified!");
 
