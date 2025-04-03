@@ -260,3 +260,5 @@ If you find this code helpful and use it in your research, please cite:
   url          = {https://doi.org/10.17181/4pcr6-r0d06}
 }
 ```
+
+The performance of this jet-tagger is discussed in Section 4.1
