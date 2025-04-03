@@ -44,7 +44,7 @@ ninja install
 Run the tagger by including the transformer `JetTagger` in a steering file like `createJetTags.py` and run it like this:
 
 ``` bash
-k4run ../k4JetTagger/options/createJetTags.py
+k4run ../k4JetTagger/options/createJetTags.py --num_ev 20
 ```
 
 This will return your edm4hep input file with the added `RefinedJetTag_X` collections. 
