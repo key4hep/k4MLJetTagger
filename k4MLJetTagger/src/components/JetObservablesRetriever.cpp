@@ -178,7 +178,9 @@ const edm4hep::Vector3f JetObservablesRetriever::get_primary_vertex(const edm4he
     }
   }
   if (i==0) {
-    throw std::invalid_argument("No primary vertex found");
+    // throw std::invalid_argument("No primary vertex found");
+    std::cout << "JetObservablesRetriever: WARNING - No primary vertex found. Set it to (0,0,0)" << std::endl;
+    pv_pos = edm4hep::Vector3f(0,0,0);
   }
 
   return pv_pos;
