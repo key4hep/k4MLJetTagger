@@ -65,7 +65,6 @@ struct JetTagger
     std::vector<edm4hep::ParticleIDCollection> tagCollections;
     tagCollections.resize(flavorNames.size());
 
-
     for (const auto& jet : inputJets) {
       // retrieve the input observables to the network from the jet
       Jet j = retriever->retrieve_input_observables(jet, primVerticies);
@@ -76,17 +75,16 @@ struct JetTagger
       // Run inference on the input variables - returns the 7 probabilities for each jet flavor
       rv::RVec<float> probabilities = weaver->run(jet_const_data);
       
-      // Uncomment for debugging: Compute the highest probability & its flavor 
-
-      // auto maxIt = std::max_element(probabilities.begin(), probabilities.end());
-      // float maxProb = *maxIt;
-      // auto maxIndex = std::distance(probabilities.begin(), maxIt);
-      // info() << "Jet with highest probability for flavor " << flavorNames[maxIndex] << " has probability " << maxProb << endmsg;
-
+      // For debugging: Compute the highest probability & its flavor 
+      auto maxIt = std::max_element(probabilities.begin(), probabilities.end());
+      float maxProb = *maxIt;
+      auto maxIndex = std::distance(probabilities.begin(), maxIt);
+      debug() << "Jet has highest probability for flavor " << flavorNames[maxIndex] << " with " << maxProb << endmsg;
 
       if (probabilities.size() != flavorNames.size()) {
         error() << "Number of probabilities returned by the network does not match number of flavors stated in the network config json" << endmsg;
       }
+
       // fill the ParticleIDCollection objects
       for (unsigned int i = 0; i < flavorNames.size(); i++) {
         auto jetTag = tagCollections[i].create();
@@ -94,6 +92,11 @@ struct JetTagger
         jetTag.setLikelihood(probabilities[i]);
         jetTag.setPDG(PDGflavors[i]);
       }
+    }
+
+    // For debugging: print if the ParticleIDCollection objects are filled correctly
+    for (unsigned int i = 0; i < tagCollections.size(); i++) {
+      debug() << "ParticleID collection for "<< flavorNames[i]<< " has size: " << tagCollections[i].size() << " with likelihoods " << tagCollections[i].likelihood() << " and PDGs "<< tagCollections[i].PDG() <<endmsg;
     }
 
     return tagCollections;
