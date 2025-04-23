@@ -9,7 +9,11 @@ output_base = "/eos/experiment/fcc/ee/datasets/CLD_fullsim_tagging_key4hep_dummy
 output_log = "/afs/cern.ch/work/s/saaumill/public/condor/std-condor/" # condor logs (stdout, stderr, log)
 
 # select what job you want to run (submitJob_JetObsWriter.sh or submitJob_JetTagsWriter.sh)
-executable = "submitJob_JetObsWriter.sh" # submitJob_JetTagsWriter.sh
+job = "writeJetConstObs.py" # writeJetTags.py # which steering file to use
+local_path_to_tagger = "/afs/cern.ch/work/s/saaumill/public/k4MLJetTagger/" # CHANGE your path here (used for path to your steering file (job) and in case of local==True, the k4MLJetTagger is locally used and NOT from the stack)
+
+# if you want to run k4MLJetTagger locally or from the latest stack
+local = False
 
 ### OPTIONAL TO CHANGE
 num_files = 5 # How many files to process per job
@@ -30,17 +34,16 @@ def generate_sub_file():
 
     
     # Prepare the header of the file
-    header = f"""# run commands for analysis,
+    header = f"""# run commands for submitting jet tagging jobs on condor
 
-# here goes your shell script
-executable    = {executable}
+executable    = submitJob.sh
 #requirements = (OpSysAndVer =?= "CentOS7")
 # here you specify where to put .log, .out and .err files
-output                = {ouput_log}job.$(ClusterId).$(ProcId).out
-error                 = {ouput_log}job.$(ClusterId).$(ProcId).err
-log                   = {ouput_log}job.$(ClusterId).$(ClusterId).log
+output                = {output_log}job.$(ClusterId).$(ProcId).out
+error                 = {output_log}job.$(ClusterId).$(ProcId).err
+log                   = {output_log}job.$(ClusterId).$(ClusterId).log
 
-+AccountingGroup = {AccountingGroup}
++AccountingGroup = {acounting_group}
 +JobFlavour    = {job_flavour}
 """
 
@@ -50,8 +53,10 @@ log                   = {ouput_log}job.$(ClusterId).$(ClusterId).log
         job_counter = 0
         for start_index in start_indices:
             input_pattern = input_data_path.format(pattern=pattern, prod=data_pattern[pattern])
-            output_file = f"{output_base}{pattern}_{job_counter}.root"
-            arguments = f"{start_index} {num_files} \'{input_pattern}\' {output_base} {output_file}"
+            output_file = f"{pattern}_{job_counter}.root"
+            arguments = f"{job} {start_index} {num_files} \'{input_pattern}\' {output_base} {output_file} {local}"
+            if local:
+                arguments += f" {local_path_to_tagger}"
             content += f"arguments=\"{arguments}\"\nqueue\n"
             job_counter += 1
 

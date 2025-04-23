@@ -1,0 +1,291 @@
+# run commands for submitting jet tagging jobs on condor
+
+executable    = submitJob.sh
+#requirements = (OpSysAndVer =?= "CentOS7")
+# here you specify where to put .log, .out and .err files
+output                = /afs/cern.ch/work/s/saaumill/public/condor/std-condor/job.$(ClusterId).$(ProcId).out
+error                 = /afs/cern.ch/work/s/saaumill/public/condor/std-condor/job.$(ClusterId).$(ProcId).err
+log                   = /afs/cern.ch/work/s/saaumill/public/condor/std-condor/job.$(ClusterId).$(ClusterId).log
+
++AccountingGroup = group_u_FCC.local_gen
++JobFlavour    = longlunch
+arguments="writeJetConstObs.py 0 5 '/eos/experiment/fcc/prod/fcc/ee/test_spring2024/240gev/Huu/CLD_o2_v05/rec/00016774/*/Huu_rec_*.root' /eos/experiment/fcc/ee/datasets/CLD_fullsim_tagging_key4hep_dummy_folder/ Huu_0.root False"
+queue
+arguments="writeJetConstObs.py 5 5 '/eos/experiment/fcc/prod/fcc/ee/test_spring2024/240gev/Huu/CLD_o2_v05/rec/00016774/*/Huu_rec_*.root' /eos/experiment/fcc/ee/datasets/CLD_fullsim_tagging_key4hep_dummy_folder/ Huu_1.root False"
+queue
+arguments="writeJetConstObs.py 10 5 '/eos/experiment/fcc/prod/fcc/ee/test_spring2024/240gev/Huu/CLD_o2_v05/rec/00016774/*/Huu_rec_*.root' /eos/experiment/fcc/ee/datasets/CLD_fullsim_tagging_key4hep_dummy_folder/ Huu_2.root False"
+queue
+arguments="writeJetConstObs.py 15 5 '/eos/experiment/fcc/prod/fcc/ee/test_spring2024/240gev/Huu/CLD_o2_v05/rec/00016774/*/Huu_rec_*.root' /eos/experiment/fcc/ee/datasets/CLD_fullsim_tagging_key4hep_dummy_folder/ Huu_3.root False"
+queue
+arguments="writeJetConstObs.py 20 5 '/eos/experiment/fcc/prod/fcc/ee/test_spring2024/240gev/Huu/CLD_o2_v05/rec/00016774/*/Huu_rec_*.root' /eos/experiment/fcc/ee/datasets/CLD_fullsim_tagging_key4hep_dummy_folder/ Huu_4.root False"
+queue
+arguments="writeJetConstObs.py 25 5 '/eos/experiment/fcc/prod/fcc/ee/test_spring2024/240gev/Huu/CLD_o2_v05/rec/00016774/*/Huu_rec_*.root' /eos/experiment/fcc/ee/datasets/CLD_fullsim_tagging_key4hep_dummy_folder/ Huu_5.root False"
+queue
+arguments="writeJetConstObs.py 30 5 '/eos/experiment/fcc/prod/fcc/ee/test_spring2024/240gev/Huu/CLD_o2_v05/rec/00016774/*/Huu_rec_*.root' /eos/experiment/fcc/ee/datasets/CLD_fullsim_tagging_key4hep_dummy_folder/ Huu_6.root False"
+queue
+arguments="writeJetConstObs.py 35 5 '/eos/experiment/fcc/prod/fcc/ee/test_spring2024/240gev/Huu/CLD_o2_v05/rec/00016774/*/Huu_rec_*.root' /eos/experiment/fcc/ee/datasets/CLD_fullsim_tagging_key4hep_dummy_folder/ Huu_7.root False"
+queue
+arguments="writeJetConstObs.py 40 5 '/eos/experiment/fcc/prod/fcc/ee/test_spring2024/240gev/Huu/CLD_o2_v05/rec/00016774/*/Huu_rec_*.root' /eos/experiment/fcc/ee/datasets/CLD_fullsim_tagging_key4hep_dummy_folder/ Huu_8.root False"
+queue
+arguments="writeJetConstObs.py 45 5 '/eos/experiment/fcc/prod/fcc/ee/test_spring2024/240gev/Huu/CLD_o2_v05/rec/00016774/*/Huu_rec_*.root' /eos/experiment/fcc/ee/datasets/CLD_fullsim_tagging_key4hep_dummy_folder/ Huu_9.root False"
+queue
+arguments="writeJetConstObs.py 50 5 '/eos/experiment/fcc/prod/fcc/ee/test_spring2024/240gev/Huu/CLD_o2_v05/rec/00016774/*/Huu_rec_*.root' /eos/experiment/fcc/ee/datasets/CLD_fullsim_tagging_key4hep_dummy_folder/ Huu_10.root False"
+queue
+arguments="writeJetConstObs.py 55 5 '/eos/experiment/fcc/prod/fcc/ee/test_spring2024/240gev/Huu/CLD_o2_v05/rec/00016774/*/Huu_rec_*.root' /eos/experiment/fcc/ee/datasets/CLD_fullsim_tagging_key4hep_dummy_folder/ Huu_11.root False"
+queue
+arguments="writeJetConstObs.py 60 5 '/eos/experiment/fcc/prod/fcc/ee/test_spring2024/240gev/Huu/CLD_o2_v05/rec/00016774/*/Huu_rec_*.root' /eos/experiment/fcc/ee/datasets/CLD_fullsim_tagging_key4hep_dummy_folder/ Huu_12.root False"
+queue
+arguments="writeJetConstObs.py 65 5 '/eos/experiment/fcc/prod/fcc/ee/test_spring2024/240gev/Huu/CLD_o2_v05/rec/00016774/*/Huu_rec_*.root' /eos/experiment/fcc/ee/datasets/CLD_fullsim_tagging_key4hep_dummy_folder/ Huu_13.root False"
+queue
+arguments="writeJetConstObs.py 70 5 '/eos/experiment/fcc/prod/fcc/ee/test_spring2024/240gev/Huu/CLD_o2_v05/rec/00016774/*/Huu_rec_*.root' /eos/experiment/fcc/ee/datasets/CLD_fullsim_tagging_key4hep_dummy_folder/ Huu_14.root False"
+queue
+arguments="writeJetConstObs.py 75 5 '/eos/experiment/fcc/prod/fcc/ee/test_spring2024/240gev/Huu/CLD_o2_v05/rec/00016774/*/Huu_rec_*.root' /eos/experiment/fcc/ee/datasets/CLD_fullsim_tagging_key4hep_dummy_folder/ Huu_15.root False"
+queue
+arguments="writeJetConstObs.py 80 5 '/eos/experiment/fcc/prod/fcc/ee/test_spring2024/240gev/Huu/CLD_o2_v05/rec/00016774/*/Huu_rec_*.root' /eos/experiment/fcc/ee/datasets/CLD_fullsim_tagging_key4hep_dummy_folder/ Huu_16.root False"
+queue
+arguments="writeJetConstObs.py 85 5 '/eos/experiment/fcc/prod/fcc/ee/test_spring2024/240gev/Huu/CLD_o2_v05/rec/00016774/*/Huu_rec_*.root' /eos/experiment/fcc/ee/datasets/CLD_fullsim_tagging_key4hep_dummy_folder/ Huu_17.root False"
+queue
+arguments="writeJetConstObs.py 90 5 '/eos/experiment/fcc/prod/fcc/ee/test_spring2024/240gev/Huu/CLD_o2_v05/rec/00016774/*/Huu_rec_*.root' /eos/experiment/fcc/ee/datasets/CLD_fullsim_tagging_key4hep_dummy_folder/ Huu_18.root False"
+queue
+arguments="writeJetConstObs.py 95 5 '/eos/experiment/fcc/prod/fcc/ee/test_spring2024/240gev/Huu/CLD_o2_v05/rec/00016774/*/Huu_rec_*.root' /eos/experiment/fcc/ee/datasets/CLD_fullsim_tagging_key4hep_dummy_folder/ Huu_19.root False"
+queue
+arguments="writeJetConstObs.py 0 5 '/eos/experiment/fcc/prod/fcc/ee/test_spring2024/240gev/Hdd/CLD_o2_v05/rec/00016771/*/Hdd_rec_*.root' /eos/experiment/fcc/ee/datasets/CLD_fullsim_tagging_key4hep_dummy_folder/ Hdd_0.root False"
+queue
+arguments="writeJetConstObs.py 5 5 '/eos/experiment/fcc/prod/fcc/ee/test_spring2024/240gev/Hdd/CLD_o2_v05/rec/00016771/*/Hdd_rec_*.root' /eos/experiment/fcc/ee/datasets/CLD_fullsim_tagging_key4hep_dummy_folder/ Hdd_1.root False"
+queue
+arguments="writeJetConstObs.py 10 5 '/eos/experiment/fcc/prod/fcc/ee/test_spring2024/240gev/Hdd/CLD_o2_v05/rec/00016771/*/Hdd_rec_*.root' /eos/experiment/fcc/ee/datasets/CLD_fullsim_tagging_key4hep_dummy_folder/ Hdd_2.root False"
+queue
+arguments="writeJetConstObs.py 15 5 '/eos/experiment/fcc/prod/fcc/ee/test_spring2024/240gev/Hdd/CLD_o2_v05/rec/00016771/*/Hdd_rec_*.root' /eos/experiment/fcc/ee/datasets/CLD_fullsim_tagging_key4hep_dummy_folder/ Hdd_3.root False"
+queue
+arguments="writeJetConstObs.py 20 5 '/eos/experiment/fcc/prod/fcc/ee/test_spring2024/240gev/Hdd/CLD_o2_v05/rec/00016771/*/Hdd_rec_*.root' /eos/experiment/fcc/ee/datasets/CLD_fullsim_tagging_key4hep_dummy_folder/ Hdd_4.root False"
+queue
+arguments="writeJetConstObs.py 25 5 '/eos/experiment/fcc/prod/fcc/ee/test_spring2024/240gev/Hdd/CLD_o2_v05/rec/00016771/*/Hdd_rec_*.root' /eos/experiment/fcc/ee/datasets/CLD_fullsim_tagging_key4hep_dummy_folder/ Hdd_5.root False"
+queue
+arguments="writeJetConstObs.py 30 5 '/eos/experiment/fcc/prod/fcc/ee/test_spring2024/240gev/Hdd/CLD_o2_v05/rec/00016771/*/Hdd_rec_*.root' /eos/experiment/fcc/ee/datasets/CLD_fullsim_tagging_key4hep_dummy_folder/ Hdd_6.root False"
+queue
+arguments="writeJetConstObs.py 35 5 '/eos/experiment/fcc/prod/fcc/ee/test_spring2024/240gev/Hdd/CLD_o2_v05/rec/00016771/*/Hdd_rec_*.root' /eos/experiment/fcc/ee/datasets/CLD_fullsim_tagging_key4hep_dummy_folder/ Hdd_7.root False"
+queue
+arguments="writeJetConstObs.py 40 5 '/eos/experiment/fcc/prod/fcc/ee/test_spring2024/240gev/Hdd/CLD_o2_v05/rec/00016771/*/Hdd_rec_*.root' /eos/experiment/fcc/ee/datasets/CLD_fullsim_tagging_key4hep_dummy_folder/ Hdd_8.root False"
+queue
+arguments="writeJetConstObs.py 45 5 '/eos/experiment/fcc/prod/fcc/ee/test_spring2024/240gev/Hdd/CLD_o2_v05/rec/00016771/*/Hdd_rec_*.root' /eos/experiment/fcc/ee/datasets/CLD_fullsim_tagging_key4hep_dummy_folder/ Hdd_9.root False"
+queue
+arguments="writeJetConstObs.py 50 5 '/eos/experiment/fcc/prod/fcc/ee/test_spring2024/240gev/Hdd/CLD_o2_v05/rec/00016771/*/Hdd_rec_*.root' /eos/experiment/fcc/ee/datasets/CLD_fullsim_tagging_key4hep_dummy_folder/ Hdd_10.root False"
+queue
+arguments="writeJetConstObs.py 55 5 '/eos/experiment/fcc/prod/fcc/ee/test_spring2024/240gev/Hdd/CLD_o2_v05/rec/00016771/*/Hdd_rec_*.root' /eos/experiment/fcc/ee/datasets/CLD_fullsim_tagging_key4hep_dummy_folder/ Hdd_11.root False"
+queue
+arguments="writeJetConstObs.py 60 5 '/eos/experiment/fcc/prod/fcc/ee/test_spring2024/240gev/Hdd/CLD_o2_v05/rec/00016771/*/Hdd_rec_*.root' /eos/experiment/fcc/ee/datasets/CLD_fullsim_tagging_key4hep_dummy_folder/ Hdd_12.root False"
+queue
+arguments="writeJetConstObs.py 65 5 '/eos/experiment/fcc/prod/fcc/ee/test_spring2024/240gev/Hdd/CLD_o2_v05/rec/00016771/*/Hdd_rec_*.root' /eos/experiment/fcc/ee/datasets/CLD_fullsim_tagging_key4hep_dummy_folder/ Hdd_13.root False"
+queue
+arguments="writeJetConstObs.py 70 5 '/eos/experiment/fcc/prod/fcc/ee/test_spring2024/240gev/Hdd/CLD_o2_v05/rec/00016771/*/Hdd_rec_*.root' /eos/experiment/fcc/ee/datasets/CLD_fullsim_tagging_key4hep_dummy_folder/ Hdd_14.root False"
+queue
+arguments="writeJetConstObs.py 75 5 '/eos/experiment/fcc/prod/fcc/ee/test_spring2024/240gev/Hdd/CLD_o2_v05/rec/00016771/*/Hdd_rec_*.root' /eos/experiment/fcc/ee/datasets/CLD_fullsim_tagging_key4hep_dummy_folder/ Hdd_15.root False"
+queue
+arguments="writeJetConstObs.py 80 5 '/eos/experiment/fcc/prod/fcc/ee/test_spring2024/240gev/Hdd/CLD_o2_v05/rec/00016771/*/Hdd_rec_*.root' /eos/experiment/fcc/ee/datasets/CLD_fullsim_tagging_key4hep_dummy_folder/ Hdd_16.root False"
+queue
+arguments="writeJetConstObs.py 85 5 '/eos/experiment/fcc/prod/fcc/ee/test_spring2024/240gev/Hdd/CLD_o2_v05/rec/00016771/*/Hdd_rec_*.root' /eos/experiment/fcc/ee/datasets/CLD_fullsim_tagging_key4hep_dummy_folder/ Hdd_17.root False"
+queue
+arguments="writeJetConstObs.py 90 5 '/eos/experiment/fcc/prod/fcc/ee/test_spring2024/240gev/Hdd/CLD_o2_v05/rec/00016771/*/Hdd_rec_*.root' /eos/experiment/fcc/ee/datasets/CLD_fullsim_tagging_key4hep_dummy_folder/ Hdd_18.root False"
+queue
+arguments="writeJetConstObs.py 95 5 '/eos/experiment/fcc/prod/fcc/ee/test_spring2024/240gev/Hdd/CLD_o2_v05/rec/00016771/*/Hdd_rec_*.root' /eos/experiment/fcc/ee/datasets/CLD_fullsim_tagging_key4hep_dummy_folder/ Hdd_19.root False"
+queue
+arguments="writeJetConstObs.py 0 5 '/eos/experiment/fcc/prod/fcc/ee/test_spring2024/240gev/Hss/CLD_o2_v05/rec/00016777/*/Hss_rec_*.root' /eos/experiment/fcc/ee/datasets/CLD_fullsim_tagging_key4hep_dummy_folder/ Hss_0.root False"
+queue
+arguments="writeJetConstObs.py 5 5 '/eos/experiment/fcc/prod/fcc/ee/test_spring2024/240gev/Hss/CLD_o2_v05/rec/00016777/*/Hss_rec_*.root' /eos/experiment/fcc/ee/datasets/CLD_fullsim_tagging_key4hep_dummy_folder/ Hss_1.root False"
+queue
+arguments="writeJetConstObs.py 10 5 '/eos/experiment/fcc/prod/fcc/ee/test_spring2024/240gev/Hss/CLD_o2_v05/rec/00016777/*/Hss_rec_*.root' /eos/experiment/fcc/ee/datasets/CLD_fullsim_tagging_key4hep_dummy_folder/ Hss_2.root False"
+queue
+arguments="writeJetConstObs.py 15 5 '/eos/experiment/fcc/prod/fcc/ee/test_spring2024/240gev/Hss/CLD_o2_v05/rec/00016777/*/Hss_rec_*.root' /eos/experiment/fcc/ee/datasets/CLD_fullsim_tagging_key4hep_dummy_folder/ Hss_3.root False"
+queue
+arguments="writeJetConstObs.py 20 5 '/eos/experiment/fcc/prod/fcc/ee/test_spring2024/240gev/Hss/CLD_o2_v05/rec/00016777/*/Hss_rec_*.root' /eos/experiment/fcc/ee/datasets/CLD_fullsim_tagging_key4hep_dummy_folder/ Hss_4.root False"
+queue
+arguments="writeJetConstObs.py 25 5 '/eos/experiment/fcc/prod/fcc/ee/test_spring2024/240gev/Hss/CLD_o2_v05/rec/00016777/*/Hss_rec_*.root' /eos/experiment/fcc/ee/datasets/CLD_fullsim_tagging_key4hep_dummy_folder/ Hss_5.root False"
+queue
+arguments="writeJetConstObs.py 30 5 '/eos/experiment/fcc/prod/fcc/ee/test_spring2024/240gev/Hss/CLD_o2_v05/rec/00016777/*/Hss_rec_*.root' /eos/experiment/fcc/ee/datasets/CLD_fullsim_tagging_key4hep_dummy_folder/ Hss_6.root False"
+queue
+arguments="writeJetConstObs.py 35 5 '/eos/experiment/fcc/prod/fcc/ee/test_spring2024/240gev/Hss/CLD_o2_v05/rec/00016777/*/Hss_rec_*.root' /eos/experiment/fcc/ee/datasets/CLD_fullsim_tagging_key4hep_dummy_folder/ Hss_7.root False"
+queue
+arguments="writeJetConstObs.py 40 5 '/eos/experiment/fcc/prod/fcc/ee/test_spring2024/240gev/Hss/CLD_o2_v05/rec/00016777/*/Hss_rec_*.root' /eos/experiment/fcc/ee/datasets/CLD_fullsim_tagging_key4hep_dummy_folder/ Hss_8.root False"
+queue
+arguments="writeJetConstObs.py 45 5 '/eos/experiment/fcc/prod/fcc/ee/test_spring2024/240gev/Hss/CLD_o2_v05/rec/00016777/*/Hss_rec_*.root' /eos/experiment/fcc/ee/datasets/CLD_fullsim_tagging_key4hep_dummy_folder/ Hss_9.root False"
+queue
+arguments="writeJetConstObs.py 50 5 '/eos/experiment/fcc/prod/fcc/ee/test_spring2024/240gev/Hss/CLD_o2_v05/rec/00016777/*/Hss_rec_*.root' /eos/experiment/fcc/ee/datasets/CLD_fullsim_tagging_key4hep_dummy_folder/ Hss_10.root False"
+queue
+arguments="writeJetConstObs.py 55 5 '/eos/experiment/fcc/prod/fcc/ee/test_spring2024/240gev/Hss/CLD_o2_v05/rec/00016777/*/Hss_rec_*.root' /eos/experiment/fcc/ee/datasets/CLD_fullsim_tagging_key4hep_dummy_folder/ Hss_11.root False"
+queue
+arguments="writeJetConstObs.py 60 5 '/eos/experiment/fcc/prod/fcc/ee/test_spring2024/240gev/Hss/CLD_o2_v05/rec/00016777/*/Hss_rec_*.root' /eos/experiment/fcc/ee/datasets/CLD_fullsim_tagging_key4hep_dummy_folder/ Hss_12.root False"
+queue
+arguments="writeJetConstObs.py 65 5 '/eos/experiment/fcc/prod/fcc/ee/test_spring2024/240gev/Hss/CLD_o2_v05/rec/00016777/*/Hss_rec_*.root' /eos/experiment/fcc/ee/datasets/CLD_fullsim_tagging_key4hep_dummy_folder/ Hss_13.root False"
+queue
+arguments="writeJetConstObs.py 70 5 '/eos/experiment/fcc/prod/fcc/ee/test_spring2024/240gev/Hss/CLD_o2_v05/rec/00016777/*/Hss_rec_*.root' /eos/experiment/fcc/ee/datasets/CLD_fullsim_tagging_key4hep_dummy_folder/ Hss_14.root False"
+queue
+arguments="writeJetConstObs.py 75 5 '/eos/experiment/fcc/prod/fcc/ee/test_spring2024/240gev/Hss/CLD_o2_v05/rec/00016777/*/Hss_rec_*.root' /eos/experiment/fcc/ee/datasets/CLD_fullsim_tagging_key4hep_dummy_folder/ Hss_15.root False"
+queue
+arguments="writeJetConstObs.py 80 5 '/eos/experiment/fcc/prod/fcc/ee/test_spring2024/240gev/Hss/CLD_o2_v05/rec/00016777/*/Hss_rec_*.root' /eos/experiment/fcc/ee/datasets/CLD_fullsim_tagging_key4hep_dummy_folder/ Hss_16.root False"
+queue
+arguments="writeJetConstObs.py 85 5 '/eos/experiment/fcc/prod/fcc/ee/test_spring2024/240gev/Hss/CLD_o2_v05/rec/00016777/*/Hss_rec_*.root' /eos/experiment/fcc/ee/datasets/CLD_fullsim_tagging_key4hep_dummy_folder/ Hss_17.root False"
+queue
+arguments="writeJetConstObs.py 90 5 '/eos/experiment/fcc/prod/fcc/ee/test_spring2024/240gev/Hss/CLD_o2_v05/rec/00016777/*/Hss_rec_*.root' /eos/experiment/fcc/ee/datasets/CLD_fullsim_tagging_key4hep_dummy_folder/ Hss_18.root False"
+queue
+arguments="writeJetConstObs.py 95 5 '/eos/experiment/fcc/prod/fcc/ee/test_spring2024/240gev/Hss/CLD_o2_v05/rec/00016777/*/Hss_rec_*.root' /eos/experiment/fcc/ee/datasets/CLD_fullsim_tagging_key4hep_dummy_folder/ Hss_19.root False"
+queue
+arguments="writeJetConstObs.py 0 5 '/eos/experiment/fcc/prod/fcc/ee/test_spring2024/240gev/Hcc/CLD_o2_v05/rec/00016780/*/Hcc_rec_*.root' /eos/experiment/fcc/ee/datasets/CLD_fullsim_tagging_key4hep_dummy_folder/ Hcc_0.root False"
+queue
+arguments="writeJetConstObs.py 5 5 '/eos/experiment/fcc/prod/fcc/ee/test_spring2024/240gev/Hcc/CLD_o2_v05/rec/00016780/*/Hcc_rec_*.root' /eos/experiment/fcc/ee/datasets/CLD_fullsim_tagging_key4hep_dummy_folder/ Hcc_1.root False"
+queue
+arguments="writeJetConstObs.py 10 5 '/eos/experiment/fcc/prod/fcc/ee/test_spring2024/240gev/Hcc/CLD_o2_v05/rec/00016780/*/Hcc_rec_*.root' /eos/experiment/fcc/ee/datasets/CLD_fullsim_tagging_key4hep_dummy_folder/ Hcc_2.root False"
+queue
+arguments="writeJetConstObs.py 15 5 '/eos/experiment/fcc/prod/fcc/ee/test_spring2024/240gev/Hcc/CLD_o2_v05/rec/00016780/*/Hcc_rec_*.root' /eos/experiment/fcc/ee/datasets/CLD_fullsim_tagging_key4hep_dummy_folder/ Hcc_3.root False"
+queue
+arguments="writeJetConstObs.py 20 5 '/eos/experiment/fcc/prod/fcc/ee/test_spring2024/240gev/Hcc/CLD_o2_v05/rec/00016780/*/Hcc_rec_*.root' /eos/experiment/fcc/ee/datasets/CLD_fullsim_tagging_key4hep_dummy_folder/ Hcc_4.root False"
+queue
+arguments="writeJetConstObs.py 25 5 '/eos/experiment/fcc/prod/fcc/ee/test_spring2024/240gev/Hcc/CLD_o2_v05/rec/00016780/*/Hcc_rec_*.root' /eos/experiment/fcc/ee/datasets/CLD_fullsim_tagging_key4hep_dummy_folder/ Hcc_5.root False"
+queue
+arguments="writeJetConstObs.py 30 5 '/eos/experiment/fcc/prod/fcc/ee/test_spring2024/240gev/Hcc/CLD_o2_v05/rec/00016780/*/Hcc_rec_*.root' /eos/experiment/fcc/ee/datasets/CLD_fullsim_tagging_key4hep_dummy_folder/ Hcc_6.root False"
+queue
+arguments="writeJetConstObs.py 35 5 '/eos/experiment/fcc/prod/fcc/ee/test_spring2024/240gev/Hcc/CLD_o2_v05/rec/00016780/*/Hcc_rec_*.root' /eos/experiment/fcc/ee/datasets/CLD_fullsim_tagging_key4hep_dummy_folder/ Hcc_7.root False"
+queue
+arguments="writeJetConstObs.py 40 5 '/eos/experiment/fcc/prod/fcc/ee/test_spring2024/240gev/Hcc/CLD_o2_v05/rec/00016780/*/Hcc_rec_*.root' /eos/experiment/fcc/ee/datasets/CLD_fullsim_tagging_key4hep_dummy_folder/ Hcc_8.root False"
+queue
+arguments="writeJetConstObs.py 45 5 '/eos/experiment/fcc/prod/fcc/ee/test_spring2024/240gev/Hcc/CLD_o2_v05/rec/00016780/*/Hcc_rec_*.root' /eos/experiment/fcc/ee/datasets/CLD_fullsim_tagging_key4hep_dummy_folder/ Hcc_9.root False"
+queue
+arguments="writeJetConstObs.py 50 5 '/eos/experiment/fcc/prod/fcc/ee/test_spring2024/240gev/Hcc/CLD_o2_v05/rec/00016780/*/Hcc_rec_*.root' /eos/experiment/fcc/ee/datasets/CLD_fullsim_tagging_key4hep_dummy_folder/ Hcc_10.root False"
+queue
+arguments="writeJetConstObs.py 55 5 '/eos/experiment/fcc/prod/fcc/ee/test_spring2024/240gev/Hcc/CLD_o2_v05/rec/00016780/*/Hcc_rec_*.root' /eos/experiment/fcc/ee/datasets/CLD_fullsim_tagging_key4hep_dummy_folder/ Hcc_11.root False"
+queue
+arguments="writeJetConstObs.py 60 5 '/eos/experiment/fcc/prod/fcc/ee/test_spring2024/240gev/Hcc/CLD_o2_v05/rec/00016780/*/Hcc_rec_*.root' /eos/experiment/fcc/ee/datasets/CLD_fullsim_tagging_key4hep_dummy_folder/ Hcc_12.root False"
+queue
+arguments="writeJetConstObs.py 65 5 '/eos/experiment/fcc/prod/fcc/ee/test_spring2024/240gev/Hcc/CLD_o2_v05/rec/00016780/*/Hcc_rec_*.root' /eos/experiment/fcc/ee/datasets/CLD_fullsim_tagging_key4hep_dummy_folder/ Hcc_13.root False"
+queue
+arguments="writeJetConstObs.py 70 5 '/eos/experiment/fcc/prod/fcc/ee/test_spring2024/240gev/Hcc/CLD_o2_v05/rec/00016780/*/Hcc_rec_*.root' /eos/experiment/fcc/ee/datasets/CLD_fullsim_tagging_key4hep_dummy_folder/ Hcc_14.root False"
+queue
+arguments="writeJetConstObs.py 75 5 '/eos/experiment/fcc/prod/fcc/ee/test_spring2024/240gev/Hcc/CLD_o2_v05/rec/00016780/*/Hcc_rec_*.root' /eos/experiment/fcc/ee/datasets/CLD_fullsim_tagging_key4hep_dummy_folder/ Hcc_15.root False"
+queue
+arguments="writeJetConstObs.py 80 5 '/eos/experiment/fcc/prod/fcc/ee/test_spring2024/240gev/Hcc/CLD_o2_v05/rec/00016780/*/Hcc_rec_*.root' /eos/experiment/fcc/ee/datasets/CLD_fullsim_tagging_key4hep_dummy_folder/ Hcc_16.root False"
+queue
+arguments="writeJetConstObs.py 85 5 '/eos/experiment/fcc/prod/fcc/ee/test_spring2024/240gev/Hcc/CLD_o2_v05/rec/00016780/*/Hcc_rec_*.root' /eos/experiment/fcc/ee/datasets/CLD_fullsim_tagging_key4hep_dummy_folder/ Hcc_17.root False"
+queue
+arguments="writeJetConstObs.py 90 5 '/eos/experiment/fcc/prod/fcc/ee/test_spring2024/240gev/Hcc/CLD_o2_v05/rec/00016780/*/Hcc_rec_*.root' /eos/experiment/fcc/ee/datasets/CLD_fullsim_tagging_key4hep_dummy_folder/ Hcc_18.root False"
+queue
+arguments="writeJetConstObs.py 95 5 '/eos/experiment/fcc/prod/fcc/ee/test_spring2024/240gev/Hcc/CLD_o2_v05/rec/00016780/*/Hcc_rec_*.root' /eos/experiment/fcc/ee/datasets/CLD_fullsim_tagging_key4hep_dummy_folder/ Hcc_19.root False"
+queue
+arguments="writeJetConstObs.py 0 5 '/eos/experiment/fcc/prod/fcc/ee/test_spring2024/240gev/Hbb/CLD_o2_v05/rec/00016783/*/Hbb_rec_*.root' /eos/experiment/fcc/ee/datasets/CLD_fullsim_tagging_key4hep_dummy_folder/ Hbb_0.root False"
+queue
+arguments="writeJetConstObs.py 5 5 '/eos/experiment/fcc/prod/fcc/ee/test_spring2024/240gev/Hbb/CLD_o2_v05/rec/00016783/*/Hbb_rec_*.root' /eos/experiment/fcc/ee/datasets/CLD_fullsim_tagging_key4hep_dummy_folder/ Hbb_1.root False"
+queue
+arguments="writeJetConstObs.py 10 5 '/eos/experiment/fcc/prod/fcc/ee/test_spring2024/240gev/Hbb/CLD_o2_v05/rec/00016783/*/Hbb_rec_*.root' /eos/experiment/fcc/ee/datasets/CLD_fullsim_tagging_key4hep_dummy_folder/ Hbb_2.root False"
+queue
+arguments="writeJetConstObs.py 15 5 '/eos/experiment/fcc/prod/fcc/ee/test_spring2024/240gev/Hbb/CLD_o2_v05/rec/00016783/*/Hbb_rec_*.root' /eos/experiment/fcc/ee/datasets/CLD_fullsim_tagging_key4hep_dummy_folder/ Hbb_3.root False"
+queue
+arguments="writeJetConstObs.py 20 5 '/eos/experiment/fcc/prod/fcc/ee/test_spring2024/240gev/Hbb/CLD_o2_v05/rec/00016783/*/Hbb_rec_*.root' /eos/experiment/fcc/ee/datasets/CLD_fullsim_tagging_key4hep_dummy_folder/ Hbb_4.root False"
+queue
+arguments="writeJetConstObs.py 25 5 '/eos/experiment/fcc/prod/fcc/ee/test_spring2024/240gev/Hbb/CLD_o2_v05/rec/00016783/*/Hbb_rec_*.root' /eos/experiment/fcc/ee/datasets/CLD_fullsim_tagging_key4hep_dummy_folder/ Hbb_5.root False"
+queue
+arguments="writeJetConstObs.py 30 5 '/eos/experiment/fcc/prod/fcc/ee/test_spring2024/240gev/Hbb/CLD_o2_v05/rec/00016783/*/Hbb_rec_*.root' /eos/experiment/fcc/ee/datasets/CLD_fullsim_tagging_key4hep_dummy_folder/ Hbb_6.root False"
+queue
+arguments="writeJetConstObs.py 35 5 '/eos/experiment/fcc/prod/fcc/ee/test_spring2024/240gev/Hbb/CLD_o2_v05/rec/00016783/*/Hbb_rec_*.root' /eos/experiment/fcc/ee/datasets/CLD_fullsim_tagging_key4hep_dummy_folder/ Hbb_7.root False"
+queue
+arguments="writeJetConstObs.py 40 5 '/eos/experiment/fcc/prod/fcc/ee/test_spring2024/240gev/Hbb/CLD_o2_v05/rec/00016783/*/Hbb_rec_*.root' /eos/experiment/fcc/ee/datasets/CLD_fullsim_tagging_key4hep_dummy_folder/ Hbb_8.root False"
+queue
+arguments="writeJetConstObs.py 45 5 '/eos/experiment/fcc/prod/fcc/ee/test_spring2024/240gev/Hbb/CLD_o2_v05/rec/00016783/*/Hbb_rec_*.root' /eos/experiment/fcc/ee/datasets/CLD_fullsim_tagging_key4hep_dummy_folder/ Hbb_9.root False"
+queue
+arguments="writeJetConstObs.py 50 5 '/eos/experiment/fcc/prod/fcc/ee/test_spring2024/240gev/Hbb/CLD_o2_v05/rec/00016783/*/Hbb_rec_*.root' /eos/experiment/fcc/ee/datasets/CLD_fullsim_tagging_key4hep_dummy_folder/ Hbb_10.root False"
+queue
+arguments="writeJetConstObs.py 55 5 '/eos/experiment/fcc/prod/fcc/ee/test_spring2024/240gev/Hbb/CLD_o2_v05/rec/00016783/*/Hbb_rec_*.root' /eos/experiment/fcc/ee/datasets/CLD_fullsim_tagging_key4hep_dummy_folder/ Hbb_11.root False"
+queue
+arguments="writeJetConstObs.py 60 5 '/eos/experiment/fcc/prod/fcc/ee/test_spring2024/240gev/Hbb/CLD_o2_v05/rec/00016783/*/Hbb_rec_*.root' /eos/experiment/fcc/ee/datasets/CLD_fullsim_tagging_key4hep_dummy_folder/ Hbb_12.root False"
+queue
+arguments="writeJetConstObs.py 65 5 '/eos/experiment/fcc/prod/fcc/ee/test_spring2024/240gev/Hbb/CLD_o2_v05/rec/00016783/*/Hbb_rec_*.root' /eos/experiment/fcc/ee/datasets/CLD_fullsim_tagging_key4hep_dummy_folder/ Hbb_13.root False"
+queue
+arguments="writeJetConstObs.py 70 5 '/eos/experiment/fcc/prod/fcc/ee/test_spring2024/240gev/Hbb/CLD_o2_v05/rec/00016783/*/Hbb_rec_*.root' /eos/experiment/fcc/ee/datasets/CLD_fullsim_tagging_key4hep_dummy_folder/ Hbb_14.root False"
+queue
+arguments="writeJetConstObs.py 75 5 '/eos/experiment/fcc/prod/fcc/ee/test_spring2024/240gev/Hbb/CLD_o2_v05/rec/00016783/*/Hbb_rec_*.root' /eos/experiment/fcc/ee/datasets/CLD_fullsim_tagging_key4hep_dummy_folder/ Hbb_15.root False"
+queue
+arguments="writeJetConstObs.py 80 5 '/eos/experiment/fcc/prod/fcc/ee/test_spring2024/240gev/Hbb/CLD_o2_v05/rec/00016783/*/Hbb_rec_*.root' /eos/experiment/fcc/ee/datasets/CLD_fullsim_tagging_key4hep_dummy_folder/ Hbb_16.root False"
+queue
+arguments="writeJetConstObs.py 85 5 '/eos/experiment/fcc/prod/fcc/ee/test_spring2024/240gev/Hbb/CLD_o2_v05/rec/00016783/*/Hbb_rec_*.root' /eos/experiment/fcc/ee/datasets/CLD_fullsim_tagging_key4hep_dummy_folder/ Hbb_17.root False"
+queue
+arguments="writeJetConstObs.py 90 5 '/eos/experiment/fcc/prod/fcc/ee/test_spring2024/240gev/Hbb/CLD_o2_v05/rec/00016783/*/Hbb_rec_*.root' /eos/experiment/fcc/ee/datasets/CLD_fullsim_tagging_key4hep_dummy_folder/ Hbb_18.root False"
+queue
+arguments="writeJetConstObs.py 95 5 '/eos/experiment/fcc/prod/fcc/ee/test_spring2024/240gev/Hbb/CLD_o2_v05/rec/00016783/*/Hbb_rec_*.root' /eos/experiment/fcc/ee/datasets/CLD_fullsim_tagging_key4hep_dummy_folder/ Hbb_19.root False"
+queue
+arguments="writeJetConstObs.py 0 5 '/eos/experiment/fcc/prod/fcc/ee/test_spring2024/240gev/Hgg/CLD_o2_v05/rec/00016768/*/Hgg_rec_*.root' /eos/experiment/fcc/ee/datasets/CLD_fullsim_tagging_key4hep_dummy_folder/ Hgg_0.root False"
+queue
+arguments="writeJetConstObs.py 5 5 '/eos/experiment/fcc/prod/fcc/ee/test_spring2024/240gev/Hgg/CLD_o2_v05/rec/00016768/*/Hgg_rec_*.root' /eos/experiment/fcc/ee/datasets/CLD_fullsim_tagging_key4hep_dummy_folder/ Hgg_1.root False"
+queue
+arguments="writeJetConstObs.py 10 5 '/eos/experiment/fcc/prod/fcc/ee/test_spring2024/240gev/Hgg/CLD_o2_v05/rec/00016768/*/Hgg_rec_*.root' /eos/experiment/fcc/ee/datasets/CLD_fullsim_tagging_key4hep_dummy_folder/ Hgg_2.root False"
+queue
+arguments="writeJetConstObs.py 15 5 '/eos/experiment/fcc/prod/fcc/ee/test_spring2024/240gev/Hgg/CLD_o2_v05/rec/00016768/*/Hgg_rec_*.root' /eos/experiment/fcc/ee/datasets/CLD_fullsim_tagging_key4hep_dummy_folder/ Hgg_3.root False"
+queue
+arguments="writeJetConstObs.py 20 5 '/eos/experiment/fcc/prod/fcc/ee/test_spring2024/240gev/Hgg/CLD_o2_v05/rec/00016768/*/Hgg_rec_*.root' /eos/experiment/fcc/ee/datasets/CLD_fullsim_tagging_key4hep_dummy_folder/ Hgg_4.root False"
+queue
+arguments="writeJetConstObs.py 25 5 '/eos/experiment/fcc/prod/fcc/ee/test_spring2024/240gev/Hgg/CLD_o2_v05/rec/00016768/*/Hgg_rec_*.root' /eos/experiment/fcc/ee/datasets/CLD_fullsim_tagging_key4hep_dummy_folder/ Hgg_5.root False"
+queue
+arguments="writeJetConstObs.py 30 5 '/eos/experiment/fcc/prod/fcc/ee/test_spring2024/240gev/Hgg/CLD_o2_v05/rec/00016768/*/Hgg_rec_*.root' /eos/experiment/fcc/ee/datasets/CLD_fullsim_tagging_key4hep_dummy_folder/ Hgg_6.root False"
+queue
+arguments="writeJetConstObs.py 35 5 '/eos/experiment/fcc/prod/fcc/ee/test_spring2024/240gev/Hgg/CLD_o2_v05/rec/00016768/*/Hgg_rec_*.root' /eos/experiment/fcc/ee/datasets/CLD_fullsim_tagging_key4hep_dummy_folder/ Hgg_7.root False"
+queue
+arguments="writeJetConstObs.py 40 5 '/eos/experiment/fcc/prod/fcc/ee/test_spring2024/240gev/Hgg/CLD_o2_v05/rec/00016768/*/Hgg_rec_*.root' /eos/experiment/fcc/ee/datasets/CLD_fullsim_tagging_key4hep_dummy_folder/ Hgg_8.root False"
+queue
+arguments="writeJetConstObs.py 45 5 '/eos/experiment/fcc/prod/fcc/ee/test_spring2024/240gev/Hgg/CLD_o2_v05/rec/00016768/*/Hgg_rec_*.root' /eos/experiment/fcc/ee/datasets/CLD_fullsim_tagging_key4hep_dummy_folder/ Hgg_9.root False"
+queue
+arguments="writeJetConstObs.py 50 5 '/eos/experiment/fcc/prod/fcc/ee/test_spring2024/240gev/Hgg/CLD_o2_v05/rec/00016768/*/Hgg_rec_*.root' /eos/experiment/fcc/ee/datasets/CLD_fullsim_tagging_key4hep_dummy_folder/ Hgg_10.root False"
+queue
+arguments="writeJetConstObs.py 55 5 '/eos/experiment/fcc/prod/fcc/ee/test_spring2024/240gev/Hgg/CLD_o2_v05/rec/00016768/*/Hgg_rec_*.root' /eos/experiment/fcc/ee/datasets/CLD_fullsim_tagging_key4hep_dummy_folder/ Hgg_11.root False"
+queue
+arguments="writeJetConstObs.py 60 5 '/eos/experiment/fcc/prod/fcc/ee/test_spring2024/240gev/Hgg/CLD_o2_v05/rec/00016768/*/Hgg_rec_*.root' /eos/experiment/fcc/ee/datasets/CLD_fullsim_tagging_key4hep_dummy_folder/ Hgg_12.root False"
+queue
+arguments="writeJetConstObs.py 65 5 '/eos/experiment/fcc/prod/fcc/ee/test_spring2024/240gev/Hgg/CLD_o2_v05/rec/00016768/*/Hgg_rec_*.root' /eos/experiment/fcc/ee/datasets/CLD_fullsim_tagging_key4hep_dummy_folder/ Hgg_13.root False"
+queue
+arguments="writeJetConstObs.py 70 5 '/eos/experiment/fcc/prod/fcc/ee/test_spring2024/240gev/Hgg/CLD_o2_v05/rec/00016768/*/Hgg_rec_*.root' /eos/experiment/fcc/ee/datasets/CLD_fullsim_tagging_key4hep_dummy_folder/ Hgg_14.root False"
+queue
+arguments="writeJetConstObs.py 75 5 '/eos/experiment/fcc/prod/fcc/ee/test_spring2024/240gev/Hgg/CLD_o2_v05/rec/00016768/*/Hgg_rec_*.root' /eos/experiment/fcc/ee/datasets/CLD_fullsim_tagging_key4hep_dummy_folder/ Hgg_15.root False"
+queue
+arguments="writeJetConstObs.py 80 5 '/eos/experiment/fcc/prod/fcc/ee/test_spring2024/240gev/Hgg/CLD_o2_v05/rec/00016768/*/Hgg_rec_*.root' /eos/experiment/fcc/ee/datasets/CLD_fullsim_tagging_key4hep_dummy_folder/ Hgg_16.root False"
+queue
+arguments="writeJetConstObs.py 85 5 '/eos/experiment/fcc/prod/fcc/ee/test_spring2024/240gev/Hgg/CLD_o2_v05/rec/00016768/*/Hgg_rec_*.root' /eos/experiment/fcc/ee/datasets/CLD_fullsim_tagging_key4hep_dummy_folder/ Hgg_17.root False"
+queue
+arguments="writeJetConstObs.py 90 5 '/eos/experiment/fcc/prod/fcc/ee/test_spring2024/240gev/Hgg/CLD_o2_v05/rec/00016768/*/Hgg_rec_*.root' /eos/experiment/fcc/ee/datasets/CLD_fullsim_tagging_key4hep_dummy_folder/ Hgg_18.root False"
+queue
+arguments="writeJetConstObs.py 95 5 '/eos/experiment/fcc/prod/fcc/ee/test_spring2024/240gev/Hgg/CLD_o2_v05/rec/00016768/*/Hgg_rec_*.root' /eos/experiment/fcc/ee/datasets/CLD_fullsim_tagging_key4hep_dummy_folder/ Hgg_19.root False"
+queue
+arguments="writeJetConstObs.py 0 5 '/eos/experiment/fcc/prod/fcc/ee/test_spring2024/240gev/Htautau/CLD_o2_v05/rec/00016765/*/Htautau_rec_*.root' /eos/experiment/fcc/ee/datasets/CLD_fullsim_tagging_key4hep_dummy_folder/ Htautau_0.root False"
+queue
+arguments="writeJetConstObs.py 5 5 '/eos/experiment/fcc/prod/fcc/ee/test_spring2024/240gev/Htautau/CLD_o2_v05/rec/00016765/*/Htautau_rec_*.root' /eos/experiment/fcc/ee/datasets/CLD_fullsim_tagging_key4hep_dummy_folder/ Htautau_1.root False"
+queue
+arguments="writeJetConstObs.py 10 5 '/eos/experiment/fcc/prod/fcc/ee/test_spring2024/240gev/Htautau/CLD_o2_v05/rec/00016765/*/Htautau_rec_*.root' /eos/experiment/fcc/ee/datasets/CLD_fullsim_tagging_key4hep_dummy_folder/ Htautau_2.root False"
+queue
+arguments="writeJetConstObs.py 15 5 '/eos/experiment/fcc/prod/fcc/ee/test_spring2024/240gev/Htautau/CLD_o2_v05/rec/00016765/*/Htautau_rec_*.root' /eos/experiment/fcc/ee/datasets/CLD_fullsim_tagging_key4hep_dummy_folder/ Htautau_3.root False"
+queue
+arguments="writeJetConstObs.py 20 5 '/eos/experiment/fcc/prod/fcc/ee/test_spring2024/240gev/Htautau/CLD_o2_v05/rec/00016765/*/Htautau_rec_*.root' /eos/experiment/fcc/ee/datasets/CLD_fullsim_tagging_key4hep_dummy_folder/ Htautau_4.root False"
+queue
+arguments="writeJetConstObs.py 25 5 '/eos/experiment/fcc/prod/fcc/ee/test_spring2024/240gev/Htautau/CLD_o2_v05/rec/00016765/*/Htautau_rec_*.root' /eos/experiment/fcc/ee/datasets/CLD_fullsim_tagging_key4hep_dummy_folder/ Htautau_5.root False"
+queue
+arguments="writeJetConstObs.py 30 5 '/eos/experiment/fcc/prod/fcc/ee/test_spring2024/240gev/Htautau/CLD_o2_v05/rec/00016765/*/Htautau_rec_*.root' /eos/experiment/fcc/ee/datasets/CLD_fullsim_tagging_key4hep_dummy_folder/ Htautau_6.root False"
+queue
+arguments="writeJetConstObs.py 35 5 '/eos/experiment/fcc/prod/fcc/ee/test_spring2024/240gev/Htautau/CLD_o2_v05/rec/00016765/*/Htautau_rec_*.root' /eos/experiment/fcc/ee/datasets/CLD_fullsim_tagging_key4hep_dummy_folder/ Htautau_7.root False"
+queue
+arguments="writeJetConstObs.py 40 5 '/eos/experiment/fcc/prod/fcc/ee/test_spring2024/240gev/Htautau/CLD_o2_v05/rec/00016765/*/Htautau_rec_*.root' /eos/experiment/fcc/ee/datasets/CLD_fullsim_tagging_key4hep_dummy_folder/ Htautau_8.root False"
+queue
+arguments="writeJetConstObs.py 45 5 '/eos/experiment/fcc/prod/fcc/ee/test_spring2024/240gev/Htautau/CLD_o2_v05/rec/00016765/*/Htautau_rec_*.root' /eos/experiment/fcc/ee/datasets/CLD_fullsim_tagging_key4hep_dummy_folder/ Htautau_9.root False"
+queue
+arguments="writeJetConstObs.py 50 5 '/eos/experiment/fcc/prod/fcc/ee/test_spring2024/240gev/Htautau/CLD_o2_v05/rec/00016765/*/Htautau_rec_*.root' /eos/experiment/fcc/ee/datasets/CLD_fullsim_tagging_key4hep_dummy_folder/ Htautau_10.root False"
+queue
+arguments="writeJetConstObs.py 55 5 '/eos/experiment/fcc/prod/fcc/ee/test_spring2024/240gev/Htautau/CLD_o2_v05/rec/00016765/*/Htautau_rec_*.root' /eos/experiment/fcc/ee/datasets/CLD_fullsim_tagging_key4hep_dummy_folder/ Htautau_11.root False"
+queue
+arguments="writeJetConstObs.py 60 5 '/eos/experiment/fcc/prod/fcc/ee/test_spring2024/240gev/Htautau/CLD_o2_v05/rec/00016765/*/Htautau_rec_*.root' /eos/experiment/fcc/ee/datasets/CLD_fullsim_tagging_key4hep_dummy_folder/ Htautau_12.root False"
+queue
+arguments="writeJetConstObs.py 65 5 '/eos/experiment/fcc/prod/fcc/ee/test_spring2024/240gev/Htautau/CLD_o2_v05/rec/00016765/*/Htautau_rec_*.root' /eos/experiment/fcc/ee/datasets/CLD_fullsim_tagging_key4hep_dummy_folder/ Htautau_13.root False"
+queue
+arguments="writeJetConstObs.py 70 5 '/eos/experiment/fcc/prod/fcc/ee/test_spring2024/240gev/Htautau/CLD_o2_v05/rec/00016765/*/Htautau_rec_*.root' /eos/experiment/fcc/ee/datasets/CLD_fullsim_tagging_key4hep_dummy_folder/ Htautau_14.root False"
+queue
+arguments="writeJetConstObs.py 75 5 '/eos/experiment/fcc/prod/fcc/ee/test_spring2024/240gev/Htautau/CLD_o2_v05/rec/00016765/*/Htautau_rec_*.root' /eos/experiment/fcc/ee/datasets/CLD_fullsim_tagging_key4hep_dummy_folder/ Htautau_15.root False"
+queue
+arguments="writeJetConstObs.py 80 5 '/eos/experiment/fcc/prod/fcc/ee/test_spring2024/240gev/Htautau/CLD_o2_v05/rec/00016765/*/Htautau_rec_*.root' /eos/experiment/fcc/ee/datasets/CLD_fullsim_tagging_key4hep_dummy_folder/ Htautau_16.root False"
+queue
+arguments="writeJetConstObs.py 85 5 '/eos/experiment/fcc/prod/fcc/ee/test_spring2024/240gev/Htautau/CLD_o2_v05/rec/00016765/*/Htautau_rec_*.root' /eos/experiment/fcc/ee/datasets/CLD_fullsim_tagging_key4hep_dummy_folder/ Htautau_17.root False"
+queue
+arguments="writeJetConstObs.py 90 5 '/eos/experiment/fcc/prod/fcc/ee/test_spring2024/240gev/Htautau/CLD_o2_v05/rec/00016765/*/Htautau_rec_*.root' /eos/experiment/fcc/ee/datasets/CLD_fullsim_tagging_key4hep_dummy_folder/ Htautau_18.root False"
+queue
+arguments="writeJetConstObs.py 95 5 '/eos/experiment/fcc/prod/fcc/ee/test_spring2024/240gev/Htautau/CLD_o2_v05/rec/00016765/*/Htautau_rec_*.root' /eos/experiment/fcc/ee/datasets/CLD_fullsim_tagging_key4hep_dummy_folder/ Htautau_19.root False"
+queue
