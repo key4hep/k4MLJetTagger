@@ -3,9 +3,9 @@
 # data you want to process
 input_data_path = "/eos/experiment/fcc/prod/fcc/ee/test_spring2024/240gev/{pattern}/CLD_o2_v05/rec/{prod}/*/{pattern}_rec_*.root"
 data_pattern = {"Huu": "00016774", "Hdd": "00016771", "Hss": "00016777", "Hcc": "00016780", "Hbb": "00016783", "Hgg": "00016768", "Htautau": "00016765"} # the key is the "pattern" and the value is the "prod" number
- 
-num_files = 5 # How many files to process per job
-start_indices = range(0, 100, num_files) # total of 100 files per flavor with 1000 events each
+
+num_files = 100 # process a total of 100 files per flavor (normally with 1000 events each)
+num_files_per_job = 5 # How many files to process per job
 
 # output paths
 output_base = "/eos/experiment/fcc/ee/datasets/CLD_fullsim_tagging_key4hep_dummy_folder/" 
@@ -51,7 +51,7 @@ log                   = {output_log}job.$(ClusterId).$(ClusterId).log
     content = ""
     for pattern in data_pattern:
         job_counter = 0
-        for start_index in start_indices:
+        for start_index in range(0, num_files, num_files_per_job):
             input_pattern = input_data_path.format(pattern=pattern, prod=data_pattern[pattern])
             output_file = f"{pattern}_{job_counter}.root"
             arguments = f"{job} {start_index} {num_files} \'{input_pattern}\' {output_base} {output_file} {local_path_to_tagger} {local}"

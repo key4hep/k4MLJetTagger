@@ -34,6 +34,10 @@ This code base also allows you to
 
 ## Installation
 
+**Local installation**
+
+Clone this repository. 
+
 Within the `k4MLJetTagger` directory run:
 
 ``` bash
@@ -46,6 +50,13 @@ cmake .. -DCMAKE_INSTALL_PREFIX=../install -G Ninja -DPython_EXECUTABLE=$(which 
 ninja install
 ```
 
+**Using the official software stack**
+
+The `k4MLJetTagger` is available on the nightlies (since April 2025). 
+
+```
+source /cvmfs/sw-nightlies.hsf.org/key4hep/setup.sh
+```
 
 ## Execution
 
@@ -56,6 +67,8 @@ k4run ../k4MLJetTagger/options/createJetTags.py --num_ev 20
 ```
 
 This will return your edm4hep input file with the added `RefinedJetTag_X` collections. 
+
+Soon, the `k4MLJetTagger` will be part of the CLD reconstruction chain by adding the flag `--enableMLJetTagger`, see [this pull request](https://github.com/key4hep/CLDConfig/pull/75).
 
 ## Infomation about the steering files provided 
 
@@ -114,7 +127,7 @@ So, generally speaking, if the input to the network changes. *This* network impl
 <img src="./extras/flowchart.png" alt="JetTagger-flowchart" width="70%">
 
 0. Do some changes that require retraining.
-1. Create a dataset to train the model on. The data should be stored in a root file, and you can use the `JetObsWriter` to create them. You normally need ~1-2 mio jets/flavor to train a new model; that is why I recommend creating the root file using condor. Follow the instructions [here](#extra-section) to do so. 
+1. Create a dataset to train the model on. The data should be stored in a root file, and you can use the `JetObsWriter` to create them. You normally need ~1-2 mio jets/flavor to train a new model; that is why I recommend creating the root file using condor. Follow the instructions [here](#creating-training-or-test-data) and resources [here](#extra-section) to do so. 
 2. I recommend using [weaver](https://github.com/doloresgarcia/weaver-core) to retrain a model and to make use of Dolores implementation of the ParticleTransformer using her repository/version of weaver. The branch `Saras-dev` also has the implementation of the L-GATr network, which does not outperform the ParticleTransformer, however. Here is how to set up the training with weaver:
 - Clone [weaver](https://github.com/doloresgarcia/weaver-core).
 - Clone your choice of network e.g., the [ParT](https://github.com/jet-universe/particle_transformer).
@@ -162,7 +175,39 @@ python3 -m weaver.train --predict --data-test /your/path/to/test-data/*.root \
 8. Run inference and check the performance. Help yourself using the scripts in `extras/plotting`. 
 9. Be proud of yourself. Well done :) 
 
+### Creating training or test data
 
+(For offical data creation, plese use the offical CLD reconstruction chain. You can use the flag `--enableMLJetTagger` during the reconstruction step, see [documentation](https://fcc-ee-detector-full-sim.docs.cern.ch/CLD/) and [implementation to CLDConfig](https://github.com/key4hep/CLDConfig/pull/75))
+
+In the `extra` section, you will find helper files to *privatly* produce large datasets for either training or evaluating the jet tagger. We use [condor](https://batchdocs.web.cern.ch/local/quick.html) to produce large dataset in root format. The folder `submit_to_condor` has two files:
+
+
+- `write_sub.py`: Modify this file to your needs. 
+  - (`input_data_path`, `data_pattern`), First, you need to define your input data. You will likely use files from the [central production](https://fcc-physics-events.web.cern.ch/fcc-ee/full-sim/index.php). Every production has its own production tag (number) that you need to set too. Please remember, the data should contain jets you want to train on / or test the taggers performance on. 
+  - (`num_files`, `num_files_per_job`) Set the total number of files you want to process and the number of files per job. 
+  - (`output_base`, `output_log`) Set a folder where you want to store the produced data (probably somewhere on `eos`). Also define a path where the condor log files should be saved (probably somewhere on your `afs`). The log files are useful to debug the condor job if needed. 
+  - (`job`) Decide what job you want to submit on condor! In principle, this can be any steering file for `k4un` that takes input and output files as argument. But most likely you want to use 
+    - `writeJetConstObs.py`: to write a root file with the jet constituent observables that the jet flavor tagger takes as input. Therefore, use this if you want to **create data to train on**. 
+    - `writeJetTags.py`: to write a root file with the jet tags. This runs the inference of the tagger on your input data and saves the tags as a root file. With this you can **evaluate the performance of the tagger**. (Have a look at this the notebook `extras/plotting/rocs_compaison.ipynb` to see how to create ROC curves). 
+  - (`local_path_to_tagger`) Define the path to your local clone of the tagger so you can use the `k4MLJetTagger/options/writeJetConstObs.py` or `k4MLJetTagger/options/writeJetTags.py` steering file. If you created your own steering file, save it in this folder: `k4MLJetTagger/options`. 
+  - (`local`) Boolean; choose if you want to use the `k4MLJetTagger` from the stack (e.g. you don't have the tagger locally compiled) or if you want to use your locally compiled tagger. 
+  - (`acounting_group`, `job_flavour`) Last you can set your accounting group for condor and the so called job flavor, e.g. how long your jobs will take. 
+
+- `sumbitJob.sh`: This is the file running your job. Do not modify it! (Only in case you created your own steering file that needs more custom options.)
+
+Now that you have modifed the `write_sub.py` file to your needs, you are ready to create the data. First run the `write_sub.py` with a python command so you create a `ccondor.sub` file which will speficy your condor job. Run following commands:
+
+```
+# go on lxplus
+cd /path/to/k4MLJetTagger/extras/submit_to_condor/
+# MODIFY write_sub.py
+python3 write_sub.py
+# check if condor.sub looks ok
+
+condor_submit condor.sub
+```
+
+For more information about how to check your submitted job and condor in general, see the documention [here](https://batchdocs.web.cern.ch/local/quick.html). 
 
 
 ### Changing the inference model - exporting the model to ONNX
@@ -215,17 +260,7 @@ You may find helpful resources in the `extras` folder.
 
 - *Example weaver config file*: The `config_for_weaver_training.yaml` is an example config file to be used for training a network with weaver using the key4hep convention for jet constituent observables names. 
 
-- *Submitting jobs to condor*: You will find `jettagswriter.sub` which submits the `writeJetTags.py` steering file to condor to run it on large data samples. It produces root files with the saved jet tags (reco from the tagger and MC). **Please** run `python write_sub_JetTagsWriter.py` to create the `.sub` file with **your** output paths and data etc. by **modifiying** the python script. The same is true for `jetobswriter.sub`, which submits a job to condor to run the `writeJetConstObs.py` steering file. For more information about condor jobs, see this [documentation](https://batchdocs.web.cern.ch/local/quick.html).
-
-```
-# go on lxplus
-cd /path/to/k4MLJetTagger/extras/submit_to_condor/
-# MODIFY the python script to match your data, paths and job
-python write_sub_JetObsWriter.py
-# check if jetobswriter.sub looks ok
-
-condor_submit jetobswriter.sub
-```
+- *Submitting jobs to condor*: Helpers to run steering files on large datasets e.g. to create your private training dataset. See instructions [here](#creating-training-or-test-data).
 
 - *Plots*: You can find some plotting scripts in `extras/plotting`: 
     - `jetobs_comparison.ipynb` is a notebook that plots the distribution of jet constituent observables used for tagging retrieved with a steering file like `writeJetConstObs.py` that uses the Gaudi algorithm `JetObsWriter`. The notebook compares the distributions of two jet observables from different root files. The helper functions for this notebook are defined in `helper_jetobs.py`
@@ -237,6 +272,15 @@ condor_submit jetobswriter.sub
 
 - The magnetic field $B$ of the detector is needed at one point to calculate the helix parameters of the tracks with respect to the primary vertex. The magnetic field is hard coded at the moment. It would be possible to retrieve it from the detector geometry (code already added; see the `Helper` file), but therefore, one must load the detector in the steering file, e.g. like [this](https://github.com/key4hep/CLDConfig/blob/ae99dbed8e34390036e29ca09897dc0ed7759030/CLDConfig/CLDReconstruction.py#L61-L66). As we use the v05 version of CLD at the moment, loading the detector is slow and not worth it to only set $Bz=2.0$ (in my opinion). With a newer detector version (e.g. v07) this might be worth investigating.
 - Currently, the network used was trained using the [FCCAnalyses convention](https://github.com/HEP-FCC/FCCAnalyses/blob/fa672d4326bcf2f43252d3554a138b53dcba15a4/examples/FCCee/weaver/config.py#L31) for naming the jet constituents observables. The naming is quite confusing; this is why I used my own convention that matches the [key4hep convention](https://github.com/key4hep/EDM4hep/blob/997ab32b886899253c9bc61adea9a21b57bc5a21/edm4hep.yaml#L195-L199). The class `VarMapper` in `Helpers` helps to switch between the two conventions. In the future, if retraining a model, I highly suggest switching to the convention used here when training the model to get rid of the FCCAnalyses convention. To do so, train the network with a yaml file like `extras/config_for_weaver_training.yaml` and root files created with `writeJetConstObs.py`, which use the key4hep convention. To run inference here in key4hep, you only need to modify the function `from_Jet_to_onnx_input` in `Helpers` where the `VarMapper` is used. Remove it; there should be no need to convert conventions anymore. 
+- A correct primary vertex reconstruction is crucial for a good tagging performance. This is a larger issue, so see [section below](#primary-vertex-reconstruction-issues---a-new-project)
+
+### Primary vertex reconstruction issues - a new project
+
+Placeholder
+
+### Outlook 
+
+Placeholder
 
 
 ## Further links:
