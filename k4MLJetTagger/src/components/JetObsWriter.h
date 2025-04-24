@@ -137,6 +137,11 @@ class JetObsWriter : public Gaudi::Algorithm {
         mutable std::vector<float> *pfcand_Sip3dSig = nullptr;
         mutable std::vector<float> *pfcand_JetDistVal = nullptr;
         mutable std::vector<float> *pfcand_JetDistSig = nullptr;
+        // Not input to network but good to check:
+        mutable float jet_PV_x;
+        mutable float jet_PV_y;
+        mutable float jet_PV_z;
+        mutable int jet_PV_id;
 
         mutable std::int32_t evNum;
 

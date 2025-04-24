@@ -22,6 +22,13 @@ public:
     */
     Jet retrieve_input_observables(const edm4hep::ReconstructedParticle& jet, const edm4hep::VertexCollection& prim_vertex_coll);
 
+    /**
+    * Get the primary vertex of the event.
+    * @param prim_vertex: the primary vertex collection of the event
+    * @return: the primary vertex
+    */
+    const edm4hep::Vector3f get_primary_vertex(const edm4hep::VertexCollection& prim_vertex);
+
 private:
 
 
@@ -65,13 +72,6 @@ private:
     * @param particle: the particle / jet constituent from which to extract the covariance matrix
     */
     void fill_cov_matrix(Pfcand& p, const edm4hep::ReconstructedParticle& particle);
-
-    /**
-    * Get the primary vertex of the event.
-    * @param prim_vertex: the primary vertex collection of the event
-    * @return: the primary vertex
-    */
-    const edm4hep::Vector3f get_primary_vertex(const edm4hep::VertexCollection& prim_vertex);
 
     /**
     * We must extract the helix parametrisation of the track with respect to the PRIMARY VERTEX. 

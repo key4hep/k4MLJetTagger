@@ -24,6 +24,7 @@
 #include "k4Interface/IGeoSvc.h" // for Bfield
 #include <edm4hep/ParticleIDCollection.h>
 #include <edm4hep/ReconstructedParticleCollection.h>
+#include "edm4hep/MCParticleCollection.h"
 #include <edm4hep/VertexCollection.h>
 
 
@@ -124,6 +125,12 @@ StatusCode JetObsWriter::execute(const EventContext&) const {
       pfcand_JetDistVal->push_back(pfc.pfcand_JetDistVal);
       pfcand_JetDistSig->push_back(pfc.pfcand_JetDistSig);
     }
+    // PV variables
+    const edm4hep::Vector3f prim_vertex = retriever->get_primary_vertex(prim_vertex_coll);
+    jet_PV_x = prim_vertex.x;
+    jet_PV_y = prim_vertex.y;
+    jet_PV_z = prim_vertex.z;
+
     t_jetcst->Fill();
   }
 
@@ -208,6 +215,11 @@ void JetObsWriter::initializeTree() {
   t_jetcst->Branch("pfcand_JetDistVal", &pfcand_JetDistVal);
   t_jetcst->Branch("pfcand_JetDistSig", &pfcand_JetDistSig);
 
+  // PV variables
+  t_jetcst->Branch("jet_PV_x", &jet_PV_x);
+  t_jetcst->Branch("jet_PV_y", &jet_PV_y);
+  t_jetcst->Branch("jet_PV_z", &jet_PV_z);
+
   return;
 }
 
@@ -249,6 +261,11 @@ void JetObsWriter::cleanTree() const {
   pfcand_Sip3dSig->clear();
   pfcand_JetDistVal->clear();
   pfcand_JetDistSig->clear();
+
+  float dummy_value = -999.0;
+  jet_PV_x = dummy_value;
+  jet_PV_y = dummy_value;
+  jet_PV_z = dummy_value;
 
   return;
 }
