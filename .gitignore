@@ -251,6 +251,6 @@ test/inputFiles/*.slcio
 test/gaudi_opts/testConverterConstants.py
 
 ## Extra section
-k4MLJetTagger/extras/submit_to_condor/*.sub
-k4MLJetTagger/extras/submit_to_condor/*.cc
+extras/submit_to_condor/*.sub
+extras/submit_to_condor/*.cc
 
