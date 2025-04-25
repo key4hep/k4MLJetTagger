@@ -30,9 +30,9 @@
 #include "onnxruntime_cxx_api.h"
 
 namespace Ort {
-  class Env;      ///< Wrapper class for the ONNX Runtime environment.
-  class Session;  ///< Wrapper class for ONNX Runtime session handling.
-}  // namespace Ort
+class Env;     ///< Wrapper class for the ONNX Runtime environment.
+class Session; ///< Wrapper class for ONNX Runtime session handling.
+} // namespace Ort
 
 /**
  * @class ONNXRuntime
@@ -64,11 +64,12 @@ public:
    *
    * @tparam T Data type of the tensor elements.
    */
-  template <typename T> using Tensor = std::vector<std::vector<T>>;
+  template <typename T>
+  using Tensor = std::vector<std::vector<T>>;
 
   // Deleted copy constructor and assignment operator
-  ONNXRuntime(const ONNXRuntime&)            = delete;  ///< Prevents copying of ONNXRuntime instances.
-  ONNXRuntime& operator=(const ONNXRuntime&) = delete;  ///< Prevents assignment of ONNXRuntime instances.
+  ONNXRuntime(const ONNXRuntime&) = delete;            ///< Prevents copying of ONNXRuntime instances.
+  ONNXRuntime& operator=(const ONNXRuntime&) = delete; ///< Prevents assignment of ONNXRuntime instances.
 
   /**
    * @brief Retrieves the list of input variable names for the model.
@@ -99,15 +100,15 @@ private:
    */
   size_t variablePos(const std::string& var_name) const;
 
-  std::unique_ptr<Ort::Env>        env_;       ///< Pointer to the ONNX Runtime environment object.
-  std::unique_ptr<Ort::Session>    session_;   ///< Pointer to the ONNX Runtime session object.
-  Ort::AllocatorWithDefaultOptions allocator;  ///< Allocator for ONNX Runtime tensors.
+  std::unique_ptr<Ort::Env> env_;             ///< Pointer to the ONNX Runtime environment object.
+  std::unique_ptr<Ort::Session> session_;     ///< Pointer to the ONNX Runtime session object.
+  Ort::AllocatorWithDefaultOptions allocator; ///< Allocator for ONNX Runtime tensors.
 
-  std::vector<std::string>                    input_node_strings_;   ///< List of input node names.
-  std::vector<std::string>                    output_node_strings_;  ///< List of output node names.
-  std::vector<std::string>                    input_names_;          ///< List of model input names.
-  std::map<std::string, std::vector<int64_t>> input_node_dims_;      ///< Dimensions of input nodes.
-  std::map<std::string, std::vector<int64_t>> output_node_dims_;     ///< Dimensions of output nodes.
+  std::vector<std::string> input_node_strings_;                  ///< List of input node names.
+  std::vector<std::string> output_node_strings_;                 ///< List of output node names.
+  std::vector<std::string> input_names_;                         ///< List of model input names.
+  std::map<std::string, std::vector<int64_t>> input_node_dims_;  ///< Dimensions of input nodes.
+  std::map<std::string, std::vector<int64_t>> output_node_dims_; ///< Dimensions of output nodes.
 };
 
 #endif

@@ -85,26 +85,26 @@ private:
                                                                            Gaudi::DataHandle::Reader, this};
   mutable DataHandle<edm4hep::ParticleIDCollection> mc_jettag_handle{"MCJetTag", Gaudi::DataHandle::Reader, this};
 
-  SmartIF<ITHistSvc> m_ths;  ///< THistogram service
+  SmartIF<ITHistSvc> m_ths; ///< THistogram service
 
   mutable TTree* t_jettag{nullptr};
 
-  mutable bool  recojet_isG;
+  mutable bool recojet_isG;
   mutable float score_recojet_isG;
-  mutable bool  recojet_isU;
+  mutable bool recojet_isU;
   mutable float score_recojet_isU;
-  mutable bool  recojet_isD;
+  mutable bool recojet_isD;
   mutable float score_recojet_isD;
-  mutable bool  recojet_isS;
+  mutable bool recojet_isS;
   mutable float score_recojet_isS;
-  mutable bool  recojet_isC;
+  mutable bool recojet_isC;
   mutable float score_recojet_isC;
-  mutable bool  recojet_isB;
+  mutable bool recojet_isB;
   mutable float score_recojet_isB;
-  mutable bool  recojet_isTAU;
+  mutable bool recojet_isTAU;
   mutable float score_recojet_isTAU;
 
   mutable std::int32_t evNum;
 };
 
-#endif  // JETTAGWRITER_H
+#endif // JETTAGWRITER_H

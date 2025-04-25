@@ -25,25 +25,25 @@
 
 struct Pfcand {
   /**
-  * Structure to store the observables of a particle / jet constituent. These observables will be used as input features to the neural network for jet flavor tagging with the Particle Transformer. For CLD, these are 33 observables including kinematics, PID and track parameters.
-  * NOTE: regarding the cov matrix, we use following convenstion compared to FCCAnalysis:
-  * HERE | FCCAnalysis | explanation
-  * d0  | xy or dxy | transverse impact parameter
-  * phi | dphi| azimuthal angle
-  * tanLambda | ctngtheta or deta or dlambda | lambda is the dip angle of the track in r-z
-  * omega | dpt | curvature in [1/mm]
-  * z0 | dz | longitudinal impact parameter
-  * All these transformations/convenstions can be found in the VarMapper class that is in Helpers.cpp
-  */
+   * Structure to store the observables of a particle / jet constituent. These observables will be used as input
+   * features to the neural network for jet flavor tagging with the Particle Transformer. For CLD, these are 33
+   * observables including kinematics, PID and track parameters. NOTE: regarding the cov matrix, we use following
+   * convenstion compared to FCCAnalysis: HERE | FCCAnalysis | explanation d0  | xy or dxy | transverse impact parameter
+   * phi | dphi| azimuthal angle
+   * tanLambda | ctngtheta or deta or dlambda | lambda is the dip angle of the track in r-z
+   * omega | dpt | curvature in [1/mm]
+   * z0 | dz | longitudinal impact parameter
+   * All these transformations/convenstions can be found in the VarMapper class that is in Helpers.cpp
+   */
 
   // kinematics
   float pfcand_erel_log, pfcand_thetarel, pfcand_phirel;
-  float pfcand_e, pfcand_p;  // needed for pf_vectors
+  float pfcand_e, pfcand_p; // needed for pf_vectors
   // PID
   int pfcand_type;
   int pfcand_charge;
   int pfcand_isEl, pfcand_isMu, pfcand_isGamma, pfcand_isChargedHad, pfcand_isNeutralHad;
-  int pfcand_dndx, pfcand_tof;  // dummy, filled with 0
+  int pfcand_dndx, pfcand_tof; // dummy, filled with 0
 
   // track params
   // cov matrix - 15 values related to 5 Helix (see struct) parameters
@@ -98,10 +98,10 @@ struct Pfcand {
 
   float get_attribute(std::string& attribute) {
     /**
-    * Return the attributes of the Struct Pfcand given an string.
-    * @param attribute: the attribute to return
-    * @return: the value of the attribute
-    */
+     * Return the attributes of the Struct Pfcand given an string.
+     * @param attribute: the attribute to return
+     * @return: the value of the attribute
+     */
     if (attribute == "pfcand_erel_log")
       return pfcand_erel_log;
     else if (attribute == "pfcand_thetarel")
@@ -182,9 +182,9 @@ struct Pfcand {
 
   std::vector<std::string> get_attribute_names() {
     /**
-    * Return a list of strings with all the attributes names of the Struct Pfcand.
-    * @return: a list of strings with all the attributes names
-    */
+     * Return a list of strings with all the attributes names of the Struct Pfcand.
+     * @return: a list of strings with all the attributes names
+     */
     return {"pfcand_erel_log",
             "pfcand_thetarel",
             "pfcand_phirel",
@@ -227,19 +227,21 @@ struct Pfcand {
 
 struct Jet {
   std::vector<Pfcand> constituents;
-  int flavor_fromMC_HjjZvv;  // jet flavor from MC which is extracted from the the H(jj)Z(vv) process by looking at the daughters of the H boson
+  int flavor_fromMC_HjjZvv; // jet flavor from MC which is extracted from the the H(jj)Z(vv) process by looking at the
+                            // daughters of the H boson
 };
 
 struct Helix {
   /**
-  * Structure to store the helix parameters of a track wrt to the primary vertex. We use the key4hep convention (https://github.com/key4hep/EDM4hep/blob/997ab32b886899253c9bc61adea9a21b57bc5a21/edm4hep.yaml#L195C9-L200 ):
-  * - d0: transverse impact parameter
-  * - phi: azimuthal angle
-  * - omega: signed curvature of the track in [1/mm]
-  * - z0: longitudinal impact parameter
-  * - tanLambda: lambda is the dip angle of the track in r-z
-  */
+   * Structure to store the helix parameters of a track wrt to the primary vertex. We use the key4hep convention
+   * (https://github.com/key4hep/EDM4hep/blob/997ab32b886899253c9bc61adea9a21b57bc5a21/edm4hep.yaml#L195C9-L200 ):
+   * - d0: transverse impact parameter
+   * - phi: azimuthal angle
+   * - omega: signed curvature of the track in [1/mm]
+   * - z0: longitudinal impact parameter
+   * - tanLambda: lambda is the dip angle of the track in r-z
+   */
   float d0, phi, omega, z0, tanLambda;
 };
 
-#endif  // STRUCTS_H
+#endif // STRUCTS_H

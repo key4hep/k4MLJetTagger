@@ -17,16 +17,16 @@
  * limitations under the License.
  */
 
-#include <edm4hep/ParticleIDCollection.h>
-#include <edm4hep/ReconstructedParticleCollection.h>
-#include <edm4hep/VertexCollection.h>
 #include "Gaudi/Property.h"
 #include "GaudiKernel/MsgStream.h"
 #include "k4FWCore/Transformer.h"
-#include "k4Interface/IGeoSvc.h"  // for Bfield
+#include "k4Interface/IGeoSvc.h" // for Bfield
+#include <edm4hep/ParticleIDCollection.h>
+#include <edm4hep/ReconstructedParticleCollection.h>
+#include <edm4hep/VertexCollection.h>
 
 #include <fstream>
-#include <nlohmann/json.hpp>  // Include a JSON parsing library
+#include <nlohmann/json.hpp> // Include a JSON parsing library
 
 #include "Helpers.h"
 #include "JetObservablesRetriever.h"
@@ -34,15 +34,17 @@
 #include "WeaverInterface.h"
 
 /**
-* @class JetTagger
-* @brief Gaudi transformer that builds edm4hep::ParticleIDCollection objects (!plural, one for each flavor) for each jet in edm4hep::ReconstructedParticleCollection.
-*
-* We retrieve a description of the jet constituents which serve as an input to a neural network. The network is loaded as an ONNX model.
-* The inference is run on each jet. The output of the network is a vector of probabilities for each jet flavor.
-* We create one ParticleID collection per flavor create, link it to the jet and set the likelihood and PDG number.
-*
-* @author Sara Aumiller
-*/
+ * @class JetTagger
+ * @brief Gaudi transformer that builds edm4hep::ParticleIDCollection objects (!plural, one for each flavor) for each
+ * jet in edm4hep::ReconstructedParticleCollection.
+ *
+ * We retrieve a description of the jet constituents which serve as an input to a neural network. The network is loaded
+ * as an ONNX model. The inference is run on each jet. The output of the network is a vector of probabilities for each
+ * jet flavor. We create one ParticleID collection per flavor create, link it to the jet and set the likelihood and PDG
+ * number.
+ *
+ * @author Sara Aumiller
+ */
 struct JetTagger : k4FWCore::Transformer<std::vector<edm4hep::ParticleIDCollection>(
                        const edm4hep::ReconstructedParticleCollection&, const edm4hep::VertexCollection&)> {
   JetTagger(const std::string& name, ISvcLocator* svcLoc)
@@ -71,9 +73,9 @@ struct JetTagger : k4FWCore::Transformer<std::vector<edm4hep::ParticleIDCollecti
       rv::RVec<float> probabilities = weaver->run(jet_const_data);
 
       // For debugging: Compute the highest probability & its flavor
-      auto  maxIt    = std::max_element(probabilities.begin(), probabilities.end());
-      float maxProb  = *maxIt;
-      auto  maxIndex = std::distance(probabilities.begin(), maxIt);
+      auto maxIt = std::max_element(probabilities.begin(), probabilities.end());
+      float maxProb = *maxIt;
+      auto maxIndex = std::distance(probabilities.begin(), maxIt);
       debug() << "Jet has highest probability for flavor " << flavorNames[maxIndex] << " with " << maxProb << endmsg;
 
       if (probabilities.size() != flavorNames.size()) {
@@ -105,8 +107,7 @@ struct JetTagger : k4FWCore::Transformer<std::vector<edm4hep::ParticleIDCollecti
   StatusCode initialize() override {
     // Load the JSON configuration file and retrieve the flavor names
     json_config = loadJsonFile(json_path);
-    flavorNames =
-        json_config["output_names"];  // e.g. "recojet_isX" with X being the jet flavor (G, U, S, C, B, D, TAU)
+    flavorNames = json_config["output_names"]; // e.g. "recojet_isX" with X being the jet flavor (G, U, S, C, B, D, TAU)
 
     // check if flavorNames matches order and size of the output collections
     if (!check_flavors(flavorNames, flavor_collection_names)) {
@@ -114,7 +115,7 @@ struct JetTagger : k4FWCore::Transformer<std::vector<edm4hep::ParticleIDCollecti
       info() << "Flavors expected from network in this order: " << flavorNames << endmsg;
     }
     for (const auto& flavor : flavorNames) {
-      PDGflavors.push_back(to_PDGflavor.at(flavor));  // retrieve the PDG number from the flavor name
+      PDGflavors.push_back(to_PDGflavor.at(flavor)); // retrieve the PDG number from the flavor name
     }
 
     // WeaverInterface object
@@ -123,7 +124,7 @@ struct JetTagger : k4FWCore::Transformer<std::vector<edm4hep::ParticleIDCollecti
     for (const auto& var : json_config["pf_features"]["var_names"]) {
       vars.push_back(var.get<std::string>());
     }
-    for (const auto& var : json_config["pf_vectors"]["var_names"]) {  // not sure if this is the solution here
+    for (const auto& var : json_config["pf_vectors"]["var_names"]) { // not sure if this is the solution here
       vars.push_back(var.get<std::string>());
     }
     // variables in pf_points are already included in pf_features
@@ -137,19 +138,19 @@ struct JetTagger : k4FWCore::Transformer<std::vector<edm4hep::ParticleIDCollecti
     // dd4hep::Detector* theDetector = Gaudi::svcLocator()->service<IGeoSvc>("GeoSvc")->getDetector();
     // double Bfield = getBzAtOrigin(theDetector);
 
-    retriever->Bz = 2.0;  // hardcoded for now
+    retriever->Bz = 2.0; // hardcoded for now
 
     return StatusCode::SUCCESS;
   }
 
   // properties
 private:
-  nlohmann::json           json_config;
-  std::vector<std::string> flavorNames;  // e.g. "recojet_isX" with X being the jet flavor (G, U, S, C, B, D, TAU)
-  std::vector<int>         PDGflavors;
-  rv::RVec<std::string>    vars;  // e.g. pfcand_isEl, ... input names that onnx model expects
+  nlohmann::json json_config;
+  std::vector<std::string> flavorNames; // e.g. "recojet_isX" with X being the jet flavor (G, U, S, C, B, D, TAU)
+  std::vector<int> PDGflavors;
+  rv::RVec<std::string> vars; // e.g. pfcand_isEl, ... input names that onnx model expects
 
-  mutable std::unique_ptr<WeaverInterface>         weaver;
+  mutable std::unique_ptr<WeaverInterface> weaver;
   mutable std::unique_ptr<JetObservablesRetriever> retriever;
 
   Gaudi::Property<std::string> model_path{

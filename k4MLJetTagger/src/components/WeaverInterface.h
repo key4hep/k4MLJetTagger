@@ -38,7 +38,7 @@ namespace rv = ROOT::VecOps;
  */
 class WeaverInterface {
 public:
-  using ConstituentVars = rv::RVec<float>;  ///< Alias for a vector of float variables.
+  using ConstituentVars = rv::RVec<float>; ///< Alias for a vector of float variables.
 
   /**
    * @brief Constructor to initialize the WeaverInterface.
@@ -89,25 +89,21 @@ private:
        */
       VarInfo(float imedian, float inorm_factor, float ireplace_inf_value, float ilower_bound, float iupper_bound,
               float ipad)
-          : center(imedian),
-            norm_factor(inorm_factor),
-            replace_inf_value(ireplace_inf_value),
-            lower_bound(ilower_bound),
-            upper_bound(iupper_bound),
-            pad(ipad) {}
+          : center(imedian), norm_factor(inorm_factor), replace_inf_value(ireplace_inf_value),
+            lower_bound(ilower_bound), upper_bound(iupper_bound), pad(ipad) {}
 
-      float center{0.};             ///< Center value for normalization.
-      float norm_factor{1.};        ///< Scaling factor for normalization.
-      float replace_inf_value{0.};  ///< Value to replace infinity with.
-      float lower_bound{-5.};       ///< Lower bound for variable values.
-      float upper_bound{5.};        ///< Upper bound for variable values.
-      float pad{0.};                ///< Value to use for padding.
+      float center{0.};            ///< Center value for normalization.
+      float norm_factor{1.};       ///< Scaling factor for normalization.
+      float replace_inf_value{0.}; ///< Value to replace infinity with.
+      float lower_bound{-5.};      ///< Lower bound for variable values.
+      float upper_bound{5.};       ///< Upper bound for variable values.
+      float pad{0.};               ///< Value to use for padding.
     };
 
-    std::string              name;                          ///< Name of the preprocessing configuration.
-    size_t                   min_length{0}, max_length{0};  ///< Minimum and maximum lengths for input vectors.
-    std::vector<std::string> var_names;                     ///< List of variable names for preprocessing.
-    std::unordered_map<std::string, VarInfo> var_info_map;  ///< Map of variable names to VarInfo.
+    std::string name;                                      ///< Name of the preprocessing configuration.
+    size_t min_length{0}, max_length{0};                   ///< Minimum and maximum lengths for input vectors.
+    std::vector<std::string> var_names;                    ///< List of variable names for preprocessing.
+    std::unordered_map<std::string, VarInfo> var_info_map; ///< Map of variable names to VarInfo.
 
     /**
      * @brief Retrieve preprocessing information for a variable.
@@ -149,12 +145,12 @@ private:
    */
   size_t variablePos(const std::string& var_name) const;
 
-  std::unique_ptr<ONNXRuntime>                      onnx_;             ///< Pointer to the ONNX runtime object.
-  std::vector<std::string>                          variables_names_;  ///< List of input variable names.
-  ONNXRuntime::Tensor<long>                         input_shapes_;     ///< Tensor describing input shapes.
-  std::vector<unsigned int>                         input_sizes_;      ///< List of input sizes for each dimension.
-  std::unordered_map<std::string, PreprocessParams> prep_info_map_;    ///< Map of preprocessing parameters.
-  ONNXRuntime::Tensor<float>                        data_;             ///< Tensor for input data.
+  std::unique_ptr<ONNXRuntime> onnx_;                               ///< Pointer to the ONNX runtime object.
+  std::vector<std::string> variables_names_;                        ///< List of input variable names.
+  ONNXRuntime::Tensor<long> input_shapes_;                          ///< Tensor describing input shapes.
+  std::vector<unsigned int> input_sizes_;                           ///< List of input sizes for each dimension.
+  std::unordered_map<std::string, PreprocessParams> prep_info_map_; ///< Map of preprocessing parameters.
+  ONNXRuntime::Tensor<float> data_;                                 ///< Tensor for input data.
 };
 
 #endif

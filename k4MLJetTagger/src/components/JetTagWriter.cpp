@@ -17,15 +17,15 @@
  * limitations under the License.
  */
 
-#include <edm4hep/ParticleIDCollection.h>
-#include <edm4hep/utils/ParticleIDUtils.h>
-#include <podio/Frame.h>
 #include "Gaudi/Property.h"
 #include "GaudiKernel/MsgStream.h"
 #include "k4FWCore/Transformer.h"
+#include <edm4hep/ParticleIDCollection.h>
+#include <edm4hep/utils/ParticleIDUtils.h>
+#include <podio/Frame.h>
 
 #include <fstream>
-#include <nlohmann/json.hpp>  // Include a JSON parsing library
+#include <nlohmann/json.hpp> // Include a JSON parsing library
 
 #include "Helpers.h"
 #include "JetObservablesRetriever.h"
@@ -69,52 +69,52 @@ StatusCode JetTagWriter::initialize() {
 
 StatusCode JetTagWriter::execute(const EventContext&) const {
   auto evs = ev_handle.get();
-  evNum    = (*evs)[0].getEventNumber();
-  //evNum = 0;
+  evNum = (*evs)[0].getEventNumber();
+  // evNum = 0;
   info() << "Starting to write jet tags of event " << evNum << " into a tree..." << endmsg;
 
   // Get the pointers to the collections
-  const edm4hep::ReconstructedParticleCollection* jet_coll_ptr             = jets_handle.get();
-  const edm4hep::ParticleIDCollection*            reco_jettag_G_coll_ptr   = reco_jettag_G_handle.get();
-  const edm4hep::ParticleIDCollection*            reco_jettag_U_coll_ptr   = reco_jettag_U_handle.get();
-  const edm4hep::ParticleIDCollection*            reco_jettag_D_coll_ptr   = reco_jettag_D_handle.get();
-  const edm4hep::ParticleIDCollection*            reco_jettag_S_coll_ptr   = reco_jettag_S_handle.get();
-  const edm4hep::ParticleIDCollection*            reco_jettag_C_coll_ptr   = reco_jettag_C_handle.get();
-  const edm4hep::ParticleIDCollection*            reco_jettag_B_coll_ptr   = reco_jettag_B_handle.get();
-  const edm4hep::ParticleIDCollection*            reco_jettag_TAU_coll_ptr = reco_jettag_TAU_handle.get();
-  const edm4hep::ParticleIDCollection*            mc_jettag_coll_ptr       = mc_jettag_handle.get();
+  const edm4hep::ReconstructedParticleCollection* jet_coll_ptr = jets_handle.get();
+  const edm4hep::ParticleIDCollection* reco_jettag_G_coll_ptr = reco_jettag_G_handle.get();
+  const edm4hep::ParticleIDCollection* reco_jettag_U_coll_ptr = reco_jettag_U_handle.get();
+  const edm4hep::ParticleIDCollection* reco_jettag_D_coll_ptr = reco_jettag_D_handle.get();
+  const edm4hep::ParticleIDCollection* reco_jettag_S_coll_ptr = reco_jettag_S_handle.get();
+  const edm4hep::ParticleIDCollection* reco_jettag_C_coll_ptr = reco_jettag_C_handle.get();
+  const edm4hep::ParticleIDCollection* reco_jettag_B_coll_ptr = reco_jettag_B_handle.get();
+  const edm4hep::ParticleIDCollection* reco_jettag_TAU_coll_ptr = reco_jettag_TAU_handle.get();
+  const edm4hep::ParticleIDCollection* mc_jettag_coll_ptr = mc_jettag_handle.get();
   // Create references to the collections
-  const edm4hep::ReconstructedParticleCollection& jet_coll             = *jet_coll_ptr;
-  const edm4hep::ParticleIDCollection&            reco_jettag_G_coll   = *reco_jettag_G_coll_ptr;
-  const edm4hep::ParticleIDCollection&            reco_jettag_U_coll   = *reco_jettag_U_coll_ptr;
-  const edm4hep::ParticleIDCollection&            reco_jettag_D_coll   = *reco_jettag_D_coll_ptr;
-  const edm4hep::ParticleIDCollection&            reco_jettag_S_coll   = *reco_jettag_S_coll_ptr;
-  const edm4hep::ParticleIDCollection&            reco_jettag_C_coll   = *reco_jettag_C_coll_ptr;
-  const edm4hep::ParticleIDCollection&            reco_jettag_B_coll   = *reco_jettag_B_coll_ptr;
-  const edm4hep::ParticleIDCollection&            reco_jettag_TAU_coll = *reco_jettag_TAU_coll_ptr;
-  const edm4hep::ParticleIDCollection&            mc_jettag_coll       = *mc_jettag_coll_ptr;
+  const edm4hep::ReconstructedParticleCollection& jet_coll = *jet_coll_ptr;
+  const edm4hep::ParticleIDCollection& reco_jettag_G_coll = *reco_jettag_G_coll_ptr;
+  const edm4hep::ParticleIDCollection& reco_jettag_U_coll = *reco_jettag_U_coll_ptr;
+  const edm4hep::ParticleIDCollection& reco_jettag_D_coll = *reco_jettag_D_coll_ptr;
+  const edm4hep::ParticleIDCollection& reco_jettag_S_coll = *reco_jettag_S_coll_ptr;
+  const edm4hep::ParticleIDCollection& reco_jettag_C_coll = *reco_jettag_C_coll_ptr;
+  const edm4hep::ParticleIDCollection& reco_jettag_B_coll = *reco_jettag_B_coll_ptr;
+  const edm4hep::ParticleIDCollection& reco_jettag_TAU_coll = *reco_jettag_TAU_coll_ptr;
+  const edm4hep::ParticleIDCollection& mc_jettag_coll = *mc_jettag_coll_ptr;
 
-  auto jetTag_G_Handler   = edm4hep::utils::PIDHandler::from(reco_jettag_G_coll);
-  auto jetTag_U_Handler   = edm4hep::utils::PIDHandler::from(reco_jettag_U_coll);
-  auto jetTag_D_Handler   = edm4hep::utils::PIDHandler::from(reco_jettag_D_coll);
-  auto jetTag_S_Handler   = edm4hep::utils::PIDHandler::from(reco_jettag_S_coll);
-  auto jetTag_C_Handler   = edm4hep::utils::PIDHandler::from(reco_jettag_C_coll);
-  auto jetTag_B_Handler   = edm4hep::utils::PIDHandler::from(reco_jettag_B_coll);
+  auto jetTag_G_Handler = edm4hep::utils::PIDHandler::from(reco_jettag_G_coll);
+  auto jetTag_U_Handler = edm4hep::utils::PIDHandler::from(reco_jettag_U_coll);
+  auto jetTag_D_Handler = edm4hep::utils::PIDHandler::from(reco_jettag_D_coll);
+  auto jetTag_S_Handler = edm4hep::utils::PIDHandler::from(reco_jettag_S_coll);
+  auto jetTag_C_Handler = edm4hep::utils::PIDHandler::from(reco_jettag_C_coll);
+  auto jetTag_B_Handler = edm4hep::utils::PIDHandler::from(reco_jettag_B_coll);
   auto jetTag_TAU_Handler = edm4hep::utils::PIDHandler::from(reco_jettag_TAU_coll);
-  auto mcJetTag_Handler   = edm4hep::utils::PIDHandler::from(mc_jettag_coll);
+  auto mcJetTag_Handler = edm4hep::utils::PIDHandler::from(mc_jettag_coll);
 
   // loop over all jets and get the PID likelihoods
   for (const auto jet : jet_coll) {
-    cleanTree();  // set all values to -9.0
+    cleanTree(); // set all values to -9.0
 
-    auto jetTags_G   = jetTag_G_Handler.getPIDs(jet);
-    auto jetTags_U   = jetTag_U_Handler.getPIDs(jet);
-    auto jetTags_D   = jetTag_D_Handler.getPIDs(jet);
-    auto jetTags_S   = jetTag_S_Handler.getPIDs(jet);
-    auto jetTags_C   = jetTag_C_Handler.getPIDs(jet);
-    auto jetTags_B   = jetTag_B_Handler.getPIDs(jet);
+    auto jetTags_G = jetTag_G_Handler.getPIDs(jet);
+    auto jetTags_U = jetTag_U_Handler.getPIDs(jet);
+    auto jetTags_D = jetTag_D_Handler.getPIDs(jet);
+    auto jetTags_S = jetTag_S_Handler.getPIDs(jet);
+    auto jetTags_C = jetTag_C_Handler.getPIDs(jet);
+    auto jetTags_B = jetTag_B_Handler.getPIDs(jet);
     auto jetTags_TAU = jetTag_TAU_Handler.getPIDs(jet);
-    auto mcJetTags   = mcJetTag_Handler.getPIDs(jet);
+    auto mcJetTags = mcJetTag_Handler.getPIDs(jet);
 
     // check if the PID info is available
     if (jetTags_G.empty() || jetTags_U.empty() || jetTags_D.empty() || jetTags_S.empty() || jetTags_C.empty() ||
@@ -130,12 +130,12 @@ StatusCode JetTagWriter::execute(const EventContext&) const {
     }
 
     // get the PID likelihoods
-    score_recojet_isG   = jetTags_G[0].getLikelihood();
-    score_recojet_isU   = jetTags_U[0].getLikelihood();
-    score_recojet_isD   = jetTags_D[0].getLikelihood();
-    score_recojet_isS   = jetTags_S[0].getLikelihood();
-    score_recojet_isC   = jetTags_C[0].getLikelihood();
-    score_recojet_isB   = jetTags_B[0].getLikelihood();
+    score_recojet_isG = jetTags_G[0].getLikelihood();
+    score_recojet_isU = jetTags_U[0].getLikelihood();
+    score_recojet_isD = jetTags_D[0].getLikelihood();
+    score_recojet_isS = jetTags_S[0].getLikelihood();
+    score_recojet_isC = jetTags_C[0].getLikelihood();
+    score_recojet_isB = jetTags_B[0].getLikelihood();
     score_recojet_isTAU = jetTags_TAU[0].getLikelihood();
 
     // check if no dummy value is left
@@ -194,22 +194,22 @@ void JetTagWriter::initializeTree() {
 }
 
 void JetTagWriter::cleanTree() const {
-  recojet_isG   = false;
-  recojet_isU   = false;
-  recojet_isD   = false;
-  recojet_isS   = false;
-  recojet_isC   = false;
-  recojet_isB   = false;
+  recojet_isG = false;
+  recojet_isU = false;
+  recojet_isD = false;
+  recojet_isS = false;
+  recojet_isC = false;
+  recojet_isB = false;
   recojet_isTAU = false;
 
-  float dummy_score   = -9.0;
+  float dummy_score = -9.0;
   score_recojet_isTAU = dummy_score;
-  score_recojet_isG   = dummy_score;
-  score_recojet_isU   = dummy_score;
-  score_recojet_isD   = dummy_score;
-  score_recojet_isS   = dummy_score;
-  score_recojet_isC   = dummy_score;
-  score_recojet_isB   = dummy_score;
+  score_recojet_isG = dummy_score;
+  score_recojet_isU = dummy_score;
+  score_recojet_isD = dummy_score;
+  score_recojet_isS = dummy_score;
+  score_recojet_isC = dummy_score;
+  score_recojet_isB = dummy_score;
 
   return;
 }

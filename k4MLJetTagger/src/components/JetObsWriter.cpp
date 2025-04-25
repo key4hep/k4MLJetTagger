@@ -17,17 +17,17 @@
  * limitations under the License.
  */
 
-#include <edm4hep/ParticleIDCollection.h>
-#include <edm4hep/ReconstructedParticleCollection.h>
-#include <edm4hep/VertexCollection.h>
 #include "Gaudi/Property.h"
 #include "GaudiKernel/MsgStream.h"
 #include "edm4hep/MCParticleCollection.h"
 #include "k4FWCore/Transformer.h"
-#include "k4Interface/IGeoSvc.h"  // for Bfield
+#include "k4Interface/IGeoSvc.h" // for Bfield
+#include <edm4hep/ParticleIDCollection.h>
+#include <edm4hep/ReconstructedParticleCollection.h>
+#include <edm4hep/VertexCollection.h>
 
 #include <fstream>
-#include <nlohmann/json.hpp>  // Include a JSON parsing library
+#include <nlohmann/json.hpp> // Include a JSON parsing library
 
 #include "Helpers.h"
 #include "JetObsWriter.h"
@@ -60,29 +60,29 @@ StatusCode JetObsWriter::initialize() {
   initializeTree();
 
   // JetObservablesRetriever object
-  retriever     = new JetObservablesRetriever();
-  retriever->Bz = 2.0;  // hardcoded for now
+  retriever = new JetObservablesRetriever();
+  retriever->Bz = 2.0; // hardcoded for now
 
   return StatusCode::SUCCESS;
 }
 
 StatusCode JetObsWriter::execute(const EventContext&) const {
   auto evs = ev_handle.get();
-  evNum    = (*evs)[0].getEventNumber();
-  //evNum = 0;
+  evNum = (*evs)[0].getEventNumber();
+  // evNum = 0;
   info() << "Event number = " << evNum << endmsg;
 
   // Get the pointers to the collections
-  const edm4hep::ReconstructedParticleCollection* jet_coll_ptr         = inputJets_handle.get();
-  const edm4hep::VertexCollection*                prim_vertex_coll_ptr = inputPrimaryVertices_handle.get();
+  const edm4hep::ReconstructedParticleCollection* jet_coll_ptr = inputJets_handle.get();
+  const edm4hep::VertexCollection* prim_vertex_coll_ptr = inputPrimaryVertices_handle.get();
   // Create references to the collections
-  const edm4hep::ReconstructedParticleCollection& jet_coll         = *jet_coll_ptr;
-  const edm4hep::VertexCollection&                prim_vertex_coll = *prim_vertex_coll_ptr;
+  const edm4hep::ReconstructedParticleCollection& jet_coll = *jet_coll_ptr;
+  const edm4hep::VertexCollection& prim_vertex_coll = *prim_vertex_coll_ptr;
 
-  for (const auto& jet : jet_coll) {  // loop over all jets in the event
+  for (const auto& jet : jet_coll) { // loop over all jets in the event
     cleanTree();
-    Jet j = retriever->retrieve_input_observables(jet, prim_vertex_coll);  // get all observables
-    for (const auto& pfc : j.constituents) {                               // loop over all jet constituents / pfcands
+    Jet j = retriever->retrieve_input_observables(jet, prim_vertex_coll); // get all observables
+    for (const auto& pfc : j.constituents) {                              // loop over all jet constituents / pfcands
       pfcand_erel_log->push_back(pfc.pfcand_erel_log);
       pfcand_thetarel->push_back(pfc.pfcand_thetarel);
       pfcand_phirel->push_back(pfc.pfcand_phirel);
@@ -123,9 +123,9 @@ StatusCode JetObsWriter::execute(const EventContext&) const {
     }
     // PV variables
     const edm4hep::Vector3f prim_vertex = retriever->get_primary_vertex(prim_vertex_coll);
-    jet_PV_x                            = prim_vertex.x;
-    jet_PV_y                            = prim_vertex.y;
-    jet_PV_z                            = prim_vertex.z;
+    jet_PV_x = prim_vertex.x;
+    jet_PV_y = prim_vertex.y;
+    jet_PV_z = prim_vertex.z;
 
     t_jetcst->Fill();
   }
@@ -134,43 +134,43 @@ StatusCode JetObsWriter::execute(const EventContext&) const {
 }
 
 void JetObsWriter::initializeTree() {
-  pfcand_erel_log               = new std::vector<float>();
-  pfcand_thetarel               = new std::vector<float>();
-  pfcand_phirel                 = new std::vector<float>();
-  pfcand_e                      = new std::vector<float>();
-  pfcand_p                      = new std::vector<float>();
-  pfcand_type                   = new std::vector<int>();
-  pfcand_charge                 = new std::vector<int>();
-  pfcand_isEl                   = new std::vector<int>();
-  pfcand_isMu                   = new std::vector<int>();
-  pfcand_isGamma                = new std::vector<int>();
-  pfcand_isChargedHad           = new std::vector<int>();
-  pfcand_isNeutralHad           = new std::vector<int>();
-  pfcand_dndx                   = new std::vector<float>();
-  pfcand_tof                    = new std::vector<float>();
-  pfcand_cov_omegaomega         = new std::vector<float>();
+  pfcand_erel_log = new std::vector<float>();
+  pfcand_thetarel = new std::vector<float>();
+  pfcand_phirel = new std::vector<float>();
+  pfcand_e = new std::vector<float>();
+  pfcand_p = new std::vector<float>();
+  pfcand_type = new std::vector<int>();
+  pfcand_charge = new std::vector<int>();
+  pfcand_isEl = new std::vector<int>();
+  pfcand_isMu = new std::vector<int>();
+  pfcand_isGamma = new std::vector<int>();
+  pfcand_isChargedHad = new std::vector<int>();
+  pfcand_isNeutralHad = new std::vector<int>();
+  pfcand_dndx = new std::vector<float>();
+  pfcand_tof = new std::vector<float>();
+  pfcand_cov_omegaomega = new std::vector<float>();
   pfcand_cov_tanLambdatanLambda = new std::vector<float>();
-  pfcand_cov_phiphi             = new std::vector<float>();
-  pfcand_cov_d0d0               = new std::vector<float>();
-  pfcand_cov_z0z0               = new std::vector<float>();
-  pfcand_cov_d0z0               = new std::vector<float>();
-  pfcand_cov_phid0              = new std::vector<float>();
-  pfcand_cov_tanLambdaz0        = new std::vector<float>();
-  pfcand_cov_d0omega            = new std::vector<float>();
-  pfcand_cov_d0tanLambda        = new std::vector<float>();
-  pfcand_cov_phiomega           = new std::vector<float>();
-  pfcand_cov_phiz0              = new std::vector<float>();
-  pfcand_cov_phitanLambda       = new std::vector<float>();
-  pfcand_cov_omegaz0            = new std::vector<float>();
-  pfcand_cov_omegatanLambda     = new std::vector<float>();
-  pfcand_d0                     = new std::vector<float>();
-  pfcand_z0                     = new std::vector<float>();
-  pfcand_Sip2dVal               = new std::vector<float>();
-  pfcand_Sip2dSig               = new std::vector<float>();
-  pfcand_Sip3dVal               = new std::vector<float>();
-  pfcand_Sip3dSig               = new std::vector<float>();
-  pfcand_JetDistVal             = new std::vector<float>();
-  pfcand_JetDistSig             = new std::vector<float>();
+  pfcand_cov_phiphi = new std::vector<float>();
+  pfcand_cov_d0d0 = new std::vector<float>();
+  pfcand_cov_z0z0 = new std::vector<float>();
+  pfcand_cov_d0z0 = new std::vector<float>();
+  pfcand_cov_phid0 = new std::vector<float>();
+  pfcand_cov_tanLambdaz0 = new std::vector<float>();
+  pfcand_cov_d0omega = new std::vector<float>();
+  pfcand_cov_d0tanLambda = new std::vector<float>();
+  pfcand_cov_phiomega = new std::vector<float>();
+  pfcand_cov_phiz0 = new std::vector<float>();
+  pfcand_cov_phitanLambda = new std::vector<float>();
+  pfcand_cov_omegaz0 = new std::vector<float>();
+  pfcand_cov_omegatanLambda = new std::vector<float>();
+  pfcand_d0 = new std::vector<float>();
+  pfcand_z0 = new std::vector<float>();
+  pfcand_Sip2dVal = new std::vector<float>();
+  pfcand_Sip2dSig = new std::vector<float>();
+  pfcand_Sip3dVal = new std::vector<float>();
+  pfcand_Sip3dSig = new std::vector<float>();
+  pfcand_JetDistVal = new std::vector<float>();
+  pfcand_JetDistSig = new std::vector<float>();
 
   t_jetcst->Branch("pfcand_erel_log", &pfcand_erel_log);
   t_jetcst->Branch("pfcand_thetarel", &pfcand_thetarel);
@@ -258,9 +258,9 @@ void JetObsWriter::cleanTree() const {
   pfcand_JetDistSig->clear();
 
   float dummy_value = -999.0;
-  jet_PV_x          = dummy_value;
-  jet_PV_y          = dummy_value;
-  jet_PV_z          = dummy_value;
+  jet_PV_x = dummy_value;
+  jet_PV_y = dummy_value;
+  jet_PV_z = dummy_value;
 
   return;
 }

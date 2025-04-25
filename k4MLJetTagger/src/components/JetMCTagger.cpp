@@ -21,11 +21,11 @@
 #include "GaudiKernel/MsgStream.h"
 #include "k4FWCore/Transformer.h"
 
+#include "edm4hep/MCParticleCollection.h"
 #include <edm4hep/ParticleIDCollection.h>
 #include <edm4hep/ReconstructedParticleCollection.h>
-#include "edm4hep/MCParticleCollection.h"
 
-#include <cmath>  // For std::abs
+#include <cmath> // For std::abs
 #include <fstream>
 
 #include "Helpers.h"
@@ -36,12 +36,12 @@ int findMCPIDfromHiggsDaughters(const edm4hep::MCParticleCollection& MCParticles
   // WARNING: This uses the assumption of H(jj)Z(vv) events!!!
 
   // find the MC Higgs Boson
-  int              HiggsPID        = 25;
-  std::set<int>    expectedFlavors = {1, 2, 3, 4, 5, 15, 21};  // u,d,s,c,b,tau,g
+  int HiggsPID = 25;
+  std::set<int> expectedFlavors = {1, 2, 3, 4, 5, 15, 21}; // u,d,s,c,b,tau,g
   std::vector<int> HiggsDaughtersPDG;
-  for (const auto& MCParticle : MCParticles) {                  // loop over all MC particles
-    if (MCParticle.getPDG() == HiggsPID) {                      // find the Higgs
-      for (const auto& daughter : MCParticle.getDaughters()) {  // find the daughters of the Higgs Boson
+  for (const auto& MCParticle : MCParticles) {                 // loop over all MC particles
+    if (MCParticle.getPDG() == HiggsPID) {                     // find the Higgs
+      for (const auto& daughter : MCParticle.getDaughters()) { // find the daughters of the Higgs Boson
         int daughterPID = daughter.getPDG();
         HiggsDaughtersPDG.push_back(daughterPID);
       }
@@ -61,24 +61,26 @@ int findMCPIDfromHiggsDaughters(const edm4hep::MCParticleCollection& MCParticles
     log << MSG::WARNING
         << "Higgs Boson has more than 2 daughters or they are not the same. Returning dummy value 0 for MC jet flavor."
         << endmsg;
-    return 0;  // dummy value
+    return 0; // dummy value
   }
   log << MSG::WARNING
       << "Something went wrong with determining the Higgs daughters. Returning dummy value 0 for MC jet flavor."
       << endmsg;
-  return 0;  // dummy value
+  return 0; // dummy value
 }
 
 /**
-* @class JetMCTagger
-* @brief Gaudi transformer that attaches a edm4hep::ParticleIDCollection object "MCJetTag" to each jet in the input collection "RefinedVertexJets".
-*
-* WARNING: This uses the assumption of H(jj)Z(vv) events!!!
-* The function loops over all jets in the input collection and attaches a ParticleID object to each jet by looking at the MC Higgs Boson and finding its daughters.
-* In the future, the function "findMCPIDfromHiggsDaughters" should be replaced by a more general function that can be used for any event topology.
-*
-* @author Sara Aumiller
-*/
+ * @class JetMCTagger
+ * @brief Gaudi transformer that attaches a edm4hep::ParticleIDCollection object "MCJetTag" to each jet in the input
+ * collection "RefinedVertexJets".
+ *
+ * WARNING: This uses the assumption of H(jj)Z(vv) events!!!
+ * The function loops over all jets in the input collection and attaches a ParticleID object to each jet by looking at
+ * the MC Higgs Boson and finding its daughters. In the future, the function "findMCPIDfromHiggsDaughters" should be
+ * replaced by a more general function that can be used for any event topology.
+ *
+ * @author Sara Aumiller
+ */
 struct JetMCTagger : k4FWCore::Transformer<edm4hep::ParticleIDCollection(
                          const edm4hep::ReconstructedParticleCollection&, const edm4hep::MCParticleCollection&)> {
   JetMCTagger(const std::string& name, ISvcLocator* svcLoc)
@@ -97,7 +99,7 @@ struct JetMCTagger : k4FWCore::Transformer<edm4hep::ParticleIDCollection(
   // operator
 
   edm4hep::ParticleIDCollection operator()(const edm4hep::ReconstructedParticleCollection& inputJets,
-                                           const edm4hep::MCParticleCollection&            MCParticles) const override {
+                                           const edm4hep::MCParticleCollection& MCParticles) const override {
     // info() << "Finding MC PID of " << inputJets.size() << " input jets" << endmsg;
 
     auto tagCollection = edm4hep::ParticleIDCollection();
