@@ -1,11 +1,30 @@
 #!/bin/bash
+##
+## Copyright (c) 2020-2024 Key4hep-Project.
+##
+## This file is part of Key4hep.
+## See https://key4hep.github.io/key4hep-doc/ for further info.
+##
+## Licensed under the Apache License, Version 2.0 (the "License");
+## you may not use this file except in compliance with the License.
+## You may obtain a copy of the License at
+##
+##     http://www.apache.org/licenses/LICENSE-2.0
+##
+## Unless required by applicable law or agreed to in writing, software
+## distributed under the License is distributed on an "AS IS" BASIS,
+## WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+## See the License for the specific language governing permissions and
+## limitations under the License.
+##
+
 
 # shell script to submit analysis job to the batch system
 echo "Running analysis job ..."
 start_time=$(date +%s)
 
-# get input parameters 
-JOB=${1} # which steering file to run with the tagger 
+# get input parameters
+JOB=${1} # which steering file to run with the tagger
 FROM_I=${2} # Which index to start with regarding the input root files
 NUM_FILES=${3} # number of files to process
 FILE_PATTERN=${4} # input file pattern
@@ -30,7 +49,7 @@ else
 fi
 
 # get input files
-root_files=($(ls ${FILE_PATTERN} 2>/dev/null | sort | tail -n +$((FROM_I + 1)) | head -n ${NUM_FILES})) # works fine even if NUM_FILES is larger than the number of files available 
+root_files=($(ls ${FILE_PATTERN} 2>/dev/null | sort | tail -n +$((FROM_I + 1)) | head -n ${NUM_FILES})) # works fine even if NUM_FILES is larger than the number of files available
 echo "[Info] Loading root files ..."
 
 # Check if there are any matching files
@@ -38,7 +57,7 @@ if [ ${#root_files[@]} -eq 0 ]; then
     echo "[Error] No root files found matching the pattern."
     exit 1
 fi
- 
+
 # make directory
 mkdir -p job
 

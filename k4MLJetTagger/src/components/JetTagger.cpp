@@ -38,9 +38,9 @@
 
 /**
 * @class JetTagger
-* @brief Gaudi transformer that builds edm4hep::ParticleIDCollection objects (!plural, one for each flavor) for each jet in edm4hep::ReconstructedParticleCollection. 
+* @brief Gaudi transformer that builds edm4hep::ParticleIDCollection objects (!plural, one for each flavor) for each jet in edm4hep::ReconstructedParticleCollection.
 *
-* We retrieve a description of the jet constituents which serve as an input to a neural network. The network is loaded as an ONNX model. 
+* We retrieve a description of the jet constituents which serve as an input to a neural network. The network is loaded as an ONNX model.
 * The inference is run on each jet. The output of the network is a vector of probabilities for each jet flavor.
 * We create one ParticleID collection per flavor create, link it to the jet and set the likelihood and PDG number.
 *
@@ -49,7 +49,7 @@
 struct JetTagger
     : k4FWCore::Transformer<std::vector<edm4hep::ParticleIDCollection>(const edm4hep::ReconstructedParticleCollection&, const edm4hep::VertexCollection& )> {
   JetTagger(const std::string& name, ISvcLocator* svcLoc)
-    : Transformer(name, svcLoc, 
+    : Transformer(name, svcLoc,
                   {
                     KeyValues("InputJets", {"RefinedVertexJets"}),
                     KeyValues("InputPrimaryVertices", {"PrimaryVertices"})
@@ -60,7 +60,7 @@ struct JetTagger
   // operator
   std::vector<edm4hep::ParticleIDCollection> operator()(const edm4hep::ReconstructedParticleCollection& inputJets, const edm4hep::VertexCollection& primVerticies) const override{
     info() << "Tagging " << inputJets.size() << " input jets" << endmsg;
-    
+
     // create n ParticleIDCollection objects, one for each flavor & retrieve the PDG number for each flavor
     std::vector<edm4hep::ParticleIDCollection> tagCollections;
     tagCollections.resize(flavorNames.size());
@@ -74,8 +74,8 @@ struct JetTagger
 
       // Run inference on the input variables - returns the 7 probabilities for each jet flavor
       rv::RVec<float> probabilities = weaver->run(jet_const_data);
-      
-      // For debugging: Compute the highest probability & its flavor 
+
+      // For debugging: Compute the highest probability & its flavor
       auto maxIt = std::max_element(probabilities.begin(), probabilities.end());
       float maxProb = *maxIt;
       auto maxIndex = std::distance(probabilities.begin(), maxIt);
@@ -116,7 +116,7 @@ struct JetTagger
     for (const auto& flavor : flavorNames) {
       PDGflavors.push_back(to_PDGflavor.at(flavor)); // retrieve the PDG number from the flavor name
     }
-    
+
 
     // WeaverInterface object
 
@@ -138,15 +138,15 @@ struct JetTagger
     // get B field from detector (this is computatially expensive, so we hardcode it for now)
     // dd4hep::Detector* theDetector = Gaudi::svcLocator()->service<IGeoSvc>("GeoSvc")->getDetector();
     // double Bfield = getBzAtOrigin(theDetector);
- 
+
     retriever->Bz = 2.0; // hardcoded for now
 
-    
+
     return StatusCode::SUCCESS;
   }
 
   // properties
-  private: 
+  private:
     nlohmann::json json_config;
     std::vector<std::string> flavorNames; // e.g. "recojet_isX" with X being the jet flavor (G, U, S, C, B, D, TAU)
     std::vector<int> PDGflavors;
@@ -159,11 +159,11 @@ struct JetTagger
     Gaudi::Property<std::string> model_path{
       this,
       "model_path",
-      "/eos/experiment/fcc/ee/jet_flavour_tagging/fullsim_test_spring2024/fullsimCLD240_2mio.onnx", 
+      "/eos/experiment/fcc/ee/jet_flavour_tagging/fullsim_test_spring2024/fullsimCLD240_2mio.onnx",
       "Path to the ONNX model"
     };
     Gaudi::Property<std::string> json_path{
-      this, 
+      this,
       "json_path",
       "/eos/experiment/fcc/ee/jet_flavour_tagging/fullsim_test_spring2024/preprocess_fullsimCLD240_2mio.json",
       "Path to the JSON configuration file for the ONNX model"

@@ -42,7 +42,7 @@ int findMCPIDfromHiggsDaughters(const edm4hep::MCParticleCollection& MCParticles
   std::set<int> expectedFlavors = {1, 2, 3, 4, 5, 15, 21}; // u,d,s,c,b,tau,g
   std::vector<int> HiggsDaughtersPDG;
   for (const auto& MCParticle : MCParticles) { // loop over all MC particles
-    if (MCParticle.getPDG() == HiggsPID) { // find the Higgs 
+    if (MCParticle.getPDG() == HiggsPID) { // find the Higgs
       for (const auto& daughter : MCParticle.getDaughters()) {       // find the daughters of the Higgs Boson
         int daughterPID = daughter.getPDG();
         HiggsDaughtersPDG.push_back(daughterPID);
@@ -55,7 +55,7 @@ int findMCPIDfromHiggsDaughters(const edm4hep::MCParticleCollection& MCParticles
     if(expectedFlavors.count(j_pid) == 1){
       return j_pid;
     }
-  } else if (HiggsDaughtersPDG.size() == 2 && HiggsDaughtersPDG[0]== 21 && HiggsDaughtersPDG[1] == 21){  
+  } else if (HiggsDaughtersPDG.size() == 2 && HiggsDaughtersPDG[0]== 21 && HiggsDaughtersPDG[1] == 21){
     // if the daughters are gluons they don't have opposite sign
     return 21;
 
@@ -81,7 +81,7 @@ int findMCPIDfromHiggsDaughters(const edm4hep::MCParticleCollection& MCParticles
 struct JetMCTagger
     : k4FWCore::Transformer<edm4hep::ParticleIDCollection(const edm4hep::ReconstructedParticleCollection&, const edm4hep::MCParticleCollection& )> {
   JetMCTagger(const std::string& name, ISvcLocator* svcLoc)
-    : Transformer(name, svcLoc, 
+    : Transformer(name, svcLoc,
                   {
                     KeyValues("InputJets", {"RefinedVertexJets"}),
                     KeyValues("MCParticles", {"MCParticles"})
@@ -92,9 +92,9 @@ struct JetMCTagger
   // initialize
 
   StatusCode initialize() override {
-    
+
     warning() << "!!! Finding the MC PID of jets uses the assumption of H(jj)Z(vv) events!!! " << endmsg;
-    
+
     return StatusCode::SUCCESS;
   }
 
@@ -106,7 +106,7 @@ struct JetMCTagger
     auto tagCollection = edm4hep::ParticleIDCollection();
 
     for (const auto& jet : inputJets) {
-    
+
       int MCflavor = findMCPIDfromHiggsDaughters(MCParticles, msg());
 
       auto jetTag = tagCollection.create();

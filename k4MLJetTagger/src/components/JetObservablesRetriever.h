@@ -1,3 +1,21 @@
+/*
+ * Copyright (c) 2020-2024 Key4hep-Project.
+ *
+ * This file is part of Key4hep.
+ * See https://key4hep.github.io/key4hep-doc/ for further info.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 #ifndef JETOBSERVABLESRETRIEVER_H
 #define JETOBSERVABLESRETRIEVER_H
 
@@ -51,7 +69,7 @@ private:
 
     /**
     * Fill the track parameters for a neutral particle with dummy values.
-    * The value dummy value -9 comes from fast sim https://github.com/HEP-FCC/FCCAnalyses/blob/d39a711a703244ee2902f5d2191ad1e2367363ac/analyzers/dataframe/src/JetConstituentsUtils.cc#L495, however the signicance that is chosen here is -200 to lie outside the distribution. 
+    * The value dummy value -9 comes from fast sim https://github.com/HEP-FCC/FCCAnalyses/blob/d39a711a703244ee2902f5d2191ad1e2367363ac/analyzers/dataframe/src/JetConstituentsUtils.cc#L495, however the signicance that is chosen here is -200 to lie outside the distribution.
     * @param p: the particle object to fill
     */
     void fill_track_params_neutral(Pfcand& p);
@@ -66,7 +84,7 @@ private:
 
     /**
     * Fill the covariance matrix for a charged particle.
-    * The covariance matrix is a 5 dim matrix, therefore we have 15 distinct values. 
+    * The covariance matrix is a 5 dim matrix, therefore we have 15 distinct values.
     * On the diagonal it's: d0 = xy, phi, omega = pt, z0, tanLambda = eta.
     * @param p: the particle object to fill
     * @param particle: the particle / jet constituent from which to extract the covariance matrix
@@ -74,8 +92,8 @@ private:
     void fill_cov_matrix(Pfcand& p, const edm4hep::ReconstructedParticle& particle);
 
     /**
-    * We must extract the helix parametrisation of the track with respect to the PRIMARY VERTEX. 
-    * This is done like in: https://github.com/HEP-FCC/FCCAnalyses/blob/63d346103159c4fc88cdee7884e09b3966cfeca4/analyzers/dataframe/src/ReconstructedParticle2Track.cc#L64 
+    * We must extract the helix parametrisation of the track with respect to the PRIMARY VERTEX.
+    * This is done like in: https://github.com/HEP-FCC/FCCAnalyses/blob/63d346103159c4fc88cdee7884e09b3966cfeca4/analyzers/dataframe/src/ReconstructedParticle2Track.cc#L64
     * @param particle: the charged particle / jet constituent which track should be parametrized
     * @param pv_pos: the primary vertex position of the event
     * @return: helix object filled with track parametrization with respect to the primary vertex

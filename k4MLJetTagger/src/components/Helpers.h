@@ -1,3 +1,21 @@
+/*
+ * Copyright (c) 2020-2024 Key4hep-Project.
+ *
+ * This file is part of Key4hep.
+ * See https://key4hep.github.io/key4hep-doc/ for further info.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 #ifndef HELPERS_H
 #define HELPERS_H
 
@@ -16,14 +34,14 @@ namespace rv = ROOT::VecOps;
 
 
 /**
-* Get the magnetic field at the origin by using the detector geometry. 
-* Adapted from: https://github.com/iLCSoft/MarlinUtil/blob/18dd0588a76902551cd06cc9499099f662b48c5f/source/src/GeometryUtil.cc#L5-L21 
+* Get the magnetic field at the origin by using the detector geometry.
+* Adapted from: https://github.com/iLCSoft/MarlinUtil/blob/18dd0588a76902551cd06cc9499099f662b48c5f/source/src/GeometryUtil.cc#L5-L21
 * @return: the magnetic field at the origin
 */
 double getBzAtOrigin(dd4hep::Detector* theDetector);
 
 /**
-* Return the input variables for the ONNX model from a Jet object. 
+* Return the input variables for the ONNX model from a Jet object.
 * The input variables should have the form of {jet -> {var1 -> {constit1, constit2, ...}, var2 -> {...}, ...}}
 * @param jet: the jet object
 * @param input_names: the names of the input variables for the ONNX model.
@@ -53,10 +71,10 @@ bool check_flavors(std::vector<std::string>& flavorNames, const std::vector<std:
 /**
  * @class VarMapper
  * @brief A utility class for mapping variable names between FCCAnalyses and Key4HEP conventions.
- * 
- * This class provides methods to map variable names used in FCCAnalyses to those in Key4HEP 
+ *
+ * This class provides methods to map variable names used in FCCAnalyses to those in Key4HEP
  * and vice versa. It maintains two internal mappings for bidirectional conversion.
- * 
+ *
  * Example:
  *   VarMapper mapper;
  *   std::string FCCAnName = mapper.mapKey4hepToFCCAn("key4hep_variable");
@@ -66,14 +84,14 @@ class VarMapper {
 public:
     /**
      * @brief Default constructor.
-     * 
+     *
      * Initializes the variable mappings between FCCAnalyses and Key4HEP.
      */
     VarMapper();
 
     /**
      * @brief Maps a Key4HEP variable name to an FCCAnalyses variable name.
-     * 
+     *
      * @param key4hepName The variable name in Key4HEP format.
      * @return The corresponding variable name in FCCAnalyses format.
      */
@@ -81,7 +99,7 @@ public:
 
     /**
      * @brief Maps an FCCAnalyses variable name to a Key4HEP variable name.
-     * 
+     *
      * @param FCCAnName The variable name in FCCAnalyses format.
      * @return The corresponding variable name in Key4HEP format.
      */

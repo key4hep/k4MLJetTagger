@@ -1,5 +1,24 @@
+##
+## Copyright (c) 2020-2024 Key4hep-Project.
+##
+## This file is part of Key4hep.
+## See https://key4hep.github.io/key4hep-doc/ for further info.
+##
+## Licensed under the Apache License, Version 2.0 (the "License");
+## you may not use this file except in compliance with the License.
+## You may obtain a copy of the License at
+##
+##     http://www.apache.org/licenses/LICENSE-2.0
+##
+## Unless required by applicable law or agreed to in writing, software
+## distributed under the License is distributed on an "AS IS" BASIS,
+## WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+## See the License for the specific language governing permissions and
+## limitations under the License.
+##
+
 # Description: Configuration file for training with Weaver
-# Convention used in this file follows key4hep conventions. 
+# Convention used in this file follows key4hep conventions.
 
 
 #treename:
@@ -63,7 +82,7 @@ inputs:
       - pfcand_cov_phitanLambda
       - pfcand_cov_omegaz0
       - pfcand_cov_omegatanLambda
-      # - pfcand_tof 
+      # - pfcand_tof
       # - pfcand_dndx
       - pfcand_charge
       - pfcand_isMu
@@ -98,7 +117,7 @@ labels:
   ### type can be `simple`, `custom`
   ### [option 1] use `simple` for binary/multi-class classification, then `value` is a list of 0-1 labels
   type: simple
-  value: [recojet_isG, recojet_isU, recojet_isS, recojet_isC, recojet_isB, recojet_isD, recojet_isTAU] 
+  value: [recojet_isG, recojet_isU, recojet_isS, recojet_isC, recojet_isB, recojet_isD, recojet_isTAU]
   ### [option 2] otherwise use `custom` to define the label, then `value` is a map
   # type: custom
   # value:

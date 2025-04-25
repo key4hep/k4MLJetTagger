@@ -1,3 +1,21 @@
+#
+# Copyright (c) 2020-2024 Key4hep-Project.
+#
+# This file is part of Key4hep.
+# See https://key4hep.github.io/key4hep-doc/ for further info.
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+#
 import uproot
 import numpy as np
 import matplotlib.pyplot as plt
@@ -38,7 +56,7 @@ def load_data(file_name, key='JetTags;1'):
 def invalid_ind(data):
     ind = []
     labels = ['U', 'D', 'C', 'S', 'B', 'G', 'TAU']
-    for l in labels: 
+    for l in labels:
         true_labels = data[f'recojet_is{l}']
         scores = data[f'score_recojet_is{l}']
         valid_indices = np.where(np.isnan(scores))
@@ -47,7 +65,7 @@ def invalid_ind(data):
 
 # binary ROC curves
 
-# from https://github.com/doloresgarcia/LOGML_2024/blob/81dfa6428bdd6e652908562474cded362d2bf5f6/src/utils/logger_wandb.py#L204 
+# from https://github.com/doloresgarcia/LOGML_2024/blob/81dfa6428bdd6e652908562474cded362d2bf5f6/src/utils/logger_wandb.py#L204
 def create_binary_rocs(positive, negative, y_true, y_score):
     mask_positive = y_true == positive
     if negative == 0 or negative == 1: # merge u and d
@@ -70,7 +88,7 @@ def create_binary_rocs(positive, negative, y_true, y_score):
         y_score_negative = y_score[mask_negative]
 
         indices = np.array([negative, positive]) # [2,4]
-        y_score_selected_positive = y_score_positive[:, indices] # from all MC positive scores (true MC b) take all probabilities for b and c 
+        y_score_selected_positive = y_score_positive[:, indices] # from all MC positive scores (true MC b) take all probabilities for b and c
         y_score_selected_negative = y_score_negative[:, indices] # from all MC netagive scores (true MC c) talke all probabilities for b and c
 
         # Calculate probabilities using softmax for BINARY discriminat
@@ -127,7 +145,7 @@ def log_multiline_rocs_b(y_true, y_score, labels, ax, k,j, ls="solid", l=True):
         auc_ = [_bg[2], _bud[2], _bc[2]]
 
         # plot
-        ys_log = [np.log10(j + 1e-8) for j in ys] 
+        ys_log = [np.log10(j + 1e-8) for j in ys]
         i = 0
         for x, y in zip(xs, ys_log):
             if l:
@@ -159,7 +177,7 @@ def log_multiline_rocs_c(y_true, y_score, labels, ax, k, j, ls="solid", l=True):
         auc_ = [_bg[2], _bud[2], _bc[2]]
 
         # plot
-        ys_log = [np.log10(j + 1e-8) for j in ys] 
+        ys_log = [np.log10(j + 1e-8) for j in ys]
         i = 0
         for x, y in zip(xs, ys_log):
             if l:
@@ -179,7 +197,7 @@ def log_multiline_rocs_c(y_true, y_score, labels, ax, k, j, ls="solid", l=True):
 def log_multiline_rocs_s(y_true, y_score, labels, ax, k, j, ls="solid", l=True):
     q_tag = 3 # s-tagging
     vs_tag = [1,2, 4, 5] # ud, b, g
-    # colors 
+    # colors
     color_cycle = plt.rcParams['axes.prop_cycle'].by_key()['color']
     dic_c = {1: color_cycle[0], 2: color_cycle[1], 3: color_cycle[4], 4: color_cycle[3], 5: color_cycle[2]}
     _bg = create_binary_rocs(q_tag, vs_tag[0], y_true, y_score)
@@ -193,7 +211,7 @@ def log_multiline_rocs_s(y_true, y_score, labels, ax, k, j, ls="solid", l=True):
         auc_ = [_bg[2], _bud[2], _bc[2], _bs[2]]
 
         # plot
-        ys_log = [np.log10(j + 1e-8) for j in ys] 
+        ys_log = [np.log10(j + 1e-8) for j in ys]
         i = 0
         for x, y in zip(xs, ys_log):
             if l:
@@ -213,7 +231,7 @@ def log_multiline_rocs_s(y_true, y_score, labels, ax, k, j, ls="solid", l=True):
 def log_multiline_rocs_g(y_true, y_score, labels, ax, k, j, ls="solid", l=True):
     q_tag = 5 # g-tagging
     vs_tag = [1,2, 3, 4] # ud, b, g
-    # colors 
+    # colors
     color_cycle = plt.rcParams['axes.prop_cycle'].by_key()['color']
     dic_c = {1: color_cycle[0], 2: color_cycle[1], 3: color_cycle[4], 4: color_cycle[3], 5: color_cycle[2]}
     _bg = create_binary_rocs(q_tag, vs_tag[0], y_true, y_score)
@@ -227,7 +245,7 @@ def log_multiline_rocs_g(y_true, y_score, labels, ax, k, j, ls="solid", l=True):
         auc_ = [_bg[2], _bud[2], _bc[2], _bs[2]]
 
         # plot
-        ys_log = [np.log10(j + 1e-8) for j in ys] 
+        ys_log = [np.log10(j + 1e-8) for j in ys]
         i = 0
         for x, y in zip(xs, ys_log):
             if l:
@@ -294,7 +312,7 @@ def all_rocs(data1, data2, label1, label2, save=False, name=None, bbox_anc=(0.6,
     for row in range(2):
         for col in range(2):
             ax[row, col].grid(True)  # Make sure the grid is visible
-    
+
     if save:
         plt.savefig("{}/{}.pdf".format(path, name))
     else:
@@ -309,7 +327,7 @@ def change_ud_to_l(y_score, y_true=None, keep_ud=False):
         print(mean_value.shape)
         y_score[:, 0] = mean_value
         y_score[:, 1] = mean_value
-    elif keep_ud==True and y_true.any()!= None: 
+    elif keep_ud==True and y_true.any()!= None:
         i_not_u = np.where(y_true!=0)
         i_not_d = np.where(y_true!=1)
         i_not = np.intersect1d(i_not_u, i_not_d)
@@ -317,19 +335,19 @@ def change_ud_to_l(y_score, y_true=None, keep_ud=False):
         mean_value = np.mean(y_score[i_not, :2], axis=1)
         y_score[i_not, 0] = mean_value
         y_score[i_not, 1] = mean_value
-    else: 
+    else:
         raise ValueError("pass y_true if to keep ud")
     return y_score
 
 def create_label_mapping():
     labels = ['ud', 'l', 'c', 's', 'b', 'g', 'tau'] # 0 and 1 are both light (l) but function needs to bijective
-    
+
     # Map label to integer
     label_to_int = {label: idx for idx, label in enumerate(labels)}
-    
+
     # Map integer to label
     int_to_label = {idx: label for idx, label in enumerate(labels)}
-    
+
     return label_to_int, int_to_label
 
 def non_binary_disc(data1, data2, dic, label1, label2, dicx=None, save=False, name=None, lax=0):
@@ -341,7 +359,7 @@ def non_binary_disc(data1, data2, dic, label1, label2, dicx=None, save=False, na
     color_cycle = plt.rcParams['axes.prop_cycle'].by_key()['color']
     dic_c = {0: color_cycle[0], 2: color_cycle[1], 3: color_cycle[4], 4: color_cycle[3], 5: color_cycle[2]}
     ls = ["solid", "dashed"]
-    
+
     for d, data in enumerate([data1, data2]):
         y_true, y_score = get_y_true_and_score(data)
         y_score = change_ud_to_l(y_score, y_true, True) # average ud to light
@@ -382,4 +400,3 @@ def non_binary_disc(data1, data2, dic, label1, label2, dicx=None, save=False, na
         plt.savefig("{}/{}.pdf".format(path, name))
     else:
         plt.show()
-        

@@ -1,3 +1,21 @@
+/*
+ * Copyright (c) 2020-2024 Key4hep-Project.
+ *
+ * This file is part of Key4hep.
+ * See https://key4hep.github.io/key4hep-doc/ for further info.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 #ifndef STRUCTS_H
 #define STRUCTS_H
 
@@ -9,10 +27,10 @@
 struct Pfcand {
   /**
   * Structure to store the observables of a particle / jet constituent. These observables will be used as input features to the neural network for jet flavor tagging with the Particle Transformer. For CLD, these are 33 observables including kinematics, PID and track parameters.
-  * NOTE: regarding the cov matrix, we use following convenstion compared to FCCAnalysis: 
+  * NOTE: regarding the cov matrix, we use following convenstion compared to FCCAnalysis:
   * HERE | FCCAnalysis | explanation
   * d0  | xy or dxy | transverse impact parameter
-  * phi | dphi| azimuthal angle 
+  * phi | dphi| azimuthal angle
   * tanLambda | ctngtheta or deta or dlambda | lambda is the dip angle of the track in r-z
   * omega | dpt | curvature in [1/mm]
   * z0 | dz | longitudinal impact parameter
@@ -30,7 +48,7 @@ struct Pfcand {
 
   // track params
   // cov matrix - 15 values related to 5 Helix (see struct) parameters
-  float pfcand_cov_omegaomega, pfcand_cov_tanLambdatanLambda, pfcand_cov_phiphi, pfcand_cov_d0d0, pfcand_cov_z0z0; 
+  float pfcand_cov_omegaomega, pfcand_cov_tanLambdatanLambda, pfcand_cov_phiphi, pfcand_cov_d0d0, pfcand_cov_z0z0;
   float pfcand_cov_d0z0, pfcand_cov_phid0, pfcand_cov_tanLambdaz0, pfcand_cov_d0omega, pfcand_cov_d0tanLambda, pfcand_cov_phiomega, pfcand_cov_phiz0, pfcand_cov_phitanLambda, pfcand_cov_omegaz0, pfcand_cov_omegatanLambda;
   // IP
   float pfcand_d0, pfcand_z0;
@@ -80,7 +98,7 @@ struct Pfcand {
 
   float get_attribute(std::string& attribute){
     /**
-    * Return the attributes of the Struct Pfcand given an string. 
+    * Return the attributes of the Struct Pfcand given an string.
     * @param attribute: the attribute to return
     * @return: the value of the attribute
     */
@@ -134,7 +152,7 @@ struct Pfcand {
 };
 
 struct Jet {
-    std::vector<Pfcand> constituents; 
+    std::vector<Pfcand> constituents;
     int flavor_fromMC_HjjZvv; // jet flavor from MC which is extracted from the the H(jj)Z(vv) process by looking at the daughters of the H boson
 };
 
@@ -142,7 +160,7 @@ struct Helix{
   /**
   * Structure to store the helix parameters of a track wrt to the primary vertex. We use the key4hep convention (https://github.com/key4hep/EDM4hep/blob/997ab32b886899253c9bc61adea9a21b57bc5a21/edm4hep.yaml#L195C9-L200 ):
   * - d0: transverse impact parameter
-  * - phi: azimuthal angle 
+  * - phi: azimuthal angle
   * - omega: signed curvature of the track in [1/mm]
   * - z0: longitudinal impact parameter
   * - tanLambda: lambda is the dip angle of the track in r-z

@@ -1,3 +1,22 @@
+#
+# Copyright (c) 2020-2024 Key4hep-Project.
+#
+# This file is part of Key4hep.
+# See https://key4hep.github.io/key4hep-doc/ for further info.
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+#
+
 ### MUST CHANGE this default values to your own!
 
 # data you want to process
@@ -8,7 +27,7 @@ num_files = 100 # process a total of 100 files per flavor (normally with 1000 ev
 num_files_per_job = 5 # How many files to process per job
 
 # output paths
-output_base = "/eos/experiment/fcc/ee/datasets/CLD_fullsim_tagging_key4hep_dummy_folder/" 
+output_base = "/eos/experiment/fcc/ee/datasets/CLD_fullsim_tagging_key4hep_dummy_folder/"
 output_log = "/afs/cern.ch/work/s/saaumill/public/condor/std-condor/" # condor logs (stdout, stderr, log)
 
 # select what job you want to run (submitJob_JetObsWriter.sh or submitJob_JetTagsWriter.sh)
@@ -19,7 +38,7 @@ local_path_to_tagger = "/afs/cern.ch/work/s/saaumill/public/k4MLJetTagger/" # CH
 local = True
 
 # condor settings
-acounting_group = "group_u_FCC.local_gen" 
+acounting_group = "group_u_FCC.local_gen"
 job_flavour = "longlunch" # check out options here: https://batchdocs.web.cern.ch/local/submit.html
 
 ### DO NOT CHANGE ANYTHING BELOW THIS LINE
@@ -27,12 +46,12 @@ job_flavour = "longlunch" # check out options here: https://batchdocs.web.cern.c
 def generate_sub_file():
     """
     Create a .sub file for the JetObsWriter job submission to condor.
-    The file will contain the header and the content with the arguments for the job. 
+    The file will contain the header and the content with the arguments for the job.
     Please make sure to use the correct paths for the input and output files and the correct executable.
     THIS function currently generates the .sub file for the JetObsWriter job submission.
     """
 
-    
+
     # Prepare the header of the file
     header = f"""# run commands for submitting jet tagging jobs on condor
 

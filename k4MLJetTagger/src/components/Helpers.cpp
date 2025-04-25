@@ -1,3 +1,21 @@
+/*
+ * Copyright (c) 2020-2024 Key4hep-Project.
+ *
+ * This file is part of Key4hep.
+ * See https://key4hep.github.io/key4hep-doc/ for further info.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 #include "Helpers.h"
 
 #include "Gaudi/Property.h"
@@ -76,7 +94,7 @@ bool check_flavors(std::vector<std::string>& flavorNames, const std::vector<std:
 
 rv::RVec<rv::RVec<float>> from_Jet_to_onnx_input(Jet& jet, const rv::RVec<std::string>& input_names){
   /**
-  * Return the input variables for the ONNX model from a Jet object. 
+  * Return the input variables for the ONNX model from a Jet object.
   * The input variables should have the form of {jet -> {var1 -> {constit1, constit2, ...}, var2 -> {...}, ...}}
   * @param jet: the jet object
   * @param input_names: the names of the input variables for the ONNX model.

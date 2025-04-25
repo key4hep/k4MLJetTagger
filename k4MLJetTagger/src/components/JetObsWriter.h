@@ -1,3 +1,21 @@
+/*
+ * Copyright (c) 2020-2024 Key4hep-Project.
+ *
+ * This file is part of Key4hep.
+ * See https://key4hep.github.io/key4hep-doc/ for further info.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 #ifndef JETOBSWRITER_H
 #define JETOBSWRITER_H
 
@@ -21,10 +39,10 @@
  * execute() method being called for each event, and finalize() method being called at the end. The algorithm also
  * provides methods for initializing and cleaning the TTree.
  *
- * The execute function loops over all jets in the events and retrieves the observables for tagging with the JetObservablesRetriever. 
+ * The execute function loops over all jets in the events and retrieves the observables for tagging with the JetObservablesRetriever.
  * It then dumps all the information into a TTree.
  * The output root file can be used for training a neural network for jet tagging.
- * 
+ *
  * @note The naming convention for the observables follows the key4hep implementation (see Structs.h and for the conversion to the old FCCAnalyses convention Helpers.cpp).
  *
  * @author Sara Aumiller

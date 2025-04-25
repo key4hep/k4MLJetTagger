@@ -1,3 +1,21 @@
+/*
+ * Copyright (c) 2020-2024 Key4hep-Project.
+ *
+ * This file is part of Key4hep.
+ * See https://key4hep.github.io/key4hep-doc/ for further info.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 #include "TLorentzVector.h"
 #include "TVector3.h"
 
@@ -107,7 +125,7 @@ void JetObservablesRetriever::fill_track_params_neutral(Pfcand& p){
   p.pfcand_Sip3dSig = -200;
   p.pfcand_JetDistVal = -9;
   p.pfcand_JetDistSig = -200;
-  
+
 }
 
 void JetObservablesRetriever::pid_flags(Pfcand& p, const edm4hep::ReconstructedParticle& particle){
@@ -219,7 +237,7 @@ Helix JetObservablesRetriever::calculate_helix_params(const edm4hep::Reconstruct
     h.d0 = -9;
   }
 
-  // calculate c - conviently to calculate with but to get omega in [1/mm]: omega = c*10**(-3) * (-1), see https://github.com/HEP-FCC/FCCAnalyses/blob/pre-edm4hep1/analyzers/dataframe/src/ReconstructedParticle2Track.cc#L194-L217 
+  // calculate c - conviently to calculate with but to get omega in [1/mm]: omega = c*10**(-3) * (-1), see https://github.com/HEP-FCC/FCCAnalyses/blob/pre-edm4hep1/analyzers/dataframe/src/ReconstructedParticle2Track.cc#L194-L217
   const float curv = a/ (2 * pt);
 
   // calculate z0
@@ -252,32 +270,32 @@ void JetObservablesRetriever::fill_track_IP(const edm4hep::ReconstructedParticle
 
   // signed IP
   TVector3 jet_p(jet.getMomentum().x, jet.getMomentum().y, jet.getMomentum().z); // for neutrals: wrt (0,0,0); for charged: track momentum at closest approach to (0,0,0)
-  TVector3 part_p(particle.getMomentum().x, particle.getMomentum().y, particle.getMomentum().z); // same 
+  TVector3 part_p(particle.getMomentum().x, particle.getMomentum().y, particle.getMomentum().z); // same
 
-  // calculate distance of closest approach in 3d - like in https://github.com/HEP-FCC/FCCAnalyses/blob/d39a711a703244ee2902f5d2191ad1e2367363ac/analyzers/dataframe/src/JetConstituentsUtils.cc#L616-L646 
+  // calculate distance of closest approach in 3d - like in https://github.com/HEP-FCC/FCCAnalyses/blob/d39a711a703244ee2902f5d2191ad1e2367363ac/analyzers/dataframe/src/JetConstituentsUtils.cc#L616-L646
   TVector3 n = part_p.Cross(jet_p).Unit(); // direction of closest approach; wrt to (0,0,0)
-  TVector3 part_pnt(- h.d0 * std::sin(h.phi), h.d0 * std::cos(h.phi), h.z0); // point on particle track; wrt to PV NOT (0,0,0) - not correct 
+  TVector3 part_pnt(- h.d0 * std::sin(h.phi), h.d0 * std::cos(h.phi), h.z0); // point on particle track; wrt to PV NOT (0,0,0) - not correct
   TVector3 jet_pnt(0,0,0) ; // point on jet
   const float d_3d = n.Dot(part_pnt - jet_pnt); // distance of closest approach
   p.pfcand_JetDistVal = d_3d;
 
-  // calculate signed 2D impact parameter - like in // https://github.com/HEP-FCC/FCCAnalyses/blob/d39a711a703244ee2902f5d2191ad1e2367363ac/analyzers/dataframe/src/JetConstituentsUtils.cc#L450-L475 
+  // calculate signed 2D impact parameter - like in // https://github.com/HEP-FCC/FCCAnalyses/blob/d39a711a703244ee2902f5d2191ad1e2367363ac/analyzers/dataframe/src/JetConstituentsUtils.cc#L450-L475
   // approximation bc part_pnt is wrt to PV and jet_p is wrt to (0,0,0)
   const float sip2d = std::copysign(std::abs(h.d0), part_pnt.X() * jet_p.X() + part_pnt.Y() * jet_p.Y()); // dot product between part and jet in 2D: if angle between track and jet greater 90 deg -> negative sign; if smaller 90 deg -> positive sign
   p.pfcand_Sip2dVal = sip2d;
   p.pfcand_Sip2dSig = (p.pfcand_cov_d0d0 > 0) ? (sip2d / std::sqrt(p.pfcand_cov_d0d0)) : -999;
 
-  // calculate signed 3D impact parameter - like in https://github.com/HEP-FCC/FCCAnalyses/blob/d39a711a703244ee2902f5d2191ad1e2367363ac/analyzers/dataframe/src/JetConstituentsUtils.cc#L503-L531 
+  // calculate signed 3D impact parameter - like in https://github.com/HEP-FCC/FCCAnalyses/blob/d39a711a703244ee2902f5d2191ad1e2367363ac/analyzers/dataframe/src/JetConstituentsUtils.cc#L503-L531
   const float IP_3d = std::sqrt(h.d0*h.d0 + h.z0*h.z0);
   const float sip3d = std::copysign(std::abs(IP_3d),  part_pnt.Dot(jet_p)); // dot product between part in jet in 3d: if angle between track and jet greater 90 deg -> negative sign; if smaller 90 deg -> positive sign
   p.pfcand_Sip3dVal = sip3d;
 
   // significance in 3D
-  const float in_sqrt = p.pfcand_cov_d0d0 + p.pfcand_cov_z0z0; 
+  const float in_sqrt = p.pfcand_cov_d0d0 + p.pfcand_cov_z0z0;
   if (in_sqrt>0){ // can caluclate sqrt?
     const float err3d = std::sqrt(in_sqrt); // error of distance of closest approach
-    p.pfcand_JetDistSig = d_3d/err3d; 
-    p.pfcand_Sip3dSig = sip3d/err3d; 
+    p.pfcand_JetDistSig = d_3d/err3d;
+    p.pfcand_Sip3dSig = sip3d/err3d;
   } else { // handle error -> dummy value
     p.pfcand_JetDistSig = -999;
     p.pfcand_Sip3dSig = -999;

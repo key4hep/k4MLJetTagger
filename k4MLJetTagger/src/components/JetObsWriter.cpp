@@ -64,7 +64,7 @@ StatusCode JetObsWriter::initialize() {
   retriever = new JetObservablesRetriever();
   retriever->Bz = 2.0; // hardcoded for now
 
-  
+
   return StatusCode::SUCCESS;
 }
 

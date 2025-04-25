@@ -108,7 +108,7 @@ StatusCode JetTagWriter::execute(const EventContext&) const {
   // loop over all jets and get the PID likelihoods
   for (const auto jet : jet_coll) {
 
-    cleanTree(); // set all values to -9.0 
+    cleanTree(); // set all values to -9.0
 
     auto jetTags_G = jetTag_G_Handler.getPIDs(jet);
     auto jetTags_U = jetTag_U_Handler.getPIDs(jet);
@@ -122,7 +122,7 @@ StatusCode JetTagWriter::execute(const EventContext&) const {
     // check if the PID info is available
     if (jetTags_G.empty() || jetTags_U.empty() || jetTags_D.empty() || jetTags_S.empty() || jetTags_C.empty() || jetTags_B.empty() || jetTags_TAU.empty() || mcJetTags.empty()) {
       error() << "No PID info found for jet!" << endmsg;
-      continue;  
+      continue;
     }
     // check if the jetTags have only one value each
     if (jetTags_G.size() != 1 || jetTags_U.size() != 1 || jetTags_D.size() != 1 || jetTags_S.size() != 1 || jetTags_C.size() != 1 || jetTags_B.size() != 1 || jetTags_TAU.size() != 1 || mcJetTags.size() != 1) {

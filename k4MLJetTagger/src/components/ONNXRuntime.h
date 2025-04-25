@@ -1,7 +1,25 @@
+/*
+ * Copyright (c) 2020-2024 Key4hep-Project.
+ *
+ * This file is part of Key4hep.
+ * See https://key4hep.github.io/key4hep-doc/ for further info.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 #ifndef ONNXRuntime_ONNXRuntime_h
 #define ONNXRuntime_ONNXRuntime_h
 
-// From: https://github.com/HEP-FCC/FCCAnalyses/tree/b9b84221837da8868158f5592b48a9af69f0f6e3/addons/ONNXRuntime  
+// From: https://github.com/HEP-FCC/FCCAnalyses/tree/b9b84221837da8868158f5592b48a9af69f0f6e3/addons/ONNXRuntime
 // AI generated documentation
 
 #include <string>
@@ -19,7 +37,7 @@ namespace Ort {
 /**
  * @class ONNXRuntime
  * @brief A wrapper class for managing ONNX model inference using ONNX Runtime.
- * 
+ *
  * This class initializes an ONNX Runtime session, manages input/output tensors,
  * and provides an interface for running inference on input data. The implementation
  * supports flexible tensor shapes and data types.
@@ -28,7 +46,7 @@ class ONNXRuntime {
 public:
   /**
    * @brief Constructor to initialize the ONNXRuntime environment and session.
-   * 
+   *
    * @param model_path Path to the ONNX model file.
    * @param input_names List of input variable names to bind during inference.
    */
@@ -41,9 +59,9 @@ public:
 
   /**
    * @brief Type alias for a 2D tensor.
-   * 
+   *
    * This template defines a tensor as a 2D vector of the specified data type.
-   * 
+   *
    * @tparam T Data type of the tensor elements.
    */
   template <typename T>
@@ -55,14 +73,14 @@ public:
 
   /**
    * @brief Retrieves the list of input variable names for the model.
-   * 
+   *
    * @return A constant reference to the vector of input names.
    */
   const std::vector<std::string>& inputNames() const { return input_names_; }
 
   /**
    * @brief Runs inference on the provided input tensor and returns the output tensor.
-   * 
+   *
    * @tparam T Data type of the tensor elements.
    * @param input_tensor Input tensor containing the data for inference.
    * @param input_shape Optional tensor specifying the input shape dimensions.
@@ -75,7 +93,7 @@ public:
 private:
   /**
    * @brief Retrieves the position of a variable in the input names list.
-   * 
+   *
    * @param var_name Name of the variable.
    * @return The position of the variable in the input names list.
    */
