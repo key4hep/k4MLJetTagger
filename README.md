@@ -272,15 +272,16 @@ You may find helpful resources in the `extras` folder.
 
 - The magnetic field $B$ of the detector is needed at one point to calculate the helix parameters of the tracks with respect to the primary vertex. The magnetic field is hard coded at the moment. It would be possible to retrieve it from the detector geometry (code already added; see the `Helper` file), but therefore, one must load the detector in the steering file, e.g. like [this](https://github.com/key4hep/CLDConfig/blob/ae99dbed8e34390036e29ca09897dc0ed7759030/CLDConfig/CLDReconstruction.py#L61-L66). As we use the v05 version of CLD at the moment, loading the detector is slow and not worth it to only set $Bz=2.0$ (in my opinion). With a newer detector version (e.g. v07) this might be worth investigating.
 - Currently, the network used was trained using the [FCCAnalyses convention](https://github.com/HEP-FCC/FCCAnalyses/blob/fa672d4326bcf2f43252d3554a138b53dcba15a4/examples/FCCee/weaver/config.py#L31) for naming the jet constituents observables. The naming is quite confusing; this is why I used my own convention that matches the [key4hep convention](https://github.com/key4hep/EDM4hep/blob/997ab32b886899253c9bc61adea9a21b57bc5a21/edm4hep.yaml#L195-L199). The class `VarMapper` in `Helpers` helps to switch between the two conventions. In the future, if retraining a model, I highly suggest switching to the convention used here when training the model to get rid of the FCCAnalyses convention. To do so, train the network with a yaml file like `extras/config_for_weaver_training.yaml` and root files created with `writeJetConstObs.py`, which use the key4hep convention. To run inference here in key4hep, you only need to modify the function `from_Jet_to_onnx_input` in `Helpers` where the `VarMapper` is used. Remove it; there should be no need to convert conventions anymore.
-- A correct primary vertex reconstruction is crucial for a good tagging performance. This is a larger issue, so see [section below](#primary-vertex-reconstruction-issues---a-new-project)
+- A correct primary vertex reconstruction is crucial for a good tagging performance due to the displacement parameters (wrt the PV) being one of the main discriminators in tagging. Unfortunately, the PV fit is not optimal in CLD full simulation, see [this github issue](https://github.com/key4hep/CLDConfig/issues/61). There is an [open issue](https://github.com/key4hep/k4MLJetTagger/issues/7) in this repository too with an attached pdf that will give an introduction to the issue. This is most likely an own project :) 
 
-### Primary vertex reconstruction issues - a new project
-
-Placeholder
 
 ### Outlook
 
-Placeholder
+What might be done in the future with the k4MLJetTagger?
+- Once improvments of crucial bottlesnecks in other eares of the reconstruction are improved, I would suggest retraining the network. This could be: PV fit fix (see [issue](https://github.com/key4hep/k4MLJetTagger/issues/7)), a new tracking algorithm or fixes in the pandora particle flow (very important!! This is discussed in the paper cited [below](#citation)).
+- You might think of training the tagger on different physics events or cross-checking at least the performance (e.g. $e^+e^- \rightarrow Z(qq)Z(\nu \nu)$). Maybe training an other tagger at 365~GeV. 
+- In the future, new (and better) architectures than the ParT might be available. You could train and test the tagging performance on such architectures. 
+- You might think of including other (informative) jet observables as an input to the tagger. Maybe newer detector geometries will have other observables available. 
 
 
 ## Further links:
