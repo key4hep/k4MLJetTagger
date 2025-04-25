@@ -31,6 +31,8 @@
 #include "TGraph.h"
 #include "TH1F.h"
 
+#include "JetObservablesRetriever.h"
+
 /**
  * @class JetObsWriter
  * @brief This class is a Gaudi algorithm for writing jet observables that are used for tagging to a TTree.
