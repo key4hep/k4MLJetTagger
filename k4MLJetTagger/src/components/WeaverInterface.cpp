@@ -1,12 +1,28 @@
-// From: https://github.com/HEP-FCC/FCCAnalyses/tree/b9b84221837da8868158f5592b48a9af69f0f6e3/addons/ONNXRuntime  
+/*
+ * Copyright (c) 2020-2024 Key4hep-Project.
+ *
+ * This file is part of Key4hep.
+ * See https://key4hep.github.io/key4hep-doc/ for further info.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 #include "WeaverInterface.h"
 
 #include "nlohmann/json.hpp"
 #include <fstream>
 #include <iostream>
 
-WeaverInterface::WeaverInterface(const std::string& onnx_filename,
-                                 const std::string& json_filename,
+WeaverInterface::WeaverInterface(const std::string& onnx_filename, const std::string& json_filename,
                                  const rv::RVec<std::string>& vars)
     : variables_names_(vars.begin(), vars.end()) {
   if (onnx_filename.empty())
@@ -19,10 +35,12 @@ WeaverInterface::WeaverInterface(const std::string& onnx_filename,
   std::vector<std::string> input_names;
   try {
     const auto json = nlohmann::json::parse(json_file);
-    json.at("input_names").get_to(input_names); // input_names is a vector of strings: pf_points pf_features pf_vectors pf_mask
+    json.at("input_names")
+        .get_to(input_names); // input_names is a vector of strings: pf_points pf_features pf_vectors pf_mask
 
-    for (const auto& input : input_names) { // loops over pf_points pf_features pf_vectors pf_mask
-      const auto& group_params = json.at(input); // group params is then the dictionary of the input name; look in json. It always has has three keys: var_names, var_infos, var_length
+    for (const auto& input : input_names) {      // loops over pf_points pf_features pf_vectors pf_mask
+      const auto& group_params = json.at(input); // group params is then the dictionary of the input name; look in json.
+                                                 // It always has has three keys: var_names, var_infos, var_length
       auto& info = prep_info_map_[input];
       info.name = input;
       group_params.at("var_names").get_to(info.var_names);
@@ -38,13 +56,10 @@ WeaverInterface::WeaverInterface(const std::string& onnx_filename,
       const auto& var_info_params = group_params.at("var_infos");
       for (const auto& name : info.var_names) {
         const auto& var_params = var_info_params.at(name);
-        info.var_info_map[name] =
-            PreprocessParams::VarInfo(var_params.at("median"),
-                                      var_params.at("norm_factor"),
-                                      var_params.at("replace_inf_value"),
-                                      var_params.at("lower_bound"),
-                                      var_params.at("upper_bound"),
-                                      var_params.contains("pad") ? (double)var_params.at("pad") : 0.);
+        info.var_info_map[name] = PreprocessParams::VarInfo(
+            var_params.at("median"), var_params.at("norm_factor"), var_params.at("replace_inf_value"),
+            var_params.at("lower_bound"), var_params.at("upper_bound"),
+            var_params.contains("pad") ? (double)var_params.at("pad") : 0.);
       }
       // create data storage with a fixed size vector initialised with 0's
       const auto& len = input_sizes_.emplace_back(info.max_length * info.var_names.size());
@@ -57,15 +72,9 @@ WeaverInterface::WeaverInterface(const std::string& onnx_filename,
   onnx_ = std::make_unique<ONNXRuntime>(onnx_filename, input_names);
 }
 
-std::vector<float> WeaverInterface::center_norm_pad(const rv::RVec<float>& input,
-                                                    float center,
-                                                    float scale,
-                                                    size_t min_length,
-                                                    size_t max_length,
-                                                    float pad_value,
-                                                    float replace_inf_value,
-                                                    float min,
-                                                    float max) {
+std::vector<float> WeaverInterface::center_norm_pad(const rv::RVec<float>& input, float center, float scale,
+                                                    size_t min_length, size_t max_length, float pad_value,
+                                                    float replace_inf_value, float min, float max) {
   if (min > pad_value || pad_value > max)
     throw std::runtime_error("Pad value not within (min, max) range");
   if (min_length > max_length)
@@ -92,7 +101,9 @@ size_t WeaverInterface::variablePos(const std::string& var_name) const {
   return var_it - variables_names_.begin();
 }
 
-rv::RVec<float> WeaverInterface::run(const rv::RVec<ConstituentVars>& constituents) { // constituents is the collection of all jet constituents. Each constituent is a collection of observables (ConstituentVars).
+rv::RVec<float> WeaverInterface::run(
+    const rv::RVec<ConstituentVars>& constituents) { // constituents is the collection of all jet constituents. Each
+                                                     // constituent is a collection of observables (ConstituentVars).
   size_t i = 0;
   for (const auto& name : onnx_->inputNames()) {
     const auto& params = prep_info_map_.at(name);
@@ -101,27 +112,20 @@ rv::RVec<float> WeaverInterface::run(const rv::RVec<ConstituentVars>& constituen
     std::fill(values.begin(), values.end(), 0);
     size_t it_pos = 0;
     ConstituentVars jc;
-    for (size_t j = 0; j < params.var_names.size(); ++j) {  // transform and add the proper amount of padding
+    for (size_t j = 0; j < params.var_names.size(); ++j) { // transform and add the proper amount of padding
       const auto& var_name = params.var_names.at(j);
-      //if (std::find(variables_names_.begin(), variables_names_.end(), "pfcand_mask") == variables_names_.end())
-      //  jc = ConstituentVars(constituents.at(0).size(), 1.f);
+      // if (std::find(variables_names_.begin(), variables_names_.end(), "pfcand_mask") == variables_names_.end())
+      //   jc = ConstituentVars(constituents.at(0).size(), 1.f);
 
-        if (var_name.find("_mask") != std::string::npos) {
-          jc = ConstituentVars(constituents.at(0).size(), 1.f);
-        }
+      if (var_name.find("_mask") != std::string::npos) {
+        jc = ConstituentVars(constituents.at(0).size(), 1.f);
+      }
 
       else
         jc = constituents.at(variablePos(var_name));
       const auto& var_info = params.info(var_name);
-      auto val = center_norm_pad(jc,
-                                 var_info.center,
-                                 var_info.norm_factor,
-                                 params.min_length,
-                                 params.max_length,
-                                 var_info.pad,
-                                 var_info.replace_inf_value,
-                                 var_info.lower_bound,
-                                 var_info.upper_bound);
+      auto val = center_norm_pad(jc, var_info.center, var_info.norm_factor, params.min_length, params.max_length,
+                                 var_info.pad, var_info.replace_inf_value, var_info.lower_bound, var_info.upper_bound);
       std::copy(val.begin(), val.end(), values.begin() + it_pos);
       it_pos += val.size();
     }

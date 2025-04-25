@@ -26,7 +26,7 @@ from k4FWCore.parseArgs import parser
 
 # parse the custom arguments
 parser_group = parser.add_argument_group("createJetMCTag.py custom options")
-parser_group.add_argument("--inputFiles", nargs="+", metavar=("file1", "file2"), help="One or multiple input files", 
+parser_group.add_argument("--inputFiles", nargs="+", metavar=("file1", "file2"), help="One or multiple input files",
                         default=["/eos/experiment/fcc/prod/fcc/ee/test_spring2024/240gev/Hbb/CLD_o2_v05/rec/00016783/000/Hbb_rec_16783_99.root"])
 parser_group.add_argument("--outputFile", help="Output file name", default="output_jetMCtags.root")
 parser_group.add_argument("--num_ev", type=int, help="Number of events to process (-1 means all)", default=-1)

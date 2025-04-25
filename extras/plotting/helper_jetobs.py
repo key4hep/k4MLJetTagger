@@ -1,3 +1,21 @@
+#
+# Copyright (c) 2020-2024 Key4hep-Project.
+#
+# This file is part of Key4hep.
+# See https://key4hep.github.io/key4hep-doc/ for further info.
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+#
 import numpy as np
 import matplotlib.pyplot as plt
 
@@ -23,9 +41,9 @@ def plot_kinematics(df1, df2, figsize=(12, 7), bins=50, l1='df1', l2='df2'):
     keys = ['pfcand_erel_log', 'pfcand_thetarel', 'pfcand_phirel', 'pfcand_e', 'pfcand_p']
 
     fig, axs = plt.subplots(2, 3, figsize=figsize)
-    
+
     for i, ax in enumerate(axs.flat):
-        if i == 5: 
+        if i == 5:
             continue
         key = keys[i]
         if key == 'pfcand_e' or key == 'pfcand_p':
@@ -64,7 +82,7 @@ def get_index_charged_particles(df, ptype='cpart'):
     """Choose particle type: cpart, npart, photon"""
     types = df['pfcand_type']
     if ptype=='cpart':
-        num = [-211, -13, -11, 11, 13, 211] 
+        num = [-211, -13, -11, 11, 13, 211]
     elif ptype=='npart':
         num = [2112]
     elif ptype=='photon':
@@ -110,7 +128,7 @@ def get_chad_elements(df_value, index):
             e_3.append(df_value[i][index_list[2]])
     return [np.array(e_1), np.array(e_2), np.array(e_3)]
 
-# plots for charged particles 
+# plots for charged particles
 
 def plot_IP(df1, df2, index1, index2, l1='df1', l2='df2', bins=70):
     keys = ['pfcand_d0', 'pfcand_z0', 'pfcand_Sip2dVal', 'pfcand_Sip2dSig', 'pfcand_Sip3dVal', 'pfcand_Sip3dSig', 'pfcand_JetDistVal', 'pfcand_JetDistSig']
@@ -122,20 +140,20 @@ def plot_IP(df1, df2, index1, index2, l1='df1', l2='df2', bins=70):
         'pfcand_Sip3dSig': [-50, 50],
         'pfcand_JetDistVal': [-0.5, 0.5],
         'pfcand_JetDistSig': [-50, 50]}
-    
+
     fig, axs = plt.subplots(4, 2, figsize=(12, 8), constrained_layout=True)
-    
+
     for i, ax in enumerate(axs.flat):
 
         key = keys[i]
 
-        # get charged particles 
+        # get charged particles
         a_list = get_chad_elements(df1[key], index1)
         b_list = get_chad_elements(df2[key], index2)
 
         ri = r[key] if r != None else None
         # get the higest energy charged particles
-        j = 0     
+        j = 0
         a = a_list[j]
         b = b_list[j]
 
@@ -157,7 +175,7 @@ def plot_IP(df1, df2, index1, index2, l1='df1', l2='df2', bins=70):
         ax.grid()
         ax.set_xlabel(key)
         ax.set_yscale('log')
-    
+
     plt.show()
 
 def plot_cov_matrix(df1, df2, index1, index2, l1='df1', l2='df2', bins=50):
@@ -203,13 +221,13 @@ def plot_cov_matrix(df1, df2, index1, index2, l1='df1', l2='df2', bins=50):
         'pfcand_cov_tanLambdatanLambda': [0, 0.5e-6],
         'pfcand_cov_tanLambdaz0': [-0.5e-5, 0],
         'pfcand_cov_phiomega': [0, 0.2e-10],
-        'pfcand_cov_phitanLambda': [-0.2e-08, 0.2e-08], 
+        'pfcand_cov_phitanLambda': [-0.2e-08, 0.2e-08],
         'pfcand_cov_phiz0': [-0.05e-6, 0.05e-6],
-        'pfcand_cov_phiphi': [0.0, 0.3e-6], 
+        'pfcand_cov_phiphi': [0.0, 0.3e-6],
         'pfcand_cov_phid0': [-0.3e-5, 0],
-        'pfcand_cov_omegaomega': [0, 5e-13], #[0, 0.5e-13], 
+        'pfcand_cov_omegaomega': [0, 5e-13], #[0, 0.5e-13],
         'pfcand_cov_d0omega': [-0.25e-9, 0.25e-9],
-        'pfcand_cov_d0tanLambda': [-0.1e-6, 0.1e-6], 
+        'pfcand_cov_d0tanLambda': [-0.1e-6, 0.1e-6],
         'pfcand_cov_d0d0': [0, 8e-5],
         'pfcand_cov_d0z0': [-0.25e-5, 0.25e-5], # here
         'pfcand_cov_z0z0': [0, 9e-5],
@@ -224,7 +242,7 @@ def plot_cov_matrix(df1, df2, index1, index2, l1='df1', l2='df2', bins=50):
         for i, key in enumerate(keys):
             if k == "full":
                 d = get_chad_elements(dic[k][key], index_charged_3E_full)[0]
-            d = get_chad_elements(list_for_pairs[k][0][key], list_for_pairs[k][1])[0] 
+            d = get_chad_elements(list_for_pairs[k][0][key], list_for_pairs[k][1])[0]
             d = np.clip(d, r[key][0], r[key][1])
             ax = axs.ravel()
             ax[i].hist(d, bins=bins, histtype='step', label=list_for_pairs[k][2], density=True, linewidth=2.0, range=r[key])

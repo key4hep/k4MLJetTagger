@@ -17,23 +17,22 @@
  * limitations under the License.
  */
 
-
-#include "GaudiKernel/MsgStream.h"
 #include "Gaudi/Property.h"
+#include "GaudiKernel/MsgStream.h"
+#include "edm4hep/MCParticleCollection.h"
 #include "k4FWCore/Transformer.h"
 #include "k4Interface/IGeoSvc.h" // for Bfield
 #include <edm4hep/ParticleIDCollection.h>
 #include <edm4hep/ReconstructedParticleCollection.h>
 #include <edm4hep/VertexCollection.h>
 
-
-#include <nlohmann/json.hpp> // Include a JSON parsing library
 #include <fstream>
+#include <nlohmann/json.hpp> // Include a JSON parsing library
 
-#include "Structs.h"
-#include "JetObservablesRetriever.h"
-#include "JetObsWriter.h"
 #include "Helpers.h"
+#include "JetObsWriter.h"
+#include "JetObservablesRetriever.h"
+#include "Structs.h"
 
 DECLARE_COMPONENT(JetObsWriter)
 
@@ -43,7 +42,8 @@ JetObsWriter::JetObsWriter(const std::string& name, ISvcLocator* svcLoc) : Gaudi
 }
 
 StatusCode JetObsWriter::initialize() {
-  if (Gaudi::Algorithm::initialize().isFailure()) return StatusCode::FAILURE;
+  if (Gaudi::Algorithm::initialize().isFailure())
+    return StatusCode::FAILURE;
 
   m_ths = service("THistSvc", true);
   if (!m_ths) {
@@ -51,7 +51,7 @@ StatusCode JetObsWriter::initialize() {
     return StatusCode::FAILURE;
   }
 
-  t_jetcst = new TTree ("JetConstituentObservables", "Jet-Constituent Observables");
+  t_jetcst = new TTree("JetConstituentObservables", "Jet-Constituent Observables");
   if (m_ths->regTree("/rec/jetconst", t_jetcst).isFailure()) {
     error() << "Couldn't register jet constituent tree" << endmsg;
     return StatusCode::FAILURE;
@@ -63,29 +63,26 @@ StatusCode JetObsWriter::initialize() {
   retriever = new JetObservablesRetriever();
   retriever->Bz = 2.0; // hardcoded for now
 
-  
   return StatusCode::SUCCESS;
 }
 
 StatusCode JetObsWriter::execute(const EventContext&) const {
-
   auto evs = ev_handle.get();
   evNum = (*evs)[0].getEventNumber();
-  //evNum = 0;
+  // evNum = 0;
   info() << "Event number = " << evNum << endmsg;
 
   // Get the pointers to the collections
-  const edm4hep::ReconstructedParticleCollection *jet_coll_ptr = inputJets_handle.get();
-  const edm4hep::VertexCollection *prim_vertex_coll_ptr = inputPrimaryVertices_handle.get();
+  const edm4hep::ReconstructedParticleCollection* jet_coll_ptr = inputJets_handle.get();
+  const edm4hep::VertexCollection* prim_vertex_coll_ptr = inputPrimaryVertices_handle.get();
   // Create references to the collections
-  const edm4hep::ReconstructedParticleCollection &jet_coll = *jet_coll_ptr;
-  const edm4hep::VertexCollection &prim_vertex_coll = *prim_vertex_coll_ptr;
-
+  const edm4hep::ReconstructedParticleCollection& jet_coll = *jet_coll_ptr;
+  const edm4hep::VertexCollection& prim_vertex_coll = *prim_vertex_coll_ptr;
 
   for (const auto& jet : jet_coll) { // loop over all jets in the event
     cleanTree();
     Jet j = retriever->retrieve_input_observables(jet, prim_vertex_coll); // get all observables
-    for (const auto& pfc : j.constituents) { // loop over all jet constituents / pfcands
+    for (const auto& pfc : j.constituents) {                              // loop over all jet constituents / pfcands
       pfcand_erel_log->push_back(pfc.pfcand_erel_log);
       pfcand_thetarel->push_back(pfc.pfcand_thetarel);
       pfcand_phirel->push_back(pfc.pfcand_phirel);
@@ -124,6 +121,12 @@ StatusCode JetObsWriter::execute(const EventContext&) const {
       pfcand_JetDistVal->push_back(pfc.pfcand_JetDistVal);
       pfcand_JetDistSig->push_back(pfc.pfcand_JetDistSig);
     }
+    // PV variables
+    const edm4hep::Vector3f prim_vertex = retriever->get_primary_vertex(prim_vertex_coll);
+    jet_PV_x = prim_vertex.x;
+    jet_PV_y = prim_vertex.y;
+    jet_PV_z = prim_vertex.z;
+
     t_jetcst->Fill();
   }
 
@@ -131,7 +134,6 @@ StatusCode JetObsWriter::execute(const EventContext&) const {
 }
 
 void JetObsWriter::initializeTree() {
-
   pfcand_erel_log = new std::vector<float>();
   pfcand_thetarel = new std::vector<float>();
   pfcand_phirel = new std::vector<float>();
@@ -208,6 +210,11 @@ void JetObsWriter::initializeTree() {
   t_jetcst->Branch("pfcand_JetDistVal", &pfcand_JetDistVal);
   t_jetcst->Branch("pfcand_JetDistSig", &pfcand_JetDistSig);
 
+  // PV variables
+  t_jetcst->Branch("jet_PV_x", &jet_PV_x);
+  t_jetcst->Branch("jet_PV_y", &jet_PV_y);
+  t_jetcst->Branch("jet_PV_z", &jet_PV_z);
+
   return;
 }
 
@@ -250,11 +257,17 @@ void JetObsWriter::cleanTree() const {
   pfcand_JetDistVal->clear();
   pfcand_JetDistSig->clear();
 
+  float dummy_value = -999.0;
+  jet_PV_x = dummy_value;
+  jet_PV_y = dummy_value;
+  jet_PV_z = dummy_value;
+
   return;
 }
 
 StatusCode JetObsWriter::finalize() {
-  if (Gaudi::Algorithm::finalize().isFailure()) return StatusCode::FAILURE;
+  if (Gaudi::Algorithm::finalize().isFailure())
+    return StatusCode::FAILURE;
 
   return StatusCode::SUCCESS;
 }

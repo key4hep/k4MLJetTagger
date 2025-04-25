@@ -27,7 +27,7 @@ from k4FWCore.parseArgs import parser
 
 # parse the custom arguments
 parser_group = parser.add_argument_group("writeJetConstObs.py custom options")
-parser_group.add_argument("--inputFiles", nargs="+", metavar=("file1", "file2"), help="One or multiple input files", 
+parser_group.add_argument("--inputFiles", nargs="+", metavar=("file1", "file2"), help="One or multiple input files",
                         default=["/eos/experiment/fcc/prod/fcc/ee/test_spring2024/240gev/Hbb/CLD_o2_v05/rec/00016783/000/Hbb_rec_16783_99.root"])
 parser_group.add_argument("--outputFile", help="Output file name", default="output_jettags.root")
 parser_group.add_argument("--onnx_model", help="Path to ONNX model used for tagging", default="/eos/experiment/fcc/ee/jet_flavour_tagging/fullsim_test_spring2024/fullsimCLD240_2mio.onnx")

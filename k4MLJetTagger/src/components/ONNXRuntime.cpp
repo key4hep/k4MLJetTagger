@@ -1,4 +1,21 @@
-// From: https://github.com/HEP-FCC/FCCAnalyses/tree/b9b84221837da8868158f5592b48a9af69f0f6e3/addons/ONNXRuntime 
+/*
+ * Copyright (c) 2020-2024 Key4hep-Project.
+ *
+ * This file is part of Key4hep.
+ * See https://key4hep.github.io/key4hep-doc/ for further info.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 #include "ONNXRuntime.h"
 
 #include "onnxruntime_cxx_api.h"
@@ -7,19 +24,17 @@
 #include <fstream>
 #include <iostream>
 
-#include <numeric>
 #include <algorithm>
+#include <numeric>
 
 ONNXRuntime::ONNXRuntime(const std::string& model_path, const std::vector<std::string>& input_names)
-    : env_(new Ort::Env(OrtLoggingLevel::ORT_LOGGING_LEVEL_WARNING, "onnx_runtime")), 
-      allocator(), 
-      input_names_(input_names) { 
-  
+    : env_(new Ort::Env(OrtLoggingLevel::ORT_LOGGING_LEVEL_WARNING, "onnx_runtime")), allocator(),
+      input_names_(input_names) {
   if (model_path.empty())
     throw std::runtime_error("Path to ONNX model cannot be empty!");
   Ort::SessionOptions options;
   options.SetIntraOpNumThreads(1);
-  std::string model{model_path};  // fixes a poor Ort experimental API
+  std::string model{model_path}; // fixes a poor Ort experimental API
   session_ = std::make_unique<Ort::Session>(*env_, model.c_str(), options);
 
   // Get input names and shapes
@@ -28,7 +43,8 @@ ONNXRuntime::ONNXRuntime(const std::string& model_path, const std::vector<std::s
 
   for (size_t i = 0; i < session_->GetInputCount(); ++i) {
     // get input names
-    const auto input_name = session_->GetInputNameAllocated(i, allocator).release(); // release the ownership of the pointer
+    const auto input_name =
+        session_->GetInputNameAllocated(i, allocator).release(); // release the ownership of the pointer
     input_node_strings_.emplace_back(input_name);
 
     // get input shapes
@@ -51,14 +67,12 @@ ONNXRuntime::ONNXRuntime(const std::string& model_path, const std::vector<std::s
     // the 0th dim depends on the batch size
     output_node_dims_[output_name].at(0) = -1;
   }
-
 }
 
 ONNXRuntime::~ONNXRuntime() {}
 
 template <typename T>
-ONNXRuntime::Tensor<T> ONNXRuntime::run(Tensor<T>& input,
-                                        const Tensor<long>& input_shapes,
+ONNXRuntime::Tensor<T> ONNXRuntime::run(Tensor<T>& input, const Tensor<long>& input_shapes,
                                         unsigned long long batch_size) const {
   std::vector<Ort::Value> tensors_in;
   for (const auto& name : input_node_strings_) {
@@ -72,48 +86,38 @@ ONNXRuntime::Tensor<T> ONNXRuntime::run(Tensor<T>& input,
       input_dims = input_shapes[input_pos];
     }
     // rely on the given input_shapes to set the batch size
-    if (input_dims[0] != static_cast<long>(batch_size)){
+    if (input_dims[0] != static_cast<long>(batch_size)) {
       throw std::runtime_error("The first element of `input_shapes` (" + std::to_string(input_dims[0]) +
-                                ") does not match the given `batch_size` (" + std::to_string(batch_size) + ")");
+                               ") does not match the given `batch_size` (" + std::to_string(batch_size) + ")");
     }
     auto expected_len = std::accumulate(input_dims.begin(), input_dims.end(), 1, std::multiplies<int64_t>());
     if (expected_len != (int64_t)value->size())
       throw std::runtime_error("Input array '" + name + "' has a wrong size of " + std::to_string(value->size()) +
                                ", expected " + std::to_string(expected_len));
 
-
     const OrtMemoryInfo* fInfo;
     fInfo = Ort::MemoryInfo::CreateCpu(OrtArenaAllocator, OrtMemTypeDefault);
-    auto input_tensor = Ort::Value::CreateTensor<float>(
-      fInfo,
-      value->data(),
-      value->size(),
-      input_dims.data(),
-      input_dims.size()
-    );
+    auto input_tensor =
+        Ort::Value::CreateTensor<float>(fInfo, value->data(), value->size(), input_dims.data(), input_dims.size());
     if (!input_tensor.IsTensor())
       throw std::runtime_error("Failed to create an input tensor for variable '" + name + "'.");
     tensors_in.emplace_back(std::move(input_tensor));
   }
 
-  // convert to char* 
+  // convert to char*
   std::vector<const char*> input_node_names;
   for (const auto& name_i : input_node_strings_) {
-      input_node_names.push_back(name_i.c_str());
+    input_node_names.push_back(name_i.c_str());
   }
 
   std::vector<const char*> output_node_names;
   for (const auto& name_j : output_node_strings_) {
-      output_node_names.push_back(name_j.c_str());
+    output_node_names.push_back(name_j.c_str());
   }
 
   // run the inference
-auto output_tensors = session_->Run(Ort::RunOptions{nullptr},
-                                    input_node_names.data(),
-                                    tensors_in.data(),
-                                    tensors_in.size(),
-                                    output_node_names.data(),
-                                    output_node_names.size());
+  auto output_tensors = session_->Run(Ort::RunOptions{nullptr}, input_node_names.data(), tensors_in.data(),
+                                      tensors_in.size(), output_node_names.data(), output_node_names.size());
   // convert output tensor to values
   Tensor<T> outputs;
   size_t i = 0;
