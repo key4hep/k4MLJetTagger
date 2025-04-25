@@ -24,14 +24,13 @@
 #include <fstream>
 #include <iostream>
 
-#include <numeric>
 #include <algorithm>
+#include <numeric>
 
 ONNXRuntime::ONNXRuntime(const std::string& model_path, const std::vector<std::string>& input_names)
     : env_(new Ort::Env(OrtLoggingLevel::ORT_LOGGING_LEVEL_WARNING, "onnx_runtime")),
       allocator(),
       input_names_(input_names) {
-
   if (model_path.empty())
     throw std::runtime_error("Path to ONNX model cannot be empty!");
   Ort::SessionOptions options;
@@ -45,11 +44,12 @@ ONNXRuntime::ONNXRuntime(const std::string& model_path, const std::vector<std::s
 
   for (size_t i = 0; i < session_->GetInputCount(); ++i) {
     // get input names
-    const auto input_name = session_->GetInputNameAllocated(i, allocator).release(); // release the ownership of the pointer
+    const auto input_name =
+        session_->GetInputNameAllocated(i, allocator).release();  // release the ownership of the pointer
     input_node_strings_.emplace_back(input_name);
 
     // get input shapes
-    const auto nodeInfo = session_->GetInputTypeInfo(i);
+    const auto nodeInfo          = session_->GetInputTypeInfo(i);
     input_node_dims_[input_name] = nodeInfo.GetTensorTypeAndShapeInfo().GetShape();
   }
 
@@ -62,52 +62,44 @@ ONNXRuntime::ONNXRuntime(const std::string& model_path, const std::vector<std::s
     output_node_strings_.emplace_back(output_name);
 
     // get output shapes
-    const auto nodeInfo = session_->GetOutputTypeInfo(i);
+    const auto nodeInfo            = session_->GetOutputTypeInfo(i);
     output_node_dims_[output_name] = nodeInfo.GetTensorTypeAndShapeInfo().GetShape();
 
     // the 0th dim depends on the batch size
     output_node_dims_[output_name].at(0) = -1;
   }
-
 }
 
 ONNXRuntime::~ONNXRuntime() {}
 
 template <typename T>
-ONNXRuntime::Tensor<T> ONNXRuntime::run(Tensor<T>& input,
-                                        const Tensor<long>& input_shapes,
+ONNXRuntime::Tensor<T> ONNXRuntime::run(Tensor<T>& input, const Tensor<long>& input_shapes,
                                         unsigned long long batch_size) const {
   std::vector<Ort::Value> tensors_in;
   for (const auto& name : input_node_strings_) {
-    auto input_pos = variablePos(name);
-    auto value = input.begin() + input_pos;
+    auto                 input_pos = variablePos(name);
+    auto                 value     = input.begin() + input_pos;
     std::vector<int64_t> input_dims;
     if (input_shapes.empty()) {
-      input_dims = input_node_dims_.at(name);
+      input_dims    = input_node_dims_.at(name);
       input_dims[0] = batch_size;
     } else {
       input_dims = input_shapes[input_pos];
     }
     // rely on the given input_shapes to set the batch size
-    if (input_dims[0] != static_cast<long>(batch_size)){
+    if (input_dims[0] != static_cast<long>(batch_size)) {
       throw std::runtime_error("The first element of `input_shapes` (" + std::to_string(input_dims[0]) +
-                                ") does not match the given `batch_size` (" + std::to_string(batch_size) + ")");
+                               ") does not match the given `batch_size` (" + std::to_string(batch_size) + ")");
     }
     auto expected_len = std::accumulate(input_dims.begin(), input_dims.end(), 1, std::multiplies<int64_t>());
     if (expected_len != (int64_t)value->size())
       throw std::runtime_error("Input array '" + name + "' has a wrong size of " + std::to_string(value->size()) +
                                ", expected " + std::to_string(expected_len));
 
-
     const OrtMemoryInfo* fInfo;
     fInfo = Ort::MemoryInfo::CreateCpu(OrtArenaAllocator, OrtMemTypeDefault);
-    auto input_tensor = Ort::Value::CreateTensor<float>(
-      fInfo,
-      value->data(),
-      value->size(),
-      input_dims.data(),
-      input_dims.size()
-    );
+    auto input_tensor =
+        Ort::Value::CreateTensor<float>(fInfo, value->data(), value->size(), input_dims.data(), input_dims.size());
     if (!input_tensor.IsTensor())
       throw std::runtime_error("Failed to create an input tensor for variable '" + name + "'.");
     tensors_in.emplace_back(std::move(input_tensor));
@@ -116,30 +108,26 @@ ONNXRuntime::Tensor<T> ONNXRuntime::run(Tensor<T>& input,
   // convert to char*
   std::vector<const char*> input_node_names;
   for (const auto& name_i : input_node_strings_) {
-      input_node_names.push_back(name_i.c_str());
+    input_node_names.push_back(name_i.c_str());
   }
 
   std::vector<const char*> output_node_names;
   for (const auto& name_j : output_node_strings_) {
-      output_node_names.push_back(name_j.c_str());
+    output_node_names.push_back(name_j.c_str());
   }
 
   // run the inference
-auto output_tensors = session_->Run(Ort::RunOptions{nullptr},
-                                    input_node_names.data(),
-                                    tensors_in.data(),
-                                    tensors_in.size(),
-                                    output_node_names.data(),
-                                    output_node_names.size());
+  auto output_tensors = session_->Run(Ort::RunOptions{nullptr}, input_node_names.data(), tensors_in.data(),
+                                      tensors_in.size(), output_node_names.data(), output_node_names.size());
   // convert output tensor to values
   Tensor<T> outputs;
-  size_t i = 0;
+  size_t    i = 0;
   for (auto& output_tensor : output_tensors) {
     if (!output_tensor.IsTensor())
       throw std::runtime_error("(at least) inference output " + std::to_string(i) + " is not a tensor.");
     // get output shape
     auto tensor_info = output_tensor.GetTensorTypeAndShapeInfo();
-    auto length = tensor_info.GetElementCount();
+    auto length      = tensor_info.GetElementCount();
 
     auto floatarr = output_tensor.GetTensorData<float>();
     outputs.emplace_back(floatarr, floatarr + length);

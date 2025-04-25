@@ -17,56 +17,57 @@
  * limitations under the License.
  */
 
-
-#include "GaudiKernel/MsgStream.h"
 #include "Gaudi/Property.h"
+#include "GaudiKernel/MsgStream.h"
 #include "k4FWCore/Transformer.h"
 
-#include "edm4hep/MCParticleCollection.h"
 #include <edm4hep/ParticleIDCollection.h>
 #include <edm4hep/ReconstructedParticleCollection.h>
+#include "edm4hep/MCParticleCollection.h"
 
+#include <cmath>  // For std::abs
 #include <fstream>
-#include <cmath> // For std::abs
 
-#include "WeaverInterface.h"
 #include "Helpers.h"
-
+#include "WeaverInterface.h"
 
 int findMCPIDfromHiggsDaughters(const edm4hep::MCParticleCollection& MCParticles, MsgStream& log) {
   // find the MC PID of the jet by looking at the MC Higgs Boson and finding its daughters
   // WARNING: This uses the assumption of H(jj)Z(vv) events!!!
 
   // find the MC Higgs Boson
-  int HiggsPID = 25;
-  std::set<int> expectedFlavors = {1, 2, 3, 4, 5, 15, 21}; // u,d,s,c,b,tau,g
+  int              HiggsPID        = 25;
+  std::set<int>    expectedFlavors = {1, 2, 3, 4, 5, 15, 21};  // u,d,s,c,b,tau,g
   std::vector<int> HiggsDaughtersPDG;
-  for (const auto& MCParticle : MCParticles) { // loop over all MC particles
-    if (MCParticle.getPDG() == HiggsPID) { // find the Higgs
-      for (const auto& daughter : MCParticle.getDaughters()) {       // find the daughters of the Higgs Boson
+  for (const auto& MCParticle : MCParticles) {                  // loop over all MC particles
+    if (MCParticle.getPDG() == HiggsPID) {                      // find the Higgs
+      for (const auto& daughter : MCParticle.getDaughters()) {  // find the daughters of the Higgs Boson
         int daughterPID = daughter.getPDG();
         HiggsDaughtersPDG.push_back(daughterPID);
       }
     }
   }
   // check if the daughters are all the same (ignoring signs)
-  if (HiggsDaughtersPDG.size() == 2 && HiggsDaughtersPDG[0] == -HiggsDaughtersPDG[1]){
+  if (HiggsDaughtersPDG.size() == 2 && HiggsDaughtersPDG[0] == -HiggsDaughtersPDG[1]) {
     int j_pid = std::abs(HiggsDaughtersPDG[0]);
-    if(expectedFlavors.count(j_pid) == 1){
+    if (expectedFlavors.count(j_pid) == 1) {
       return j_pid;
     }
-  } else if (HiggsDaughtersPDG.size() == 2 && HiggsDaughtersPDG[0]== 21 && HiggsDaughtersPDG[1] == 21){
+  } else if (HiggsDaughtersPDG.size() == 2 && HiggsDaughtersPDG[0] == 21 && HiggsDaughtersPDG[1] == 21) {
     // if the daughters are gluons they don't have opposite sign
     return 21;
 
   } else {
-    log << MSG::WARNING << "Higgs Boson has more than 2 daughters or they are not the same. Returning dummy value 0 for MC jet flavor." << endmsg;
-    return 0; // dummy value
+    log << MSG::WARNING
+        << "Higgs Boson has more than 2 daughters or they are not the same. Returning dummy value 0 for MC jet flavor."
+        << endmsg;
+    return 0;  // dummy value
   }
-  log << MSG::WARNING << "Something went wrong with determining the Higgs daughters. Returning dummy value 0 for MC jet flavor." << endmsg;
-  return 0; // dummy value
+  log << MSG::WARNING
+      << "Something went wrong with determining the Higgs daughters. Returning dummy value 0 for MC jet flavor."
+      << endmsg;
+  return 0;  // dummy value
 }
-
 
 /**
 * @class JetMCTagger
@@ -78,21 +79,16 @@ int findMCPIDfromHiggsDaughters(const edm4hep::MCParticleCollection& MCParticles
 *
 * @author Sara Aumiller
 */
-struct JetMCTagger
-    : k4FWCore::Transformer<edm4hep::ParticleIDCollection(const edm4hep::ReconstructedParticleCollection&, const edm4hep::MCParticleCollection& )> {
+struct JetMCTagger : k4FWCore::Transformer<edm4hep::ParticleIDCollection(
+                         const edm4hep::ReconstructedParticleCollection&, const edm4hep::MCParticleCollection&)> {
   JetMCTagger(const std::string& name, ISvcLocator* svcLoc)
-    : Transformer(name, svcLoc,
-                  {
-                    KeyValues("InputJets", {"RefinedVertexJets"}),
-                    KeyValues("MCParticles", {"MCParticles"})
-                  },
-                  {KeyValues("OutputIDCollection", {"MCJetTag"})}
-                  ) {}
+      : Transformer(name, svcLoc,
+                    {KeyValues("InputJets", {"RefinedVertexJets"}), KeyValues("MCParticles", {"MCParticles"})},
+                    {KeyValues("OutputIDCollection", {"MCJetTag"})}) {}
 
   // initialize
 
   StatusCode initialize() override {
-
     warning() << "!!! Finding the MC PID of jets uses the assumption of H(jj)Z(vv) events!!! " << endmsg;
 
     return StatusCode::SUCCESS;
@@ -100,13 +96,13 @@ struct JetMCTagger
 
   // operator
 
-  edm4hep::ParticleIDCollection operator()(const edm4hep::ReconstructedParticleCollection& inputJets, const edm4hep::MCParticleCollection& MCParticles) const override{
+  edm4hep::ParticleIDCollection operator()(const edm4hep::ReconstructedParticleCollection& inputJets,
+                                           const edm4hep::MCParticleCollection&            MCParticles) const override {
     // info() << "Finding MC PID of " << inputJets.size() << " input jets" << endmsg;
 
     auto tagCollection = edm4hep::ParticleIDCollection();
 
     for (const auto& jet : inputJets) {
-
       int MCflavor = findMCPIDfromHiggsDaughters(MCParticles, msg());
 
       auto jetTag = tagCollection.create();
