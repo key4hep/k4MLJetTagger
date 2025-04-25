@@ -23,7 +23,6 @@
 #include <stdexcept>
 #include <vector>
 
-
 struct Pfcand {
   /**
   * Structure to store the observables of a particle / jet constituent. These observables will be used as input features to the neural network for jet flavor tagging with the Particle Transformer. For CLD, these are 33 observables including kinematics, PID and track parameters.
@@ -39,24 +38,25 @@ struct Pfcand {
 
   // kinematics
   float pfcand_erel_log, pfcand_thetarel, pfcand_phirel;
-  float pfcand_e, pfcand_p; // needed for pf_vectors
+  float pfcand_e, pfcand_p;  // needed for pf_vectors
   // PID
   int pfcand_type;
   int pfcand_charge;
   int pfcand_isEl, pfcand_isMu, pfcand_isGamma, pfcand_isChargedHad, pfcand_isNeutralHad;
-  int pfcand_dndx, pfcand_tof; // dummy, filled with 0
+  int pfcand_dndx, pfcand_tof;  // dummy, filled with 0
 
   // track params
   // cov matrix - 15 values related to 5 Helix (see struct) parameters
   float pfcand_cov_omegaomega, pfcand_cov_tanLambdatanLambda, pfcand_cov_phiphi, pfcand_cov_d0d0, pfcand_cov_z0z0;
-  float pfcand_cov_d0z0, pfcand_cov_phid0, pfcand_cov_tanLambdaz0, pfcand_cov_d0omega, pfcand_cov_d0tanLambda, pfcand_cov_phiomega, pfcand_cov_phiz0, pfcand_cov_phitanLambda, pfcand_cov_omegaz0, pfcand_cov_omegatanLambda;
+  float pfcand_cov_d0z0, pfcand_cov_phid0, pfcand_cov_tanLambdaz0, pfcand_cov_d0omega, pfcand_cov_d0tanLambda,
+      pfcand_cov_phiomega, pfcand_cov_phiz0, pfcand_cov_phitanLambda, pfcand_cov_omegaz0, pfcand_cov_omegatanLambda;
   // IP
   float pfcand_d0, pfcand_z0;
   float pfcand_Sip2dVal, pfcand_Sip2dSig;
   float pfcand_Sip3dVal, pfcand_Sip3dSig;
   float pfcand_JetDistVal, pfcand_JetDistSig;
 
-  void print_values(){
+  void print_values() {
     std::cout << "pfcand_e" << pfcand_e << std::endl;
     std::cout << "pfcand_p" << pfcand_p << std::endl;
     std::cout << "pfcand_erel_log: " << pfcand_erel_log << std::endl;
@@ -96,67 +96,141 @@ struct Pfcand {
     std::cout << "pfcand_JetDistSig: " << pfcand_JetDistSig << std::endl;
   }
 
-  float get_attribute(std::string& attribute){
+  float get_attribute(std::string& attribute) {
     /**
     * Return the attributes of the Struct Pfcand given an string.
     * @param attribute: the attribute to return
     * @return: the value of the attribute
     */
-    if (attribute == "pfcand_erel_log") return pfcand_erel_log;
-    else if (attribute == "pfcand_thetarel") return pfcand_thetarel;
-    else if (attribute == "pfcand_phirel") return pfcand_phirel;
-    else if (attribute == "pfcand_type") return pfcand_type;
-    else if (attribute == "pfcand_charge") return pfcand_charge;
-    else if (attribute == "pfcand_isEl") return pfcand_isEl;
-    else if (attribute == "pfcand_isMu") return pfcand_isMu;
-    else if (attribute == "pfcand_isGamma") return pfcand_isGamma;
-    else if (attribute == "pfcand_isChargedHad") return pfcand_isChargedHad;
-    else if (attribute == "pfcand_isNeutralHad") return pfcand_isNeutralHad;
-    else if (attribute == "pfcand_dndx") return pfcand_dndx;
-    else if (attribute == "pfcand_tof") return pfcand_tof;
-    else if (attribute == "pfcand_cov_omegaomega") return pfcand_cov_omegaomega;
-    else if (attribute == "pfcand_cov_tanLambdatanLambda") return pfcand_cov_tanLambdatanLambda;
-    else if (attribute == "pfcand_cov_phiphi") return pfcand_cov_phiphi;
-    else if (attribute == "pfcand_cov_d0d0") return pfcand_cov_d0d0;
-    else if (attribute == "pfcand_cov_z0z0") return pfcand_cov_z0z0;
-    else if (attribute == "pfcand_cov_d0z0") return pfcand_cov_d0z0;
-    else if (attribute == "pfcand_cov_phid0") return pfcand_cov_phid0;
-    else if (attribute == "pfcand_cov_tanLambdaz0") return pfcand_cov_tanLambdaz0;
-    else if (attribute == "pfcand_cov_d0omega") return pfcand_cov_d0omega;
-    else if (attribute == "pfcand_cov_d0tanLambda") return pfcand_cov_d0tanLambda;
-    else if (attribute == "pfcand_cov_phiomega") return pfcand_cov_phiomega;
-    else if (attribute == "pfcand_cov_phiz0") return pfcand_cov_phiz0;
-    else if (attribute == "pfcand_cov_phitanLambda") return pfcand_cov_phitanLambda;
-    else if (attribute == "pfcand_cov_omegaz0") return pfcand_cov_omegaz0;
-    else if (attribute == "pfcand_cov_omegatanLambda") return pfcand_cov_omegatanLambda;
-    else if (attribute == "pfcand_d0") return pfcand_d0;
-    else if (attribute == "pfcand_z0") return pfcand_z0;
-    else if (attribute == "pfcand_Sip2dVal") return pfcand_Sip2dVal;
-    else if (attribute == "pfcand_Sip2dSig") return pfcand_Sip2dSig;
-    else if (attribute == "pfcand_Sip3dVal") return pfcand_Sip3dVal;
-    else if (attribute == "pfcand_Sip3dSig") return pfcand_Sip3dSig;
-    else if (attribute == "pfcand_JetDistVal") return pfcand_JetDistVal;
-    else if (attribute == "pfcand_JetDistSig") return pfcand_JetDistSig;
-    else if (attribute == "pfcand_e") return pfcand_e;
-    else if (attribute == "pfcand_p") return pfcand_p;
-    else throw std::invalid_argument("Attribute not found: " + attribute);
+    if (attribute == "pfcand_erel_log")
+      return pfcand_erel_log;
+    else if (attribute == "pfcand_thetarel")
+      return pfcand_thetarel;
+    else if (attribute == "pfcand_phirel")
+      return pfcand_phirel;
+    else if (attribute == "pfcand_type")
+      return pfcand_type;
+    else if (attribute == "pfcand_charge")
+      return pfcand_charge;
+    else if (attribute == "pfcand_isEl")
+      return pfcand_isEl;
+    else if (attribute == "pfcand_isMu")
+      return pfcand_isMu;
+    else if (attribute == "pfcand_isGamma")
+      return pfcand_isGamma;
+    else if (attribute == "pfcand_isChargedHad")
+      return pfcand_isChargedHad;
+    else if (attribute == "pfcand_isNeutralHad")
+      return pfcand_isNeutralHad;
+    else if (attribute == "pfcand_dndx")
+      return pfcand_dndx;
+    else if (attribute == "pfcand_tof")
+      return pfcand_tof;
+    else if (attribute == "pfcand_cov_omegaomega")
+      return pfcand_cov_omegaomega;
+    else if (attribute == "pfcand_cov_tanLambdatanLambda")
+      return pfcand_cov_tanLambdatanLambda;
+    else if (attribute == "pfcand_cov_phiphi")
+      return pfcand_cov_phiphi;
+    else if (attribute == "pfcand_cov_d0d0")
+      return pfcand_cov_d0d0;
+    else if (attribute == "pfcand_cov_z0z0")
+      return pfcand_cov_z0z0;
+    else if (attribute == "pfcand_cov_d0z0")
+      return pfcand_cov_d0z0;
+    else if (attribute == "pfcand_cov_phid0")
+      return pfcand_cov_phid0;
+    else if (attribute == "pfcand_cov_tanLambdaz0")
+      return pfcand_cov_tanLambdaz0;
+    else if (attribute == "pfcand_cov_d0omega")
+      return pfcand_cov_d0omega;
+    else if (attribute == "pfcand_cov_d0tanLambda")
+      return pfcand_cov_d0tanLambda;
+    else if (attribute == "pfcand_cov_phiomega")
+      return pfcand_cov_phiomega;
+    else if (attribute == "pfcand_cov_phiz0")
+      return pfcand_cov_phiz0;
+    else if (attribute == "pfcand_cov_phitanLambda")
+      return pfcand_cov_phitanLambda;
+    else if (attribute == "pfcand_cov_omegaz0")
+      return pfcand_cov_omegaz0;
+    else if (attribute == "pfcand_cov_omegatanLambda")
+      return pfcand_cov_omegatanLambda;
+    else if (attribute == "pfcand_d0")
+      return pfcand_d0;
+    else if (attribute == "pfcand_z0")
+      return pfcand_z0;
+    else if (attribute == "pfcand_Sip2dVal")
+      return pfcand_Sip2dVal;
+    else if (attribute == "pfcand_Sip2dSig")
+      return pfcand_Sip2dSig;
+    else if (attribute == "pfcand_Sip3dVal")
+      return pfcand_Sip3dVal;
+    else if (attribute == "pfcand_Sip3dSig")
+      return pfcand_Sip3dSig;
+    else if (attribute == "pfcand_JetDistVal")
+      return pfcand_JetDistVal;
+    else if (attribute == "pfcand_JetDistSig")
+      return pfcand_JetDistSig;
+    else if (attribute == "pfcand_e")
+      return pfcand_e;
+    else if (attribute == "pfcand_p")
+      return pfcand_p;
+    else
+      throw std::invalid_argument("Attribute not found: " + attribute);
   };
 
-  std::vector<std::string> get_attribute_names(){
+  std::vector<std::string> get_attribute_names() {
     /**
     * Return a list of strings with all the attributes names of the Struct Pfcand.
     * @return: a list of strings with all the attributes names
     */
-    return {"pfcand_erel_log", "pfcand_thetarel", "pfcand_phirel", "pfcand_e", "pfcand_p", "pfcand_type", "pfcand_charge", "pfcand_isEl", "pfcand_isMu", "pfcand_isGamma", "pfcand_isChargedHad", "pfcand_isNeutralHad", "pfcand_dndx", "pfcand_tof", "pfcand_cov_omegaomega", "pfcand_cov_tanLambdatanLambda", "pfcand_cov_phiphi", "pfcand_cov_d0d0", "pfcand_cov_z0z0", "pfcand_cov_d0z0", "pfcand_cov_phid0", "pfcand_cov_tanLambdaz0", "pfcand_cov_d0omega", "pfcand_cov_d0tanLambda", "pfcand_cov_phiomega", "pfcand_cov_phiz0", "pfcand_cov_phitanLambda", "pfcand_cov_omegaz0", "pfcand_cov_omegatanLambda", "pfcand_d0", "pfcand_z0", "pfcand_Sip2dVal", "pfcand_Sip2dSig", "pfcand_Sip3dVal", "pfcand_Sip3dSig", "pfcand_JetDistVal", "pfcand_JetDistSig"};
+    return {"pfcand_erel_log",
+            "pfcand_thetarel",
+            "pfcand_phirel",
+            "pfcand_e",
+            "pfcand_p",
+            "pfcand_type",
+            "pfcand_charge",
+            "pfcand_isEl",
+            "pfcand_isMu",
+            "pfcand_isGamma",
+            "pfcand_isChargedHad",
+            "pfcand_isNeutralHad",
+            "pfcand_dndx",
+            "pfcand_tof",
+            "pfcand_cov_omegaomega",
+            "pfcand_cov_tanLambdatanLambda",
+            "pfcand_cov_phiphi",
+            "pfcand_cov_d0d0",
+            "pfcand_cov_z0z0",
+            "pfcand_cov_d0z0",
+            "pfcand_cov_phid0",
+            "pfcand_cov_tanLambdaz0",
+            "pfcand_cov_d0omega",
+            "pfcand_cov_d0tanLambda",
+            "pfcand_cov_phiomega",
+            "pfcand_cov_phiz0",
+            "pfcand_cov_phitanLambda",
+            "pfcand_cov_omegaz0",
+            "pfcand_cov_omegatanLambda",
+            "pfcand_d0",
+            "pfcand_z0",
+            "pfcand_Sip2dVal",
+            "pfcand_Sip2dSig",
+            "pfcand_Sip3dVal",
+            "pfcand_Sip3dSig",
+            "pfcand_JetDistVal",
+            "pfcand_JetDistSig"};
   };
 };
 
 struct Jet {
-    std::vector<Pfcand> constituents;
-    int flavor_fromMC_HjjZvv; // jet flavor from MC which is extracted from the the H(jj)Z(vv) process by looking at the daughters of the H boson
+  std::vector<Pfcand> constituents;
+  int flavor_fromMC_HjjZvv;  // jet flavor from MC which is extracted from the the H(jj)Z(vv) process by looking at the daughters of the H boson
 };
 
-struct Helix{
+struct Helix {
   /**
   * Structure to store the helix parameters of a track wrt to the primary vertex. We use the key4hep convention (https://github.com/key4hep/EDM4hep/blob/997ab32b886899253c9bc61adea9a21b57bc5a21/edm4hep.yaml#L195C9-L200 ):
   * - d0: transverse impact parameter
@@ -168,4 +242,4 @@ struct Helix{
   float d0, phi, omega, z0, tanLambda;
 };
 
-#endif // STRUCTS_H
+#endif  // STRUCTS_H

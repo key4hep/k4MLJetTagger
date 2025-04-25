@@ -38,7 +38,7 @@ namespace rv = ROOT::VecOps;
  */
 class WeaverInterface {
 public:
-  using ConstituentVars = rv::RVec<float>; ///< Alias for a vector of float variables.
+  using ConstituentVars = rv::RVec<float>;  ///< Alias for a vector of float variables.
 
   /**
    * @brief Constructor to initialize the WeaverInterface.
@@ -47,8 +47,7 @@ public:
    * @param json_filename Path to the JSON file containing preprocessing parameters.
    * @param vars List of variable names to describe jet constituent observables (e.g. pfcand_isEl).
    */
-  explicit WeaverInterface(const std::string& onnx_filename = "",
-                           const std::string& json_filename = "",
+  explicit WeaverInterface(const std::string& onnx_filename = "", const std::string& json_filename = "",
                            const rv::RVec<std::string>& vars = {});
 
   /**
@@ -88,11 +87,7 @@ private:
        * @param iupper_bound The upper bound for variable values.
        * @param ipad The value to use for padding.
        */
-      VarInfo(float imedian,
-              float inorm_factor,
-              float ireplace_inf_value,
-              float ilower_bound,
-              float iupper_bound,
+      VarInfo(float imedian, float inorm_factor, float ireplace_inf_value, float ilower_bound, float iupper_bound,
               float ipad)
           : center(imedian),
             norm_factor(inorm_factor),
@@ -109,10 +104,10 @@ private:
       float pad{0.};                ///< Value to use for padding.
     };
 
-    std::string name;                         ///< Name of the preprocessing configuration.
-    size_t min_length{0}, max_length{0};     ///< Minimum and maximum lengths for input vectors.
-    std::vector<std::string> var_names;      ///< List of variable names for preprocessing.
-    std::unordered_map<std::string, VarInfo> var_info_map; ///< Map of variable names to VarInfo.
+    std::string              name;                          ///< Name of the preprocessing configuration.
+    size_t                   min_length{0}, max_length{0};  ///< Minimum and maximum lengths for input vectors.
+    std::vector<std::string> var_names;                     ///< List of variable names for preprocessing.
+    std::unordered_map<std::string, VarInfo> var_info_map;  ///< Map of variable names to VarInfo.
 
     /**
      * @brief Retrieve preprocessing information for a variable.
@@ -142,14 +137,8 @@ private:
    * @param max Maximum allowable value.
    * @return A preprocessed vector of variables.
    */
-  std::vector<float> center_norm_pad(const rv::RVec<float>& input,
-                                     float center,
-                                     float scale,
-                                     size_t min_length,
-                                     size_t max_length,
-                                     float pad_value = 0,
-                                     float replace_inf_value = 0,
-                                     float min = 0,
+  std::vector<float> center_norm_pad(const rv::RVec<float>& input, float center, float scale, size_t min_length,
+                                     size_t max_length, float pad_value = 0, float replace_inf_value = 0, float min = 0,
                                      float max = -1);
 
   /**
@@ -160,12 +149,12 @@ private:
    */
   size_t variablePos(const std::string& var_name) const;
 
-  std::unique_ptr<ONNXRuntime> onnx_;                  ///< Pointer to the ONNX runtime object.
-  std::vector<std::string> variables_names_;           ///< List of input variable names.
-  ONNXRuntime::Tensor<long> input_shapes_;             ///< Tensor describing input shapes.
-  std::vector<unsigned int> input_sizes_;              ///< List of input sizes for each dimension.
-  std::unordered_map<std::string, PreprocessParams> prep_info_map_; ///< Map of preprocessing parameters.
-  ONNXRuntime::Tensor<float> data_;                    ///< Tensor for input data.
+  std::unique_ptr<ONNXRuntime>                      onnx_;             ///< Pointer to the ONNX runtime object.
+  std::vector<std::string>                          variables_names_;  ///< List of input variable names.
+  ONNXRuntime::Tensor<long>                         input_shapes_;     ///< Tensor describing input shapes.
+  std::vector<unsigned int>                         input_sizes_;      ///< List of input sizes for each dimension.
+  std::unordered_map<std::string, PreprocessParams> prep_info_map_;    ///< Map of preprocessing parameters.
+  ONNXRuntime::Tensor<float>                        data_;             ///< Tensor for input data.
 };
 
 #endif

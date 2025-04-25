@@ -19,19 +19,18 @@
 #ifndef HELPERS_H
 #define HELPERS_H
 
-#include <unordered_map>
-#include <string>
 #include <fstream>
 #include <iostream>
-#include <nlohmann/json.hpp> // Include a JSON parsing library
+#include <nlohmann/json.hpp>  // Include a JSON parsing library
+#include <string>
+#include <unordered_map>
 
-#include "Structs.h"
 #include "ROOT/RVec.hxx"
+#include "Structs.h"
 
-#include <DD4hep/Detector.h> // for Bfield
+#include <DD4hep/Detector.h>  // for Bfield
 
 namespace rv = ROOT::VecOps;
-
 
 /**
 * Get the magnetic field at the origin by using the detector geometry.
@@ -82,40 +81,39 @@ bool check_flavors(std::vector<std::string>& flavorNames, const std::vector<std:
  */
 class VarMapper {
 public:
-    /**
+  /**
      * @brief Default constructor.
      *
      * Initializes the variable mappings between FCCAnalyses and Key4HEP.
      */
-    VarMapper();
+  VarMapper();
 
-    /**
+  /**
      * @brief Maps a Key4HEP variable name to an FCCAnalyses variable name.
      *
      * @param key4hepName The variable name in Key4HEP format.
      * @return The corresponding variable name in FCCAnalyses format.
      */
-    std::string mapKey4hepToFCCAn(const std::string& key4hepName) const;
+  std::string mapKey4hepToFCCAn(const std::string& key4hepName) const;
 
-    /**
+  /**
      * @brief Maps an FCCAnalyses variable name to a Key4HEP variable name.
      *
      * @param FCCAnName The variable name in FCCAnalyses format.
      * @return The corresponding variable name in Key4HEP format.
      */
-    std::string mapFCCAnToKey4hep(const std::string& FCCAnName) const;
+  std::string mapFCCAnToKey4hep(const std::string& FCCAnName) const;
 
 private:
-    /**
+  /**
      * @brief Mapping from Key4HEP variable names to FCCAnalyses variable names.
      */
-    std::unordered_map<std::string, std::string> map_to_FCCAn;
+  std::unordered_map<std::string, std::string> map_to_FCCAn;
 
-    /**
+  /**
      * @brief Mapping from FCCAnalyses variable names to Key4HEP variable names.
      */
-    std::unordered_map<std::string, std::string> map_to_key4hep;
+  std::unordered_map<std::string, std::string> map_to_key4hep;
 };
 
-
-#endif // HELPERS_H
+#endif  // HELPERS_H
