@@ -31,7 +31,6 @@
 
 #include "Helpers.h"
 #include "JetObsWriter.h"
-#include "JetObservablesRetriever.h"
 #include "Structs.h"
 
 DECLARE_COMPONENT(JetObsWriter)
