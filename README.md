@@ -86,13 +86,45 @@ If you want to use the Jet Tagger for your analyses, you most likely only need t
 Every jet has *one* PID collection for *every flavor*. Each jet has a certain probability associated for being of each flavor. E.g., if you want to use all jets that have at least a probability $X$ being of flavor $b$, then you could write something like:
 
 ```
+#include <edm4hep/ParticleIDCollection.h>
+#include <edm4hep/utils/ParticleIDUtils.h>
+
+// jet_coll is the "RefinedJetTags" collection
+// jetTag_B_Handler is a PIDHandler, e.g. like 
+// auto jetTag_B_Handler = edm4hep::utils::PIDHandler::from(reco_jettag_B_coll); // with reco_jettag_B_coll being the "RefinedJetTag_B" collection 
+
 // loop over all jets and get the PID likelihood of being a b-jet
 for (const auto jet : jet_coll) {
  auto jetTags_B = jetTag_B_Handler.getPIDs(jet);
- score_recojet_isB = jetTags_B[0].getLikelihood() // [0] because there should only be ONE b-tag PID collection associated to one jet
+ score_recojet_isB = jetTags_B[0].getLikelihood(); // [0] because there should only be ONE b-tag PID collection associated to one jet
  if(score_recojet_isB > X){
  // your code here
  }
+}
+```
+
+For an working example code, see `MLJetTagger/k4MLJetTagger/src/components/JetTagWriter.cpp` and `JetTagWriter.h`. 
+
+If you want to use the jet-tag collections in [FCCAnalyses](https://github.com/HEP-FCC/FCCAnalyses), use the `master` branch to evaluate full simulation samples. Make sure that the `k4MLJetTagger` has been applied to the data (inspect available collections from your input edm4hep root files with `podio-dump myfiles.root`. You should see the `RefindedJetTag_X` collections. If not, you need to run the tagger over the data first. Use a steeringfile like `createJetTags.py` for this.) Here is an example function to retrieve b-jet scores: 
+
+```
+Vec_f get_bscores(ROOT::VecOps::RVec<edm4hep::ParticleIDData> b_tags_coll) {
+    // check size of the b-tag collection - must be 2
+    if(b_tags_coll.size() != 2) {
+        std::cout << "ERROR: Expected two b-tag collections! " << std::endl;
+        exit(1);
+    }
+
+    Vec_f result;
+    result.reserve(2); // two b scores 
+
+    for (const auto b_tags : b_tags_coll) {
+        // std::cout << "jet likelihood: " << b_tags.likelihood << std::endl;
+        // std::cout << "jet pdg: " << b_tags.PDG << std::endl;
+        result.emplace_back(b_tags.likelihood);
+    }
+
+    return result;
 }
 ```
 
