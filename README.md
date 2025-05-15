@@ -312,7 +312,7 @@ You may find helpful resources in the `extras` folder.
 
 What might be done in the future with the k4MLJetTagger?
 - Once improvments of crucial bottlesnecks in other eares of the reconstruction are improved, I would suggest retraining the network. This could be: PV fit fix (see [issue](https://github.com/key4hep/k4MLJetTagger/issues/7)), a new tracking algorithm or fixes in the pandora particle flow (very important!! This is discussed in the paper cited [below](#citation)).
-- You might think of training the tagger on different physics events or cross-checking at least the performance (e.g. $e^+e^- \rightarrow Z(qq)Z(\nu \nu)$). Maybe training an other tagger at 365~GeV. 
+- You might think of training the tagger on different physics events or cross-checking at least the performance (e.g. $e^+ e^- \rightarrow Z(qq) Z( \nu \nu)$ ). Maybe training an other tagger at 365~GeV. 
 - In the future, new (and better) architectures than the ParT might be available. You could train and test the tagging performance on such architectures. 
 - You might think of including other (informative) jet observables as an input to the tagger. Maybe newer detector geometries will have other observables available. 
 
