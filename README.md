@@ -86,13 +86,45 @@ If you want to use the Jet Tagger for your analyses, you most likely only need t
 Every jet has *one* PID collection for *every flavor*. Each jet has a certain probability associated for being of each flavor. E.g., if you want to use all jets that have at least a probability $X$ being of flavor $b$, then you could write something like:
 
 ```
+#include <edm4hep/ParticleIDCollection.h>
+#include <edm4hep/utils/ParticleIDUtils.h>
+
+// jet_coll is the "RefinedJetTags" collection
+// jetTag_B_Handler is a PIDHandler, e.g. like
+// auto jetTag_B_Handler = edm4hep::utils::PIDHandler::from(reco_jettag_B_coll); // with reco_jettag_B_coll being the "RefinedJetTag_B" collection
+
 // loop over all jets and get the PID likelihood of being a b-jet
 for (const auto jet : jet_coll) {
  auto jetTags_B = jetTag_B_Handler.getPIDs(jet);
- score_recojet_isB = jetTags_B[0].getLikelihood() // [0] because there should only be ONE b-tag PID collection associated to one jet
+ score_recojet_isB = jetTags_B[0].getLikelihood(); // [0] because there should only be ONE b-tag PID collection associated to one jet
  if(score_recojet_isB > X){
  // your code here
  }
+}
+```
+
+For an working example code, see `MLJetTagger/k4MLJetTagger/src/components/JetTagWriter.cpp` and `JetTagWriter.h`.
+
+If you want to use the jet-tag collections in [FCCAnalyses](https://github.com/HEP-FCC/FCCAnalyses), use the `master` branch to evaluate full simulation samples. Make sure that the `k4MLJetTagger` has been applied to the data (inspect available collections from your input edm4hep root files with `podio-dump myfiles.root`. You should see the `RefindedJetTag_X` collections. If not, you need to run the tagger over the data first. Use a steeringfile like `createJetTags.py` for this.) Here is an example function to retrieve b-jet scores:
+
+```
+Vec_f get_bscores(ROOT::VecOps::RVec<edm4hep::ParticleIDData> b_tags_coll) {
+    // check size of the b-tag collection - must be 2
+    if(b_tags_coll.size() != 2) {
+        std::cout << "ERROR: Expected two b-tag collections! " << std::endl;
+        exit(1);
+    }
+
+    Vec_f result;
+    result.reserve(2); // two b scores
+
+    for (const auto b_tags : b_tags_coll) {
+        // std::cout << "jet likelihood: " << b_tags.likelihood << std::endl;
+        // std::cout << "jet pdg: " << b_tags.PDG << std::endl;
+        result.emplace_back(b_tags.likelihood);
+    }
+
+    return result;
 }
 ```
 
@@ -119,6 +151,7 @@ Here is a quick overview of the source files in this repo:
 - If you want to run at a different energy.
 - If you want to use different input observables for tagging (check out [this section](#adding-new-input-observables-for-tagging)).
 - If you want to use a different detector setup.
+- If you have different kinematics than $H(qq)Z(\nu \nu)$.
 
 So, generally speaking, if the input to the network changes. *This* network implemented was trained on CLD full simulation at 240 GeV (`/eos/experiment/fcc/prod/fcc/ee/test_spring2024/240gev/Hbb/CLD_o2_v05/rec/`). Check out the performance in this [publication](https://repository.cern/records/4pcr6-r0d06).
 
@@ -131,7 +164,7 @@ So, generally speaking, if the input to the network changes. *This* network impl
 2. I recommend using [weaver](https://github.com/doloresgarcia/weaver-core) to retrain a model and to make use of Dolores implementation of the ParticleTransformer using her repository/version of weaver. The branch `Saras-dev` also has the implementation of the L-GATr network, which does not outperform the ParticleTransformer, however. Here is how to set up the training with weaver:
 - Clone [weaver](https://github.com/doloresgarcia/weaver-core).
 - Clone your choice of network e.g., the [ParT](https://github.com/jet-universe/particle_transformer).
-- Set up the environment using a docker. First, create the `.sif` file with `singularity pull docker://dologarcia/gatr:v0` (or `:v` for L-GATr). You only need to do this once. Then export the cache with `export APPTAINER_CACHEDIR=/your/path/to/cache`. You can then activate the env with `singularity shell -B /your/bindings/ --nv colorsinglet.sif `. Bindings could be `-B /eos -B /afs` if running on CERN resources.
+- Set up the environment using a docker. First, create the `.sif` file with `singularity pull docker://dologarcia/colorsinglet:v4` (or `singularity pull docker://dologarcia/gatr:v0` for L-GATr, this docker only has some add-ons compared to the colorsinglet, so it also works for the ParT). You only need to do this once. Then export the cache with `export APPTAINER_CACHEDIR=/your/path/to/cache`. You can then activate the env with `singularity shell -B /your/bindings/ --nv colorsinglet.sif `. Bindings could be `-B /eos -B /afs` if running on CERN resources.
 - Create a `.yaml` file to specify how to train the network. To use the jet observable convention used here, I have created a dummy config file in the `extras` section: `config_for_weaver_training.yaml`. Please check out the [open issues](#open-problems--further-work) to adapt the convention in the source code, but I *highly recommend* using the convention used in key4hep / here / in the dummy config when retraining the model and make the changes in the source code.
 - Create a [wandb](https://wandb.ai/) account. You need to connect your docker env *once* with your wandb account: Activate your env with `singularity shell -B /your/bindings/ --nv colorsinglet.sif ` and then do `wandb login`.
 
@@ -269,18 +302,19 @@ You may find helpful resources in the `extras` folder.
 
 
 ## Open problems / further work
-
 - The magnetic field $B$ of the detector is needed at one point to calculate the helix parameters of the tracks with respect to the primary vertex. The magnetic field is hard coded at the moment. It would be possible to retrieve it from the detector geometry (code already added; see the `Helper` file), but therefore, one must load the detector in the steering file, e.g. like [this](https://github.com/key4hep/CLDConfig/blob/ae99dbed8e34390036e29ca09897dc0ed7759030/CLDConfig/CLDReconstruction.py#L61-L66). As we use the v05 version of CLD at the moment, loading the detector is slow and not worth it to only set $Bz=2.0$ (in my opinion). With a newer detector version (e.g. v07) this might be worth investigating.
-- Currently, the network used was trained using the [FCCAnalyses convention](https://github.com/HEP-FCC/FCCAnalyses/blob/fa672d4326bcf2f43252d3554a138b53dcba15a4/examples/FCCee/weaver/config.py#L31) for naming the jet constituents observables. The naming is quite confusing; this is why I used my own convention that matches the [key4hep convention](https://github.com/key4hep/EDM4hep/blob/997ab32b886899253c9bc61adea9a21b57bc5a21/edm4hep.yaml#L195-L199). The class `VarMapper` in `Helpers` helps to switch between the two conventions. In the future, if retraining a model, I highly suggest switching to the convention used here when training the model to get rid of the FCCAnalyses convention. To do so, train the network with a yaml file like `extras/config_for_weaver_training.yaml` and root files created with `writeJetConstObs.py`, which use the key4hep convention. To run inference here in key4hep, you only need to modify the function `from_Jet_to_onnx_input` in `Helpers` where the `VarMapper` is used. Remove it; there should be no need to convert conventions anymore.
-- A correct primary vertex reconstruction is crucial for a good tagging performance. This is a larger issue, so see [section below](#primary-vertex-reconstruction-issues---a-new-project)
+- Currently, the network used was trained using the [FCCAnalyses convention](https://github.com/HEP-FCC/FCCAnalyses/blob/fa672d4326bcf2f43252d3554a138b53dcba15a4/examples/FCCee/weaver/config.py#L31) for naming the jet constituents observables. The naming is quite confusing; this is why I used my own convention that matches the [key4hep convention](https://github.com/key4hep/EDM4hep/blob/997ab32b886899253c9bc61adea9a21b57bc5a21/edm4hep.yaml#L195-L199). The class `VarMapper` in `Helpers` helps to switch between the two conventions. In the future, if retraining a model, I highly suggest switching to the convention used here when training the model to get rid of the FCCAnalyses convention. To do so, train the network with a yaml file like `extras/config_for_weaver_training.yaml` and root files created with `writeJetConstObs.py`, which use the key4hep convention. To run inference here in key4hep, you only need to modify the function `from_Jet_to_onnx_input` in `Helpers` where the `VarMapper` is used. Remove it; there should be no need to convert conventions anymore. You can then savely delete the `VarMapper` in `Helpers`.
+- A correct primary vertex reconstruction is crucial for a good tagging performance due to the displacement parameters (wrt the PV) being one of the main discriminators in tagging. Unfortunately, the PV fit is not optimal in CLD full simulation, see [this github issue](https://github.com/key4hep/CLDConfig/issues/61). There is an [open issue](https://github.com/key4hep/k4MLJetTagger/issues/7) in this repository too with an attached pdf that will give an introduction to the issue. This is most likely an own project :)
+- It would be very useful to use the tagger on-the-fly in [FCCAnalyses](https://github.com/HEP-FCC/FCCAnalyses) instead of applying the jet-clustering and tagging in the CLD reconstruction step with [CLDConfig](https://github.com/key4hep/CLDConfig/pull/75) because every analysis might have specifics. It would be a waste of resources to create new data for every analysis. In fast simulation with IDEA in [FCCAnalyses](https://github.com/HEP-FCC/FCCAnalyses/tree/master/addons/ONNXRuntime), tagging is done on the fly, maybe this can be starting point. There, the tagger input is retrieved in FCCAnalyses - but this code already exists within the `k4MLTagger`. How can these two tools be merged?
 
-### Primary vertex reconstruction issues - a new project
-
-Placeholder
 
 ### Outlook
 
-Placeholder
+What might be done in the future with the k4MLJetTagger?
+- Once improvments of crucial bottlesnecks in other eares of the reconstruction are improved, I would suggest retraining the network. This could be: PV fit fix (see [issue](https://github.com/key4hep/k4MLJetTagger/issues/7)), a new tracking algorithm or fixes in the pandora particle flow (very important!! This is discussed in the paper cited [below](#citation)).
+- You might think of training the tagger on different physics events or cross-checking at least the performance (e.g. $e^+ e^- \rightarrow Z(qq) Z( \nu \nu)$ ). Maybe training an other tagger at 365~GeV.
+- In the future, new (and better) architectures than the ParT might be available. You could train and test the tagging performance on such architectures.
+- You might think of including other (informative) jet observables as an input to the tagger. Maybe newer detector geometries will have other observables available.
 
 
 ## Further links:
