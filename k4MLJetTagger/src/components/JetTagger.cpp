@@ -106,7 +106,7 @@ struct JetTagger : k4FWCore::Transformer<std::vector<edm4hep::ParticleIDCollecti
   // initialize
   StatusCode initialize() override {
     // Load the JSON configuration file and retrieve the flavor names
-    json_config = loadJsonFile(json_path);
+    auto json_config = loadJsonFile(json_path);
     flavorNames = json_config["output_names"]; // e.g. "recojet_isX" with X being the jet flavor (G, U, S, C, B, D, TAU)
 
     // check if flavorNames matches order and size of the output collections
@@ -145,7 +145,6 @@ struct JetTagger : k4FWCore::Transformer<std::vector<edm4hep::ParticleIDCollecti
 
   // properties
 private:
-  nlohmann::json json_config;
   std::vector<std::string> flavorNames; // e.g. "recojet_isX" with X being the jet flavor (G, U, S, C, B, D, TAU)
   std::vector<int> PDGflavors;
   rv::RVec<std::string> vars; // e.g. pfcand_isEl, ... input names that onnx model expects
