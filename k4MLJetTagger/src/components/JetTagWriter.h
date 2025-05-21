@@ -51,17 +51,21 @@ public:
   /// Destructor.
   ~JetTagWriter(){};
   /// Initialize.
-  virtual StatusCode initialize();
+  StatusCode initialize() override;
+  /// Execute function.
+  StatusCode execute(const EventContext&) const override;
+  /// Finalize.
+  StatusCode finalize() override;
+
+private:
   /// Initialize tree.
   void initializeTree();
   /// Clean tree.
   void cleanTree() const;
-  /// Execute function.
-  virtual StatusCode execute(const EventContext&) const;
-  /// Finalize.
-  virtual StatusCode finalize();
 
-private:
+  // Mark this algorithm as non-thread safe
+  bool isReEntrant() const final { return false; }
+
   mutable DataHandle<edm4hep::EventHeaderCollection> ev_handle{"EventHeader", Gaudi::DataHandle::Reader, this};
   mutable DataHandle<edm4hep::ReconstructedParticleCollection> jets_handle{"RefinedVertexJets",
                                                                            Gaudi::DataHandle::Reader, this};
