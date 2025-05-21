@@ -25,7 +25,6 @@
 #include <edm4hep/ReconstructedParticleCollection.h>
 #include <edm4hep/VertexCollection.h>
 
-#include <fstream>
 #include <nlohmann/json.hpp> // Include a JSON parsing library
 
 #include "Helpers.h"

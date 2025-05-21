@@ -21,9 +21,6 @@
 #include "onnxruntime_cxx_api.h"
 // #include "experimental_onnxruntime_cxx_api.h"
 
-#include <fstream>
-#include <iostream>
-
 #include <algorithm>
 #include <numeric>
 

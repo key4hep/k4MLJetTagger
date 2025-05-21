@@ -22,14 +22,10 @@
 #include "Gaudi/Algorithm.h"
 #include "GaudiKernel/ITHistSvc.h"
 #include "k4FWCore/DataHandle.h"
-#include "k4FWCore/MetaDataHandle.h"
 
 #include <edm4hep/EventHeaderCollection.h>
 #include <edm4hep/ReconstructedParticleCollection.h>
 #include <edm4hep/VertexCollection.h>
-
-#include "TGraph.h"
-#include "TH1F.h"
 
 #include <edm4hep/ParticleIDCollection.h>
 #include <edm4hep/utils/ParticleIDUtils.h>

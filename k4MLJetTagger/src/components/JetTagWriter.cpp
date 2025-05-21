@@ -17,20 +17,10 @@
  * limitations under the License.
  */
 
-#include "Gaudi/Property.h"
-#include "GaudiKernel/MsgStream.h"
-#include "k4FWCore/Transformer.h"
+#include "JetTagWriter.h"
+
 #include <edm4hep/ParticleIDCollection.h>
 #include <edm4hep/utils/ParticleIDUtils.h>
-#include <podio/Frame.h>
-
-#include <fstream>
-#include <nlohmann/json.hpp> // Include a JSON parsing library
-
-#include "Helpers.h"
-#include "JetObservablesRetriever.h"
-#include "JetTagWriter.h"
-#include "Structs.h"
 
 DECLARE_COMPONENT(JetTagWriter)
 

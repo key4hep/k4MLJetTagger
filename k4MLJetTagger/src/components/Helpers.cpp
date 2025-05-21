@@ -18,8 +18,6 @@
  */
 #include "Helpers.h"
 
-#include "Gaudi/Property.h"
-
 #include <DD4hep/DD4hepUnits.h>
 
 double getBzAtOrigin(dd4hep::Detector* theDetector) {

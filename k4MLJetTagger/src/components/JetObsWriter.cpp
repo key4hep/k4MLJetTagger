@@ -17,19 +17,11 @@
  * limitations under the License.
  */
 
-#include "Gaudi/Property.h"
 #include "GaudiKernel/MsgStream.h"
-#include "edm4hep/MCParticleCollection.h"
-#include "k4FWCore/Transformer.h"
-#include "k4Interface/IGeoSvc.h" // for Bfield
 #include <edm4hep/ParticleIDCollection.h>
 #include <edm4hep/ReconstructedParticleCollection.h>
 #include <edm4hep/VertexCollection.h>
 
-#include <fstream>
-#include <nlohmann/json.hpp> // Include a JSON parsing library
-
-#include "Helpers.h"
 #include "JetObsWriter.h"
 #include "Structs.h"
 
