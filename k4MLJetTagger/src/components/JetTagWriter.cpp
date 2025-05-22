@@ -17,33 +17,25 @@
  * limitations under the License.
  */
 
-#include "Gaudi/Property.h"
-#include "GaudiKernel/MsgStream.h"
-#include "k4FWCore/Transformer.h"
+#include "JetTagWriter.h"
+
 #include <edm4hep/ParticleIDCollection.h>
 #include <edm4hep/utils/ParticleIDUtils.h>
-#include <podio/Frame.h>
 
-#include <fstream>
-#include <nlohmann/json.hpp> // Include a JSON parsing library
-
-#include "Helpers.h"
-#include "JetObservablesRetriever.h"
-#include "JetTagWriter.h"
-#include "Structs.h"
+#include "TTree.h"
 
 DECLARE_COMPONENT(JetTagWriter)
 
 JetTagWriter::JetTagWriter(const std::string& name, ISvcLocator* svcLoc) : Gaudi::Algorithm(name, svcLoc) {
-  declareProperty("InputJets", jets_handle, "Collection of refined jets");
-  declareProperty("RefinedJetTag_G", reco_jettag_G_handle, "Collection for jet flavor tag G");
-  declareProperty("RefinedJetTag_U", reco_jettag_U_handle, "Collection for jet flavor tag U");
-  declareProperty("RefinedJetTag_D", reco_jettag_D_handle, "Collection for jet flavor tag D");
-  declareProperty("RefinedJetTag_S", reco_jettag_S_handle, "Collection for jet flavor tag S");
-  declareProperty("RefinedJetTag_C", reco_jettag_C_handle, "Collection for jet flavor tag C");
-  declareProperty("RefinedJetTag_B", reco_jettag_B_handle, "Collection for jet flavor tag B");
-  declareProperty("RefinedJetTag_TAU", reco_jettag_TAU_handle, "Collection for jet flavor tag TAU");
-  declareProperty("MCJetTag", mc_jettag_handle, "Collection for MC Jet Tag");
+  declareProperty("InputJets", m_jetsHandle, "Collection of refined jets");
+  declareProperty("RefinedJetTag_G", m_recoJettagGHandle, "Collection for jet flavor tag G");
+  declareProperty("RefinedJetTag_U", m_recoJettagUHandle, "Collection for jet flavor tag U");
+  declareProperty("RefinedJetTag_D", m_recoJettagDHandle, "Collection for jet flavor tag D");
+  declareProperty("RefinedJetTag_S", m_recoJettagSHandle, "Collection for jet flavor tag S");
+  declareProperty("RefinedJetTag_C", m_recoJettagCHandle, "Collection for jet flavor tag C");
+  declareProperty("RefinedJetTag_B", m_recoJettagBHandle, "Collection for jet flavor tag B");
+  declareProperty("RefinedJetTag_TAU", m_recoJettagTauHandle, "Collection for jet flavor tag TAU");
+  declareProperty("MCJetTag", m_mcJettagHandle, "Collection for MC Jet Tag");
 }
 
 StatusCode JetTagWriter::initialize() {
@@ -56,8 +48,8 @@ StatusCode JetTagWriter::initialize() {
     return StatusCode::FAILURE;
   }
 
-  t_jettag = new TTree("JetTags", "Jet flavor tags");
-  if (m_ths->regTree("/rec/jetflags", t_jettag).isFailure()) {
+  m_jettag = new TTree("JetTags", "Jet flavor tags");
+  if (m_ths->regTree("/rec/jetflags", m_jettag).isFailure()) {
     error() << "Couldn't register jet flags tree" << endmsg;
     return StatusCode::FAILURE;
   }
@@ -68,21 +60,21 @@ StatusCode JetTagWriter::initialize() {
 }
 
 StatusCode JetTagWriter::execute(const EventContext&) const {
-  auto evs = ev_handle.get();
-  evNum = (*evs)[0].getEventNumber();
+  auto evs = m_eventHeaderHandle.get();
+  m_evNum = (*evs)[0].getEventNumber();
   // evNum = 0;
-  info() << "Starting to write jet tags of event " << evNum << " into a tree..." << endmsg;
+  info() << "Starting to write jet tags of event " << m_evNum << " into a tree..." << endmsg;
 
   // Get the pointers to the collections
-  const edm4hep::ReconstructedParticleCollection* jet_coll_ptr = jets_handle.get();
-  const edm4hep::ParticleIDCollection* reco_jettag_G_coll_ptr = reco_jettag_G_handle.get();
-  const edm4hep::ParticleIDCollection* reco_jettag_U_coll_ptr = reco_jettag_U_handle.get();
-  const edm4hep::ParticleIDCollection* reco_jettag_D_coll_ptr = reco_jettag_D_handle.get();
-  const edm4hep::ParticleIDCollection* reco_jettag_S_coll_ptr = reco_jettag_S_handle.get();
-  const edm4hep::ParticleIDCollection* reco_jettag_C_coll_ptr = reco_jettag_C_handle.get();
-  const edm4hep::ParticleIDCollection* reco_jettag_B_coll_ptr = reco_jettag_B_handle.get();
-  const edm4hep::ParticleIDCollection* reco_jettag_TAU_coll_ptr = reco_jettag_TAU_handle.get();
-  const edm4hep::ParticleIDCollection* mc_jettag_coll_ptr = mc_jettag_handle.get();
+  const edm4hep::ReconstructedParticleCollection* jet_coll_ptr = m_jetsHandle.get();
+  const edm4hep::ParticleIDCollection* reco_jettag_G_coll_ptr = m_recoJettagGHandle.get();
+  const edm4hep::ParticleIDCollection* reco_jettag_U_coll_ptr = m_recoJettagUHandle.get();
+  const edm4hep::ParticleIDCollection* reco_jettag_D_coll_ptr = m_recoJettagDHandle.get();
+  const edm4hep::ParticleIDCollection* reco_jettag_S_coll_ptr = m_recoJettagSHandle.get();
+  const edm4hep::ParticleIDCollection* reco_jettag_C_coll_ptr = m_recoJettagCHandle.get();
+  const edm4hep::ParticleIDCollection* reco_jettag_B_coll_ptr = m_recoJettagBHandle.get();
+  const edm4hep::ParticleIDCollection* reco_jettag_TAU_coll_ptr = m_recoJettagTauHandle.get();
+  const edm4hep::ParticleIDCollection* mc_jettag_coll_ptr = m_mcJettagHandle.get();
   // Create references to the collections
   const edm4hep::ReconstructedParticleCollection& jet_coll = *jet_coll_ptr;
   const edm4hep::ParticleIDCollection& reco_jettag_G_coll = *reco_jettag_G_coll_ptr;
@@ -130,18 +122,18 @@ StatusCode JetTagWriter::execute(const EventContext&) const {
     }
 
     // get the PID likelihoods
-    score_recojet_isG = jetTags_G[0].getLikelihood();
-    score_recojet_isU = jetTags_U[0].getLikelihood();
-    score_recojet_isD = jetTags_D[0].getLikelihood();
-    score_recojet_isS = jetTags_S[0].getLikelihood();
-    score_recojet_isC = jetTags_C[0].getLikelihood();
-    score_recojet_isB = jetTags_B[0].getLikelihood();
-    score_recojet_isTAU = jetTags_TAU[0].getLikelihood();
+    m_scoreRecojetIsG = jetTags_G[0].getLikelihood();
+    m_scoreRecoJetIsU = jetTags_U[0].getLikelihood();
+    m_scoreRecoJetIsD = jetTags_D[0].getLikelihood();
+    m_scoreRecoJetIsS = jetTags_S[0].getLikelihood();
+    m_scoreRecoJetIsC = jetTags_C[0].getLikelihood();
+    m_scoreRecoJetIsB = jetTags_B[0].getLikelihood();
+    m_scoreRecoJetIsTau = jetTags_TAU[0].getLikelihood();
 
     // check if no dummy value is left
-    if (score_recojet_isG == -9.0 || score_recojet_isU == -9.0 || score_recojet_isD == -9.0 ||
-        score_recojet_isS == -9.0 || score_recojet_isC == -9.0 || score_recojet_isB == -9.0 ||
-        score_recojet_isTAU == -9.0) {
+    if (m_scoreRecojetIsG == -9.0 || m_scoreRecoJetIsU == -9.0 || m_scoreRecoJetIsD == -9.0 ||
+        m_scoreRecoJetIsS == -9.0 || m_scoreRecoJetIsC == -9.0 || m_scoreRecoJetIsB == -9.0 ||
+        m_scoreRecoJetIsTau == -9.0) {
       error() << "Dummy value for probability scores still seems to be set!" << endmsg;
       continue;
     }
@@ -149,67 +141,67 @@ StatusCode JetTagWriter::execute(const EventContext&) const {
     // get MC jet flavor and set the corresponding bool to true
     int mc_flavor = mcJetTags[0].getPDG();
     if (mc_flavor == 21) {
-      recojet_isG = true;
+      m_recojetIsG = true;
     } else if (mc_flavor == 2) {
-      recojet_isU = true;
+      m_recoJetIsU = true;
     } else if (mc_flavor == 1) {
-      recojet_isD = true;
+      m_recoJetIsD = true;
     } else if (mc_flavor == 3) {
-      recojet_isS = true;
+      m_recoJetIsS = true;
     } else if (mc_flavor == 4) {
-      recojet_isC = true;
+      m_recoJetIsC = true;
     } else if (mc_flavor == 5) {
-      recojet_isB = true;
+      m_recoJetIsB = true;
     } else if (mc_flavor == 15) {
-      recojet_isTAU = true;
+      m_recoJetIsTAU = true;
     } else {
       error() << "MC jet flavor not found!" << endmsg;
       continue;
     }
 
     // fill the tree
-    t_jettag->Fill();
+    m_jettag->Fill();
   }
 
   return StatusCode::SUCCESS;
 }
 
 void JetTagWriter::initializeTree() {
-  t_jettag->Branch("recojet_isG", &recojet_isG, "recojet_isG/O");
-  t_jettag->Branch("score_recojet_isG", &score_recojet_isG, "score_recojet_isG/F");
-  t_jettag->Branch("recojet_isU", &recojet_isU, "recojet_isU/O");
-  t_jettag->Branch("score_recojet_isU", &score_recojet_isU, "score_recojet_isU/F");
-  t_jettag->Branch("recojet_isD", &recojet_isD, "recojet_isD/O");
-  t_jettag->Branch("score_recojet_isD", &score_recojet_isD, "score_recojet_isD/F");
-  t_jettag->Branch("recojet_isS", &recojet_isS, "recojet_isS/O");
-  t_jettag->Branch("score_recojet_isS", &score_recojet_isS, "score_recojet_isS/F");
-  t_jettag->Branch("recojet_isC", &recojet_isC, "recojet_isC/O");
-  t_jettag->Branch("score_recojet_isC", &score_recojet_isC, "score_recojet_isC/F");
-  t_jettag->Branch("recojet_isB", &recojet_isB, "recojet_isB/O");
-  t_jettag->Branch("score_recojet_isB", &score_recojet_isB, "score_recojet_isB/F");
-  t_jettag->Branch("recojet_isTAU", &recojet_isTAU, "recojet_isTAU/O");
-  t_jettag->Branch("score_recojet_isTAU", &score_recojet_isTAU, "score_recojet_isTAU/F");
+  m_jettag->Branch("recojet_isG", &m_recojetIsG, "recojet_isG/O");
+  m_jettag->Branch("score_recojet_isG", &m_scoreRecojetIsG, "score_recojet_isG/F");
+  m_jettag->Branch("m_recoJetIsU", &m_recoJetIsU, "m_recoJetIsU/O");
+  m_jettag->Branch("m_scoreRecoJetIsU", &m_scoreRecoJetIsU, "m_scoreRecoJetIsU/F");
+  m_jettag->Branch("m_recoJetIsD", &m_recoJetIsD, "m_recoJetIsD/O");
+  m_jettag->Branch("m_scoreRecoJetIsD", &m_scoreRecoJetIsD, "m_scoreRecoJetIsD/F");
+  m_jettag->Branch("m_recoJetIsS", &m_recoJetIsS, "m_recoJetIsS/O");
+  m_jettag->Branch("m_scoreRecoJetIsS", &m_scoreRecoJetIsS, "m_scoreRecoJetIsS/F");
+  m_jettag->Branch("m_recoJetIsC", &m_recoJetIsC, "m_recoJetIsC/O");
+  m_jettag->Branch("m_scoreRecoJetIsC", &m_scoreRecoJetIsC, "m_scoreRecoJetIsC/F");
+  m_jettag->Branch("m_recoJetIsB", &m_recoJetIsB, "m_recoJetIsB/O");
+  m_jettag->Branch("m_scoreRecoJetIsB", &m_scoreRecoJetIsB, "m_scoreRecoJetIsB/F");
+  m_jettag->Branch("m_recoJetIsTAU", &m_recoJetIsTAU, "m_recoJetIsTAU/O");
+  m_jettag->Branch("m_scoreRecoJetIsTAU", &m_scoreRecoJetIsTau, "m_scoreRecoJetIsTAU/F");
 
   return;
 }
 
 void JetTagWriter::cleanTree() const {
-  recojet_isG = false;
-  recojet_isU = false;
-  recojet_isD = false;
-  recojet_isS = false;
-  recojet_isC = false;
-  recojet_isB = false;
-  recojet_isTAU = false;
+  m_recojetIsG = false;
+  m_recoJetIsU = false;
+  m_recoJetIsD = false;
+  m_recoJetIsS = false;
+  m_recoJetIsC = false;
+  m_recoJetIsB = false;
+  m_recoJetIsTAU = false;
 
   float dummy_score = -9.0;
-  score_recojet_isTAU = dummy_score;
-  score_recojet_isG = dummy_score;
-  score_recojet_isU = dummy_score;
-  score_recojet_isD = dummy_score;
-  score_recojet_isS = dummy_score;
-  score_recojet_isC = dummy_score;
-  score_recojet_isB = dummy_score;
+  m_scoreRecoJetIsTau = dummy_score;
+  m_scoreRecojetIsG = dummy_score;
+  m_scoreRecoJetIsU = dummy_score;
+  m_scoreRecoJetIsD = dummy_score;
+  m_scoreRecoJetIsS = dummy_score;
+  m_scoreRecoJetIsC = dummy_score;
+  m_scoreRecoJetIsB = dummy_score;
 
   return;
 }

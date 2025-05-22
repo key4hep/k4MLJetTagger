@@ -145,12 +145,12 @@ private:
    */
   size_t variablePos(const std::string& var_name) const;
 
-  std::unique_ptr<ONNXRuntime> onnx_;                               ///< Pointer to the ONNX runtime object.
-  std::vector<std::string> variables_names_;                        ///< List of input variable names.
-  ONNXRuntime::Tensor<long> input_shapes_;                          ///< Tensor describing input shapes.
-  std::vector<unsigned int> input_sizes_;                           ///< List of input sizes for each dimension.
-  std::unordered_map<std::string, PreprocessParams> prep_info_map_; ///< Map of preprocessing parameters.
-  ONNXRuntime::Tensor<float> data_;                                 ///< Tensor for input data.
+  std::unique_ptr<ONNXRuntime> m_onnx;                             ///< Pointer to the ONNX runtime object.
+  std::vector<std::string> m_variablesNames;                       ///< List of input variable names.
+  ONNXRuntime::Tensor<long> m_inputShapes;                         ///< Tensor describing input shapes.
+  std::vector<unsigned int> m_inputSizes;                          ///< List of input sizes for each dimension.
+  std::unordered_map<std::string, PreprocessParams> m_prepInfoMap; ///< Map of preprocessing parameters.
+  ONNXRuntime::Tensor<float> m_data;                               ///< Tensor for input data.
 };
 
 #endif

@@ -18,8 +18,6 @@
  */
 #include "Helpers.h"
 
-#include "Gaudi/Property.h"
-
 #include <DD4hep/DD4hepUnits.h>
 
 double getBzAtOrigin(dd4hep::Detector* theDetector) {
@@ -129,61 +127,61 @@ rv::RVec<rv::RVec<float>> from_Jet_to_onnx_input(Jet& jet, const rv::RVec<std::s
 // converstion from FCCAnalyses to key4hep and vice versa
 
 VarMapper::VarMapper() {
-  map_to_FCCAn["pfcand_erel_log"] = "pfcand_erel_log";
-  map_to_FCCAn["pfcand_thetarel"] = "pfcand_thetarel";
-  map_to_FCCAn["pfcand_phirel"] = "pfcand_phirel";
-  map_to_FCCAn["pfcand_cov_omegaomega"] = "pfcand_dptdpt";
-  map_to_FCCAn["pfcand_cov_tanLambdatanLambda"] = "pfcand_detadeta";
-  map_to_FCCAn["pfcand_cov_phiphi"] = "pfcand_dphidphi";
-  map_to_FCCAn["pfcand_cov_d0d0"] = "pfcand_dxydxy";
-  map_to_FCCAn["pfcand_cov_z0z0"] = "pfcand_dzdz";
-  map_to_FCCAn["pfcand_cov_d0z0"] = "pfcand_dxydz";
-  map_to_FCCAn["pfcand_cov_phid0"] = "pfcand_dphidxy";
-  map_to_FCCAn["pfcand_cov_tanLambdaz0"] = "pfcand_dlambdadz";
-  map_to_FCCAn["pfcand_cov_d0omega"] = "pfcand_dxyc";
-  map_to_FCCAn["pfcand_cov_d0tanLambda"] = "pfcand_dxyctgtheta";
-  map_to_FCCAn["pfcand_cov_phiomega"] = "pfcand_phic";
-  map_to_FCCAn["pfcand_cov_phiz0"] = "pfcand_phidz";
-  map_to_FCCAn["pfcand_cov_phitanLambda"] = "pfcand_phictgtheta";
-  map_to_FCCAn["pfcand_cov_omegaz0"] = "pfcand_cdz";
-  map_to_FCCAn["pfcand_cov_omegatanLambda"] = "pfcand_cctgtheta";
-  map_to_FCCAn["pfcand_d0"] = "pfcand_dxy";
-  map_to_FCCAn["pfcand_z0"] = "pfcand_dz";
-  map_to_FCCAn["pfcand_Sip2dVal"] = "pfcand_btagSip2dVal";
-  map_to_FCCAn["pfcand_Sip2dSig"] = "pfcand_btagSip2dSig";
-  map_to_FCCAn["pfcand_Sip3dVal"] = "pfcand_btagSip3dVal";
-  map_to_FCCAn["pfcand_Sip3dSig"] = "pfcand_btagSip3dSig";
-  map_to_FCCAn["pfcand_JetDistVal"] = "pfcand_btagJetDistVal";
-  map_to_FCCAn["pfcand_JetDistSig"] = "pfcand_btagJetDistSig";
-  map_to_FCCAn["pfcand_type"] = "pfcand_type";
-  map_to_FCCAn["pfcand_charge"] = "pfcand_charge";
-  map_to_FCCAn["pfcand_isEl"] = "pfcand_isEl";
-  map_to_FCCAn["pfcand_isMu"] = "pfcand_isMu";
-  map_to_FCCAn["pfcand_isGamma"] = "pfcand_isGamma";
-  map_to_FCCAn["pfcand_isChargedHad"] = "pfcand_isChargedHad";
-  map_to_FCCAn["pfcand_isNeutralHad"] = "pfcand_isNeutralHad";
-  map_to_FCCAn["pfcand_dndx"] = "pfcand_dndx";
-  map_to_FCCAn["pfcand_tof"] = "pfcand_mtof";
-  map_to_FCCAn["pfcand_e"] = "pfcand_e";
-  map_to_FCCAn["pfcand_p"] = "pfcand_p";
+  m_mapToFCCAn["pfcand_erel_log"] = "pfcand_erel_log";
+  m_mapToFCCAn["pfcand_thetarel"] = "pfcand_thetarel";
+  m_mapToFCCAn["pfcand_phirel"] = "pfcand_phirel";
+  m_mapToFCCAn["pfcand_cov_omegaomega"] = "pfcand_dptdpt";
+  m_mapToFCCAn["pfcand_cov_tanLambdatanLambda"] = "pfcand_detadeta";
+  m_mapToFCCAn["pfcand_cov_phiphi"] = "pfcand_dphidphi";
+  m_mapToFCCAn["pfcand_cov_d0d0"] = "pfcand_dxydxy";
+  m_mapToFCCAn["pfcand_cov_z0z0"] = "pfcand_dzdz";
+  m_mapToFCCAn["pfcand_cov_d0z0"] = "pfcand_dxydz";
+  m_mapToFCCAn["pfcand_cov_phid0"] = "pfcand_dphidxy";
+  m_mapToFCCAn["pfcand_cov_tanLambdaz0"] = "pfcand_dlambdadz";
+  m_mapToFCCAn["pfcand_cov_d0omega"] = "pfcand_dxyc";
+  m_mapToFCCAn["pfcand_cov_d0tanLambda"] = "pfcand_dxyctgtheta";
+  m_mapToFCCAn["pfcand_cov_phiomega"] = "pfcand_phic";
+  m_mapToFCCAn["pfcand_cov_phiz0"] = "pfcand_phidz";
+  m_mapToFCCAn["pfcand_cov_phitanLambda"] = "pfcand_phictgtheta";
+  m_mapToFCCAn["pfcand_cov_omegaz0"] = "pfcand_cdz";
+  m_mapToFCCAn["pfcand_cov_omegatanLambda"] = "pfcand_cctgtheta";
+  m_mapToFCCAn["pfcand_d0"] = "pfcand_dxy";
+  m_mapToFCCAn["pfcand_z0"] = "pfcand_dz";
+  m_mapToFCCAn["pfcand_Sip2dVal"] = "pfcand_btagSip2dVal";
+  m_mapToFCCAn["pfcand_Sip2dSig"] = "pfcand_btagSip2dSig";
+  m_mapToFCCAn["pfcand_Sip3dVal"] = "pfcand_btagSip3dVal";
+  m_mapToFCCAn["pfcand_Sip3dSig"] = "pfcand_btagSip3dSig";
+  m_mapToFCCAn["pfcand_JetDistVal"] = "pfcand_btagJetDistVal";
+  m_mapToFCCAn["pfcand_JetDistSig"] = "pfcand_btagJetDistSig";
+  m_mapToFCCAn["pfcand_type"] = "pfcand_type";
+  m_mapToFCCAn["pfcand_charge"] = "pfcand_charge";
+  m_mapToFCCAn["pfcand_isEl"] = "pfcand_isEl";
+  m_mapToFCCAn["pfcand_isMu"] = "pfcand_isMu";
+  m_mapToFCCAn["pfcand_isGamma"] = "pfcand_isGamma";
+  m_mapToFCCAn["pfcand_isChargedHad"] = "pfcand_isChargedHad";
+  m_mapToFCCAn["pfcand_isNeutralHad"] = "pfcand_isNeutralHad";
+  m_mapToFCCAn["pfcand_dndx"] = "pfcand_dndx";
+  m_mapToFCCAn["pfcand_tof"] = "pfcand_mtof";
+  m_mapToFCCAn["pfcand_e"] = "pfcand_e";
+  m_mapToFCCAn["pfcand_p"] = "pfcand_p";
 
   // Create the reverse mapping
-  for (const auto& pair : map_to_FCCAn) {
-    map_to_key4hep[pair.second] = pair.first;
+  for (const auto& pair : m_mapToFCCAn) {
+    m_mapToKey4hep[pair.second] = pair.first;
   }
 }
 
 std::string VarMapper::mapKey4hepToFCCAn(const std::string& key4hepName) const {
-  auto it = map_to_FCCAn.find(key4hepName);
-  if (it != map_to_FCCAn.end()) {
+  auto it = m_mapToFCCAn.find(key4hepName);
+  if (it != m_mapToFCCAn.end()) {
     return it->second;
   }
   return ""; // Return an empty string if not found
 }
 
 std::string VarMapper::mapFCCAnToKey4hep(const std::string& FCCAnName) const {
-  auto it = map_to_key4hep.find(FCCAnName);
-  if (it != map_to_key4hep.end()) {
+  auto it = m_mapToKey4hep.find(FCCAnName);
+  if (it != m_mapToKey4hep.end()) {
     return it->second;
   }
   return ""; // Return an empty string if not found
