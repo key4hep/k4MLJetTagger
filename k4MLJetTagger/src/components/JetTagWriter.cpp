@@ -22,6 +22,8 @@
 #include <edm4hep/ParticleIDCollection.h>
 #include <edm4hep/utils/ParticleIDUtils.h>
 
+#include "TTree.h"
+
 DECLARE_COMPONENT(JetTagWriter)
 
 JetTagWriter::JetTagWriter(const std::string& name, ISvcLocator* svcLoc) : Gaudi::Algorithm(name, svcLoc) {

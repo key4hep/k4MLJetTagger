@@ -17,13 +17,16 @@
  * limitations under the License.
  */
 
-#include "GaudiKernel/MsgStream.h"
+#include "JetObsWriter.h"
+#include "Structs.h"
+
 #include <edm4hep/ParticleIDCollection.h>
 #include <edm4hep/ReconstructedParticleCollection.h>
 #include <edm4hep/VertexCollection.h>
 
-#include "JetObsWriter.h"
-#include "Structs.h"
+#include "GaudiKernel/MsgStream.h"
+
+#include "TTree.h"
 
 DECLARE_COMPONENT(JetObsWriter)
 
