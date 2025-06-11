@@ -24,7 +24,7 @@
 
 WeaverInterface::WeaverInterface(const std::string& onnx_filename, const std::string& json_filename,
                                  const rv::RVec<std::string>& vars)
-    : variables_names_(vars.begin(), vars.end()) {
+    : m_variablesNames(vars.begin(), vars.end()) {
   if (onnx_filename.empty())
     throw std::runtime_error("ONNX model input file not specified!");
   if (json_filename.empty())
@@ -41,16 +41,16 @@ WeaverInterface::WeaverInterface(const std::string& onnx_filename, const std::st
     for (const auto& input : input_names) {      // loops over pf_points pf_features pf_vectors pf_mask
       const auto& group_params = json.at(input); // group params is then the dictionary of the input name; look in json.
                                                  // It always has has three keys: var_names, var_infos, var_length
-      auto& info = prep_info_map_[input];
+      auto& info = m_prepInfoMap[input];
       info.name = input;
       group_params.at("var_names").get_to(info.var_names);
       if (group_params.contains("var_length")) {
         info.min_length = info.max_length = group_params.at("var_length");
-        input_shapes_.push_back({1, (int64_t)info.var_names.size(), (int64_t)info.min_length});
+        m_inputShapes.push_back({1, (int64_t)info.var_names.size(), (int64_t)info.min_length});
       } else {
         info.min_length = group_params.at("min_length");
         info.max_length = group_params.at("max_length");
-        input_shapes_.push_back({1, (int64_t)info.var_names.size(), -1});
+        m_inputShapes.push_back({1, (int64_t)info.var_names.size(), -1});
       }
       // for all variables, retrieve the allowed range
       const auto& var_info_params = group_params.at("var_infos");
@@ -62,14 +62,14 @@ WeaverInterface::WeaverInterface(const std::string& onnx_filename, const std::st
             var_params.contains("pad") ? (double)var_params.at("pad") : 0.);
       }
       // create data storage with a fixed size vector initialised with 0's
-      const auto& len = input_sizes_.emplace_back(info.max_length * info.var_names.size());
-      data_.emplace_back(len, 0);
+      const auto& len = m_inputSizes.emplace_back(info.max_length * info.var_names.size());
+      m_data.emplace_back(len, 0);
     }
   } catch (const nlohmann::json::exception& exc) {
     throw std::runtime_error("Failed to parse input JSON file '" + json_filename + "'.\n" + exc.what());
   }
 
-  onnx_ = std::make_unique<ONNXRuntime>(onnx_filename, input_names);
+  m_onnx = std::make_unique<ONNXRuntime>(onnx_filename, input_names);
 }
 
 std::vector<float> WeaverInterface::center_norm_pad(const rv::RVec<float>& input, float center, float scale,
@@ -94,27 +94,27 @@ std::vector<float> WeaverInterface::center_norm_pad(const rv::RVec<float>& input
 }
 
 size_t WeaverInterface::variablePos(const std::string& var_name) const {
-  auto var_it = std::find(variables_names_.begin(), variables_names_.end(), var_name);
-  if (var_it == variables_names_.end())
+  auto var_it = std::find(m_variablesNames.begin(), m_variablesNames.end(), var_name);
+  if (var_it == m_variablesNames.end())
     throw std::runtime_error("Unable to find variable with name '" + var_name +
                              "' in the list of registered variables");
-  return var_it - variables_names_.begin();
+  return var_it - m_variablesNames.begin();
 }
 
 rv::RVec<float> WeaverInterface::run(
     const rv::RVec<ConstituentVars>& constituents) { // constituents is the collection of all jet constituents. Each
                                                      // constituent is a collection of observables (ConstituentVars).
   size_t i = 0;
-  for (const auto& name : onnx_->inputNames()) {
-    const auto& params = prep_info_map_.at(name);
-    auto& values = data_[i];
-    values.resize(input_sizes_.at(i));
+  for (const auto& name : m_onnx->inputNames()) {
+    const auto& params = m_prepInfoMap.at(name);
+    auto& values = m_data[i];
+    values.resize(m_inputSizes.at(i));
     std::fill(values.begin(), values.end(), 0);
     size_t it_pos = 0;
     ConstituentVars jc;
     for (size_t j = 0; j < params.var_names.size(); ++j) { // transform and add the proper amount of padding
       const auto& var_name = params.var_names.at(j);
-      // if (std::find(variables_names_.begin(), variables_names_.end(), "pfcand_mask") == variables_names_.end())
+      // if (std::find(m_variablesNames.begin(), m_variablesNames.end(), "pfcand_mask") == m_variablesNames.end())
       //   jc = ConstituentVars(constituents.at(0).size(), 1.f);
 
       if (var_name.find("_mask") != std::string::npos) {
@@ -132,7 +132,7 @@ rv::RVec<float> WeaverInterface::run(
     values.resize(it_pos);
     ++i;
   }
-  return onnx_->run<float>(data_, input_shapes_)[0]; // this runs the interference on the preprocessed data
+  return m_onnx->run<float>(m_data, m_inputShapes)[0]; // this runs the interference on the preprocessed data
 }
 
 void WeaverInterface::PreprocessParams::dumpVars() const {
