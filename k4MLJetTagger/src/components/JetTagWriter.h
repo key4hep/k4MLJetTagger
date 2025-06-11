@@ -53,7 +53,7 @@ public:
   /// Constructor.
   JetTagWriter(const std::string& name, ISvcLocator* svcLoc);
   /// Destructor.
-  ~JetTagWriter(){};
+  ~JetTagWriter() {};
   /// Initialize.
   virtual StatusCode initialize();
   /// Initialize tree.
