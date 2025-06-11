@@ -19,7 +19,7 @@ limitations under the License.
 CMAKE_MINIMUM_REQUIRED(VERSION 3.12)
 
 
-project(k4MLJetTagger)
+project(k4MLJetTagger LANGUAGES CXX)
 
 # please keep this layout for version setting, used by the automatic tagging script
 set(PACKAGE_VERSION_MAJOR 1)
