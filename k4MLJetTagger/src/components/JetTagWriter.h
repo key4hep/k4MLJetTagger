@@ -66,24 +66,26 @@ public:
   virtual StatusCode finalize();
 
 private:
-  mutable DataHandle<edm4hep::EventHeaderCollection> ev_handle{"EventHeader", Gaudi::DataHandle::Reader, this};
-  mutable DataHandle<edm4hep::ReconstructedParticleCollection> jets_handle{"RefinedVertexJets",
-                                                                           Gaudi::DataHandle::Reader, this};
-  mutable DataHandle<edm4hep::ParticleIDCollection> reco_jettag_G_handle{"RefinedJetTag_G", Gaudi::DataHandle::Reader,
+  mutable k4FWCore::DataHandle<edm4hep::EventHeaderCollection> ev_handle{"EventHeader", Gaudi::DataHandle::Reader,
                                                                          this};
-  mutable DataHandle<edm4hep::ParticleIDCollection> reco_jettag_U_handle{"RefinedJetTag_U", Gaudi::DataHandle::Reader,
-                                                                         this};
-  mutable DataHandle<edm4hep::ParticleIDCollection> reco_jettag_D_handle{"RefinedJetTag_D", Gaudi::DataHandle::Reader,
-                                                                         this};
-  mutable DataHandle<edm4hep::ParticleIDCollection> reco_jettag_S_handle{"RefinedJetTag_S", Gaudi::DataHandle::Reader,
-                                                                         this};
-  mutable DataHandle<edm4hep::ParticleIDCollection> reco_jettag_C_handle{"RefinedJetTag_C", Gaudi::DataHandle::Reader,
-                                                                         this};
-  mutable DataHandle<edm4hep::ParticleIDCollection> reco_jettag_B_handle{"RefinedJetTag_B", Gaudi::DataHandle::Reader,
-                                                                         this};
-  mutable DataHandle<edm4hep::ParticleIDCollection> reco_jettag_TAU_handle{"RefinedJetTag_TAU",
-                                                                           Gaudi::DataHandle::Reader, this};
-  mutable DataHandle<edm4hep::ParticleIDCollection> mc_jettag_handle{"MCJetTag", Gaudi::DataHandle::Reader, this};
+  mutable k4FWCore::DataHandle<edm4hep::ReconstructedParticleCollection> jets_handle{"RefinedVertexJets",
+                                                                                     Gaudi::DataHandle::Reader, this};
+  mutable k4FWCore::DataHandle<edm4hep::ParticleIDCollection> reco_jettag_G_handle{"RefinedJetTag_G",
+                                                                                   Gaudi::DataHandle::Reader, this};
+  mutable k4FWCore::DataHandle<edm4hep::ParticleIDCollection> reco_jettag_U_handle{"RefinedJetTag_U",
+                                                                                   Gaudi::DataHandle::Reader, this};
+  mutable k4FWCore::DataHandle<edm4hep::ParticleIDCollection> reco_jettag_D_handle{"RefinedJetTag_D",
+                                                                                   Gaudi::DataHandle::Reader, this};
+  mutable k4FWCore::DataHandle<edm4hep::ParticleIDCollection> reco_jettag_S_handle{"RefinedJetTag_S",
+                                                                                   Gaudi::DataHandle::Reader, this};
+  mutable k4FWCore::DataHandle<edm4hep::ParticleIDCollection> reco_jettag_C_handle{"RefinedJetTag_C",
+                                                                                   Gaudi::DataHandle::Reader, this};
+  mutable k4FWCore::DataHandle<edm4hep::ParticleIDCollection> reco_jettag_B_handle{"RefinedJetTag_B",
+                                                                                   Gaudi::DataHandle::Reader, this};
+  mutable k4FWCore::DataHandle<edm4hep::ParticleIDCollection> reco_jettag_TAU_handle{"RefinedJetTag_TAU",
+                                                                                     Gaudi::DataHandle::Reader, this};
+  mutable k4FWCore::DataHandle<edm4hep::ParticleIDCollection> mc_jettag_handle{"MCJetTag", Gaudi::DataHandle::Reader,
+                                                                               this};
 
   SmartIF<ITHistSvc> m_ths; ///< THistogram service
 
