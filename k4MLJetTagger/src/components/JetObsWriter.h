@@ -102,12 +102,12 @@ public:
   virtual StatusCode finalize();
 
 private:
-  mutable k4FWCore::DataHandle<edm4hep::EventHeaderCollection> m_eventHeaderHandle{"EventHeader", Gaudi::DataHandle::Reader,
-                                                                                   this};
-  mutable k4FWCore::DataHandle<edm4hep::ReconstructedParticleCollection> m_inputJetsHandle{"InputJets", Gaudi::DataHandle::Reader,
-                                                                                           this};
+  mutable k4FWCore::DataHandle<edm4hep::EventHeaderCollection> m_eventHeaderHandle{"EventHeader",
+                                                                                   Gaudi::DataHandle::Reader, this};
+  mutable k4FWCore::DataHandle<edm4hep::ReconstructedParticleCollection> m_inputJetsHandle{
+      "InputJets", Gaudi::DataHandle::Reader, this};
   mutable k4FWCore::DataHandle<edm4hep::VertexCollection> m_inputPrimaryVerticesHandle{"InputPrimaryVertices",
-                                                                                      Gaudi::DataHandle::Reader, this};
+                                                                                       Gaudi::DataHandle::Reader, this};
 
   mutable JetObservablesRetriever* m_retriever;
 
