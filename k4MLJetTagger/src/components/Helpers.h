@@ -19,8 +19,6 @@
 #ifndef HELPERS_H
 #define HELPERS_H
 
-#include <fstream>
-#include <iostream>
 #include <nlohmann/json.hpp> // Include a JSON parsing library
 #include <string>
 #include <unordered_map>
@@ -110,12 +108,12 @@ private:
   /**
    * @brief Mapping from Key4HEP variable names to FCCAnalyses variable names.
    */
-  std::unordered_map<std::string, std::string> map_to_FCCAn;
+  std::unordered_map<std::string, std::string> m_mapToFCCAn;
 
   /**
    * @brief Mapping from FCCAnalyses variable names to Key4HEP variable names.
    */
-  std::unordered_map<std::string, std::string> map_to_key4hep;
+  std::unordered_map<std::string, std::string> m_mapToKey4hep;
 };
 
 #endif // HELPERS_H

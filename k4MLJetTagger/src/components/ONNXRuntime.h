@@ -76,7 +76,7 @@ public:
    *
    * @return A constant reference to the vector of input names.
    */
-  const std::vector<std::string>& inputNames() const { return input_names_; }
+  const std::vector<std::string>& inputNames() const { return m_inputNames; }
 
   /**
    * @brief Runs inference on the provided input tensor and returns the output tensor.
@@ -100,15 +100,15 @@ private:
    */
   size_t variablePos(const std::string& var_name) const;
 
-  std::unique_ptr<Ort::Env> env_;             ///< Pointer to the ONNX Runtime environment object.
-  std::unique_ptr<Ort::Session> session_;     ///< Pointer to the ONNX Runtime session object.
-  Ort::AllocatorWithDefaultOptions allocator; ///< Allocator for ONNX Runtime tensors.
+  std::unique_ptr<Ort::Env> m_env;              ///< Pointer to the ONNX Runtime environment object.
+  std::unique_ptr<Ort::Session> m_session;      ///< Pointer to the ONNX Runtime session object.
+  Ort::AllocatorWithDefaultOptions m_allocator; ///< Allocator for ONNX Runtime tensors.
 
-  std::vector<std::string> input_node_strings_;                  ///< List of input node names.
-  std::vector<std::string> output_node_strings_;                 ///< List of output node names.
-  std::vector<std::string> input_names_;                         ///< List of model input names.
-  std::map<std::string, std::vector<int64_t>> input_node_dims_;  ///< Dimensions of input nodes.
-  std::map<std::string, std::vector<int64_t>> output_node_dims_; ///< Dimensions of output nodes.
+  std::vector<std::string> m_inputNodeStrings;                  ///< List of input node names.
+  std::vector<std::string> m_outputNodeStrings;                 ///< List of output node names.
+  std::vector<std::string> m_inputNames;                        ///< List of model input names.
+  std::map<std::string, std::vector<int64_t>> m_inputNodeDims;  ///< Dimensions of input nodes.
+  std::map<std::string, std::vector<int64_t>> m_outputNodeDims; ///< Dimensions of output nodes.
 };
 
 #endif

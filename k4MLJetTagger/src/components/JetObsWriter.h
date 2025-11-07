@@ -22,14 +22,10 @@
 #include "Gaudi/Algorithm.h"
 #include "GaudiKernel/ITHistSvc.h"
 #include "k4FWCore/DataHandle.h"
-#include "k4FWCore/MetaDataHandle.h"
 
 #include <edm4hep/EventHeaderCollection.h>
 #include <edm4hep/ReconstructedParticleCollection.h>
 #include <edm4hep/VertexCollection.h>
-
-#include "TGraph.h"
-#include "TH1F.h"
 
 #include "JetObservablesRetriever.h"
 
@@ -56,43 +52,43 @@ public:
   JetObsWriter(const std::string& name, ISvcLocator* svcLoc);
   /// Destructor.
   ~JetObsWriter() {
-    delete pfcand_erel_log;
-    delete pfcand_thetarel;
-    delete pfcand_phirel;
-    delete pfcand_e;
-    delete pfcand_p;
-    delete pfcand_type;
-    delete pfcand_charge;
-    delete pfcand_isEl;
-    delete pfcand_isMu;
-    delete pfcand_isGamma;
-    delete pfcand_isChargedHad;
-    delete pfcand_isNeutralHad;
-    delete pfcand_dndx;
-    delete pfcand_tof;
-    delete pfcand_cov_omegaomega;
-    delete pfcand_cov_tanLambdatanLambda;
-    delete pfcand_cov_phiphi;
-    delete pfcand_cov_d0d0;
-    delete pfcand_cov_z0z0;
-    delete pfcand_cov_d0z0;
-    delete pfcand_cov_phid0;
-    delete pfcand_cov_tanLambdaz0;
-    delete pfcand_cov_d0omega;
-    delete pfcand_cov_d0tanLambda;
-    delete pfcand_cov_phiomega;
-    delete pfcand_cov_phiz0;
-    delete pfcand_cov_phitanLambda;
-    delete pfcand_cov_omegaz0;
-    delete pfcand_cov_omegatanLambda;
-    delete pfcand_d0;
-    delete pfcand_z0;
-    delete pfcand_Sip2dVal;
-    delete pfcand_Sip2dSig;
-    delete pfcand_Sip3dVal;
-    delete pfcand_Sip3dSig;
-    delete pfcand_JetDistVal;
-    delete pfcand_JetDistSig;
+    delete m_pfcandErelLog;
+    delete m_pfcandThetarel;
+    delete m_pfcandPhirel;
+    delete m_pfcandE;
+    delete m_pfcandP;
+    delete m_pfcandType;
+    delete m_pfcandCharge;
+    delete m_pfcandIsEl;
+    delete m_pfcandIsMu;
+    delete m_pfcandIsGamma;
+    delete m_pfcandIsChargedHad;
+    delete m_pfcandIsNeutralHad;
+    delete m_pfcandDndx;
+    delete m_pfcandTof;
+    delete m_pfcandCovOmegaOmega;
+    delete m_pfcandCovTanLambdaTanLambda;
+    delete m_pfcandCovPhiPhi;
+    delete m_pfcandCovD0D0;
+    delete m_pfcandCovZ0Z0;
+    delete m_pfcandCovD0Z0;
+    delete m_pfcandCovPhiD0;
+    delete m_pfcandCovTanLambdaZ0;
+    delete m_pfcandCovD0Omega;
+    delete m_pfcandCovD0TanLambda;
+    delete m_pfcandCovPhiOmega;
+    delete m_pfcandCovPhiZ0;
+    delete m_pfcandCovPhiTanLambda;
+    delete m_pfcandCovOmegaZ0;
+    delete m_pfcandCovOmegaTanLambda;
+    delete m_pfcandD0;
+    delete m_pfcandZ0;
+    delete m_pfcandSip2dVal;
+    delete m_pfcandSip2dSig;
+    delete m_pfcandSip3dVal;
+    delete m_pfcandSip3dSig;
+    delete m_pfcandJetDistVal;
+    delete m_pfcandJetDistSig;
   };
   /// Initialize.
   virtual StatusCode initialize();
@@ -106,63 +102,63 @@ public:
   virtual StatusCode finalize();
 
 private:
-  mutable k4FWCore::DataHandle<edm4hep::EventHeaderCollection> ev_handle{"EventHeader", Gaudi::DataHandle::Reader,
-                                                                         this};
-  mutable k4FWCore::DataHandle<edm4hep::ReconstructedParticleCollection> inputJets_handle{
+  mutable k4FWCore::DataHandle<edm4hep::EventHeaderCollection> m_eventHeaderHandle{"EventHeader",
+                                                                                   Gaudi::DataHandle::Reader, this};
+  mutable k4FWCore::DataHandle<edm4hep::ReconstructedParticleCollection> m_inputJetsHandle{
       "InputJets", Gaudi::DataHandle::Reader, this};
-  mutable k4FWCore::DataHandle<edm4hep::VertexCollection> inputPrimaryVertices_handle{"InputPrimaryVertices",
-                                                                                      Gaudi::DataHandle::Reader, this};
+  mutable k4FWCore::DataHandle<edm4hep::VertexCollection> m_inputPrimaryVerticesHandle{"InputPrimaryVertices",
+                                                                                       Gaudi::DataHandle::Reader, this};
 
-  mutable JetObservablesRetriever* retriever;
+  mutable JetObservablesRetriever* m_retriever;
 
   SmartIF<ITHistSvc> m_ths; ///< THistogram service
 
-  mutable TTree* t_jetcst{nullptr};
+  mutable TTree* m_jetcst{nullptr};
 
-  mutable std::vector<float>* pfcand_erel_log = nullptr;
-  mutable std::vector<float>* pfcand_thetarel = nullptr;
-  mutable std::vector<float>* pfcand_phirel = nullptr;
-  mutable std::vector<float>* pfcand_e = nullptr;
-  mutable std::vector<float>* pfcand_p = nullptr;
-  mutable std::vector<int>* pfcand_type = nullptr;
-  mutable std::vector<int>* pfcand_charge = nullptr;
-  mutable std::vector<int>* pfcand_isEl = nullptr;
-  mutable std::vector<int>* pfcand_isMu = nullptr;
-  mutable std::vector<int>* pfcand_isGamma = nullptr;
-  mutable std::vector<int>* pfcand_isChargedHad = nullptr;
-  mutable std::vector<int>* pfcand_isNeutralHad = nullptr;
-  mutable std::vector<float>* pfcand_dndx = nullptr;
-  mutable std::vector<float>* pfcand_tof = nullptr;
-  mutable std::vector<float>* pfcand_cov_omegaomega = nullptr;
-  mutable std::vector<float>* pfcand_cov_tanLambdatanLambda = nullptr;
-  mutable std::vector<float>* pfcand_cov_phiphi = nullptr;
-  mutable std::vector<float>* pfcand_cov_d0d0 = nullptr;
-  mutable std::vector<float>* pfcand_cov_z0z0 = nullptr;
-  mutable std::vector<float>* pfcand_cov_d0z0 = nullptr;
-  mutable std::vector<float>* pfcand_cov_phid0 = nullptr;
-  mutable std::vector<float>* pfcand_cov_tanLambdaz0 = nullptr;
-  mutable std::vector<float>* pfcand_cov_d0omega = nullptr;
-  mutable std::vector<float>* pfcand_cov_d0tanLambda = nullptr;
-  mutable std::vector<float>* pfcand_cov_phiomega = nullptr;
-  mutable std::vector<float>* pfcand_cov_phiz0 = nullptr;
-  mutable std::vector<float>* pfcand_cov_phitanLambda = nullptr;
-  mutable std::vector<float>* pfcand_cov_omegaz0 = nullptr;
-  mutable std::vector<float>* pfcand_cov_omegatanLambda = nullptr;
-  mutable std::vector<float>* pfcand_d0 = nullptr;
-  mutable std::vector<float>* pfcand_z0 = nullptr;
-  mutable std::vector<float>* pfcand_Sip2dVal = nullptr;
-  mutable std::vector<float>* pfcand_Sip2dSig = nullptr;
-  mutable std::vector<float>* pfcand_Sip3dVal = nullptr;
-  mutable std::vector<float>* pfcand_Sip3dSig = nullptr;
-  mutable std::vector<float>* pfcand_JetDistVal = nullptr;
-  mutable std::vector<float>* pfcand_JetDistSig = nullptr;
+  mutable std::vector<float>* m_pfcandErelLog = nullptr;
+  mutable std::vector<float>* m_pfcandThetarel = nullptr;
+  mutable std::vector<float>* m_pfcandPhirel = nullptr;
+  mutable std::vector<float>* m_pfcandE = nullptr;
+  mutable std::vector<float>* m_pfcandP = nullptr;
+  mutable std::vector<int>* m_pfcandType = nullptr;
+  mutable std::vector<int>* m_pfcandCharge = nullptr;
+  mutable std::vector<int>* m_pfcandIsEl = nullptr;
+  mutable std::vector<int>* m_pfcandIsMu = nullptr;
+  mutable std::vector<int>* m_pfcandIsGamma = nullptr;
+  mutable std::vector<int>* m_pfcandIsChargedHad = nullptr;
+  mutable std::vector<int>* m_pfcandIsNeutralHad = nullptr;
+  mutable std::vector<float>* m_pfcandDndx = nullptr;
+  mutable std::vector<float>* m_pfcandTof = nullptr;
+  mutable std::vector<float>* m_pfcandCovOmegaOmega = nullptr;
+  mutable std::vector<float>* m_pfcandCovTanLambdaTanLambda = nullptr;
+  mutable std::vector<float>* m_pfcandCovPhiPhi = nullptr;
+  mutable std::vector<float>* m_pfcandCovD0D0 = nullptr;
+  mutable std::vector<float>* m_pfcandCovZ0Z0 = nullptr;
+  mutable std::vector<float>* m_pfcandCovD0Z0 = nullptr;
+  mutable std::vector<float>* m_pfcandCovPhiD0 = nullptr;
+  mutable std::vector<float>* m_pfcandCovTanLambdaZ0 = nullptr;
+  mutable std::vector<float>* m_pfcandCovD0Omega = nullptr;
+  mutable std::vector<float>* m_pfcandCovD0TanLambda = nullptr;
+  mutable std::vector<float>* m_pfcandCovPhiOmega = nullptr;
+  mutable std::vector<float>* m_pfcandCovPhiZ0 = nullptr;
+  mutable std::vector<float>* m_pfcandCovPhiTanLambda = nullptr;
+  mutable std::vector<float>* m_pfcandCovOmegaZ0 = nullptr;
+  mutable std::vector<float>* m_pfcandCovOmegaTanLambda = nullptr;
+  mutable std::vector<float>* m_pfcandD0 = nullptr;
+  mutable std::vector<float>* m_pfcandZ0 = nullptr;
+  mutable std::vector<float>* m_pfcandSip2dVal = nullptr;
+  mutable std::vector<float>* m_pfcandSip2dSig = nullptr;
+  mutable std::vector<float>* m_pfcandSip3dVal = nullptr;
+  mutable std::vector<float>* m_pfcandSip3dSig = nullptr;
+  mutable std::vector<float>* m_pfcandJetDistVal = nullptr;
+  mutable std::vector<float>* m_pfcandJetDistSig = nullptr;
   // Not input to network but good to check:
-  mutable float jet_PV_x;
-  mutable float jet_PV_y;
-  mutable float jet_PV_z;
-  mutable int jet_PV_id;
+  mutable float m_jetPVx;
+  mutable float m_jetPVy;
+  mutable float m_jetPVz;
+  mutable int m_jetPVid;
 
-  mutable std::int32_t evNum;
+  mutable std::int32_t m_evNum;
 };
 
 #endif // JETOBSWRITER_H

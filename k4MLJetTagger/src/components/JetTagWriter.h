@@ -22,14 +22,10 @@
 #include "Gaudi/Algorithm.h"
 #include "GaudiKernel/ITHistSvc.h"
 #include "k4FWCore/DataHandle.h"
-#include "k4FWCore/MetaDataHandle.h"
 
 #include <edm4hep/EventHeaderCollection.h>
 #include <edm4hep/ReconstructedParticleCollection.h>
 #include <edm4hep/VertexCollection.h>
-
-#include "TGraph.h"
-#include "TH1F.h"
 
 #include <edm4hep/ParticleIDCollection.h>
 #include <edm4hep/utils/ParticleIDUtils.h>
@@ -55,58 +51,59 @@ public:
   /// Destructor.
   ~JetTagWriter() {};
   /// Initialize.
-  virtual StatusCode initialize();
+  StatusCode initialize() override;
+  /// Execute function.
+  StatusCode execute(const EventContext&) const override;
+  /// Finalize.
+  StatusCode finalize() override;
+
+private:
   /// Initialize tree.
   void initializeTree();
   /// Clean tree.
   void cleanTree() const;
-  /// Execute function.
-  virtual StatusCode execute(const EventContext&) const;
-  /// Finalize.
-  virtual StatusCode finalize();
 
-private:
-  mutable k4FWCore::DataHandle<edm4hep::EventHeaderCollection> ev_handle{"EventHeader", Gaudi::DataHandle::Reader,
-                                                                         this};
-  mutable k4FWCore::DataHandle<edm4hep::ReconstructedParticleCollection> jets_handle{"RefinedVertexJets",
-                                                                                     Gaudi::DataHandle::Reader, this};
-  mutable k4FWCore::DataHandle<edm4hep::ParticleIDCollection> reco_jettag_G_handle{"RefinedJetTag_G",
+  mutable k4FWCore::DataHandle<edm4hep::EventHeaderCollection> m_eventHeaderHandle{"EventHeader",
                                                                                    Gaudi::DataHandle::Reader, this};
-  mutable k4FWCore::DataHandle<edm4hep::ParticleIDCollection> reco_jettag_U_handle{"RefinedJetTag_U",
-                                                                                   Gaudi::DataHandle::Reader, this};
-  mutable k4FWCore::DataHandle<edm4hep::ParticleIDCollection> reco_jettag_D_handle{"RefinedJetTag_D",
-                                                                                   Gaudi::DataHandle::Reader, this};
-  mutable k4FWCore::DataHandle<edm4hep::ParticleIDCollection> reco_jettag_S_handle{"RefinedJetTag_S",
-                                                                                   Gaudi::DataHandle::Reader, this};
-  mutable k4FWCore::DataHandle<edm4hep::ParticleIDCollection> reco_jettag_C_handle{"RefinedJetTag_C",
-                                                                                   Gaudi::DataHandle::Reader, this};
-  mutable k4FWCore::DataHandle<edm4hep::ParticleIDCollection> reco_jettag_B_handle{"RefinedJetTag_B",
-                                                                                   Gaudi::DataHandle::Reader, this};
-  mutable k4FWCore::DataHandle<edm4hep::ParticleIDCollection> reco_jettag_TAU_handle{"RefinedJetTag_TAU",
-                                                                                     Gaudi::DataHandle::Reader, this};
-  mutable k4FWCore::DataHandle<edm4hep::ParticleIDCollection> mc_jettag_handle{"MCJetTag", Gaudi::DataHandle::Reader,
+  mutable k4FWCore::DataHandle<edm4hep::ReconstructedParticleCollection> m_jetsHandle{"RefinedVertexJets",
+                                                                                      Gaudi::DataHandle::Reader, this};
+  mutable k4FWCore::DataHandle<edm4hep::ParticleIDCollection> m_recoJettagGHandle{"RefinedJetTag_G",
+                                                                                  Gaudi::DataHandle::Reader, this};
+  mutable k4FWCore::DataHandle<edm4hep::ParticleIDCollection> m_recoJettagUHandle{"RefinedJetTag_U",
+                                                                                  Gaudi::DataHandle::Reader, this};
+  mutable k4FWCore::DataHandle<edm4hep::ParticleIDCollection> m_recoJettagDHandle{"RefinedJetTag_D",
+                                                                                  Gaudi::DataHandle::Reader, this};
+  mutable k4FWCore::DataHandle<edm4hep::ParticleIDCollection> m_recoJettagSHandle{"RefinedJetTag_S",
+                                                                                  Gaudi::DataHandle::Reader, this};
+  mutable k4FWCore::DataHandle<edm4hep::ParticleIDCollection> m_recoJettagCHandle{"RefinedJetTag_C",
+                                                                                  Gaudi::DataHandle::Reader, this};
+  mutable k4FWCore::DataHandle<edm4hep::ParticleIDCollection> m_recoJettagBHandle{"RefinedJetTag_B",
+                                                                                  Gaudi::DataHandle::Reader, this};
+  mutable k4FWCore::DataHandle<edm4hep::ParticleIDCollection> m_recoJettagTauHandle{"RefinedJetTag_TAU",
+                                                                                    Gaudi::DataHandle::Reader, this};
+  mutable k4FWCore::DataHandle<edm4hep::ParticleIDCollection> m_mcJettagHandle{"MCJetTag", Gaudi::DataHandle::Reader,
                                                                                this};
 
   SmartIF<ITHistSvc> m_ths; ///< THistogram service
 
-  mutable TTree* t_jettag{nullptr};
+  mutable TTree* m_jettag{nullptr};
 
-  mutable bool recojet_isG;
-  mutable float score_recojet_isG;
-  mutable bool recojet_isU;
-  mutable float score_recojet_isU;
-  mutable bool recojet_isD;
-  mutable float score_recojet_isD;
-  mutable bool recojet_isS;
-  mutable float score_recojet_isS;
-  mutable bool recojet_isC;
-  mutable float score_recojet_isC;
-  mutable bool recojet_isB;
-  mutable float score_recojet_isB;
-  mutable bool recojet_isTAU;
-  mutable float score_recojet_isTAU;
+  mutable bool m_recojetIsG;
+  mutable float m_scoreRecojetIsG;
+  mutable bool m_recoJetIsU;
+  mutable float m_scoreRecoJetIsU;
+  mutable bool m_recoJetIsD;
+  mutable float m_scoreRecoJetIsD;
+  mutable bool m_recoJetIsS;
+  mutable float m_scoreRecoJetIsS;
+  mutable bool m_recoJetIsC;
+  mutable float m_scoreRecoJetIsC;
+  mutable bool m_recoJetIsB;
+  mutable float m_scoreRecoJetIsB;
+  mutable bool m_recoJetIsTAU;
+  mutable float m_scoreRecoJetIsTau;
 
-  mutable std::int32_t evNum;
+  mutable std::int32_t m_evNum;
 };
 
 #endif // JETTAGWRITER_H
