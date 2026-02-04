@@ -92,7 +92,7 @@ ONNXRuntime::Tensor<T> ONNXRuntime::run(Tensor<T>& input, const Tensor<long>& in
       throw std::runtime_error("Input array '" + name + "' has a wrong size of " + std::to_string(value->size()) +
                                ", expected " + std::to_string(expected_len));
 
-    const auto* fInfo = Ort::MemoryInfo::CreateCpu(OrtArenaAllocator, OrtMemTypeDefault);
+    const auto fInfo = Ort::MemoryInfo::CreateCpu(OrtArenaAllocator, OrtMemTypeDefault);
     auto input_tensor =
         Ort::Value::CreateTensor<float>(fInfo, value->data(), value->size(), input_dims.data(), input_dims.size());
     if (!input_tensor.IsTensor())
