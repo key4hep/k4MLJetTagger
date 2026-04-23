@@ -35,9 +35,6 @@
 *.out
 *.app
 
-# ROOT
-*.root
-
 ### CMake ###
 CMakeLists.txt.user
 CMakeCache.txt
@@ -247,10 +244,10 @@ edm4hep/src/
 ## k4FWCore
 test/k4FWCoreTest/**/*.root
 ## k4MarlinWrapper
-test/inputFiles/*.slcio
+test/inputFiles
 test/gaudi_opts/testConverterConstants.py
 
-## Extra section
-extras/submit_to_condor/*.sub
-extras/submit_to_condor/*.cc
-
+# AI tools
+.claude/
+.codex/
+.aider.*
