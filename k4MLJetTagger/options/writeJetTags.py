@@ -19,8 +19,6 @@
 from Gaudi.Configuration import INFO, WARNING
 from Configurables import JetTagWriter, JetTagger, JetMCTagger
 from Configurables import k4DataSvc
-from Configurables import EventDataSvc
-from Configurables import CollectionMerger
 from Configurables import THistSvc
 from k4FWCore import ApplicationMgr, IOSvc
 from k4FWCore.parseArgs import parser
