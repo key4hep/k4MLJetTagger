@@ -17,8 +17,7 @@
 # limitations under the License.
 #
 from Gaudi.Configuration import INFO, WARNING
-from Configurables import JetObsWriter
-from Configurables import k4DataSvc
+from Configurables import JetObsWriter, EventDataSvc
 from Configurables import THistSvc
 from k4FWCore import ApplicationMgr, IOSvc
 from k4FWCore.parseArgs import parser
@@ -54,6 +53,6 @@ algList.append(MyJetObsWriter)
 ApplicationMgr(TopAlg=algList,
                EvtSel="NONE",
                EvtMax=args.num_ev,
-               ExtSvc=[k4DataSvc("EventDataSvc")],
+               ExtSvc=[EventDataSvc("EventDataSvc")],
                OutputLevel=INFO,
                )
