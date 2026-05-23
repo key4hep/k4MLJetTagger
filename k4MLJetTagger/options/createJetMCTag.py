@@ -17,8 +17,7 @@
 # limitations under the License.
 #
 from Gaudi.Configuration import INFO
-from Configurables import JetMCTagger
-from Configurables import k4DataSvc
+from Configurables import JetMCTagger, EventDataSvc
 from k4FWCore import ApplicationMgr, IOSvc
 from k4FWCore.parseArgs import parser
 
@@ -43,6 +42,6 @@ transformer = JetMCTagger("JetMCTagger",
 ApplicationMgr(TopAlg=[transformer],
                EvtSel="NONE",
                EvtMax=args.num_ev,
-               ExtSvc=[k4DataSvc("EventDataSvc")],
+               ExtSvc=[EventDataSvc("EventDataSvc")],
                OutputLevel=INFO,
                )
