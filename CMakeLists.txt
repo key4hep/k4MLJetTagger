@@ -52,9 +52,9 @@ endif()
 
 #---------------------------------------------------------------
 
-include(cmake/Key4hepConfig.cmake)
-
 include(GNUInstallDirs)
+
+include(cmake/Key4hepConfig.cmake)
 
 include(CTest)
 
