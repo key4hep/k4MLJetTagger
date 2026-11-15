@@ -1,3 +1,8 @@
+# v00.01.03
+
+* 2026-11-04 Juan Miguel Carceller ([PR#16](https://github.com/key4hep/k4MLJetTagger/pull/16))
+  - Initialize GNU install directories before configuring RPATH (no behavior change).
+
 # v00.01.02
 
 * 2026-05-23 Juan Miguel Carceller ([PR#15](https://github.com/key4hep/k4MLJetTagger/pull/15))
