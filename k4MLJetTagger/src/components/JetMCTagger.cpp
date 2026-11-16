@@ -31,6 +31,7 @@
 #include "Helpers.h"
 #include "WeaverInterface.h"
 
+namespace {
 int findMCPIDfromHiggsDaughters(const edm4hep::MCParticleCollection& MCParticles, MsgStream& log) {
   // find the MC PID of the jet by looking at the MC Higgs Boson and finding its daughters
   // WARNING: This uses the assumption of H(jj)Z(vv) events!!!
@@ -68,6 +69,7 @@ int findMCPIDfromHiggsDaughters(const edm4hep::MCParticleCollection& MCParticles
       << endmsg;
   return 0; // dummy value
 }
+} // namespace
 
 /**
  * @class JetMCTagger
