@@ -59,7 +59,9 @@ include(cmake/Key4hepConfig.cmake)
 include(CTest)
 
 add_subdirectory(k4MLJetTagger)
-add_subdirectory(tests)
+if(BUILD_TESTING)
+  add_subdirectory(tests)
+endif()
 
 include(cmake/CreateProjectConfig.cmake)
 
