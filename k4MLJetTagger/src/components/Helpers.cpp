@@ -20,6 +20,10 @@
 
 #include <DD4hep/DD4hepUnits.h>
 
+#include <fstream>
+#include <iostream>
+#include <stdexcept>
+
 double getBzAtOrigin(dd4hep::Detector* theDetector) {
   double bfield(0.0);
   if (not(theDetector->state() == dd4hep::Detector::READY)) {
