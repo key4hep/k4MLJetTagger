@@ -24,7 +24,7 @@ project(k4MLJetTagger LANGUAGES CXX)
 # please keep this layout for version setting, used by the automatic tagging script
 set(PACKAGE_VERSION_MAJOR 0)
 set(PACKAGE_VERSION_MINOR 1)
-set(PACKAGE_VERSION_PATCH 3)
+set(PACKAGE_VERSION_PATCH 4)
 
 set(PACKAGE_VERSION "${PACKAGE_VERSION_MAJOR}.${PACKAGE_VERSION_MINOR}.${PACKAGE_VERSION_PATCH}")
 
