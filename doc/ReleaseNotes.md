@@ -1,3 +1,14 @@
+# v00.01.04
+
+* 2026-11-27 Juan Miguel Carceller ([PR#19](https://github.com/key4hep/k4MLJetTagger/pull/19))
+  - Include `<fstream>`, `<iostream>` and `<stdexcept>` in `Helpers.cpp`, fixing the build with newer ROOT (6.42.0) that no longer provide `<fstream>` transitively.
+
+* 2026-11-18 Juan Miguel Carceller ([PR#18](https://github.com/key4hep/k4MLJetTagger/pull/18))
+  - Skip downloading the `createJetTags` test inputs when `BUILD_TESTING=OFF`.
+
+* 2026-11-16 Juan Miguel Carceller ([PR#17](https://github.com/key4hep/k4MLJetTagger/pull/17))
+  - Put `findMCPIDfromHiggsDaughters` in an unnamed namespace so that it is not exported.
+
 # v00.01.03
 
 * 2026-11-04 Juan Miguel Carceller ([PR#16](https://github.com/key4hep/k4MLJetTagger/pull/16))
